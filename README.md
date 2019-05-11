@@ -55,6 +55,35 @@ that you're using, as long as it adheres to concept of nullable type expected by
 
 One example of nullable type that models this concept would then be: _std::optional_.
 
+#### fmap
+
+One the most basic and useful operations to allow composition of nullable types is _fmap_. Which roughly speaking turns
+a nullable type containing a value of type _A_ into a functor.
+ 
+Given a nullable _N[A]_ and a function _f: A -> B_, _fmap_ uses _f_ to map over _N[A]_, yielding another nullable
+_N[B]_.
+
+Furthermore, if the input nullable is empty, _fmap_ does nothing, and simply returns a brand new empty nullable _N[B]_.
+
+Example:
+
+```
+auto int_to_string = [](auto& a){ return std::to_string(a); };
+std::optional<int> one{1};
+std::optional<std::string> one_as_string = fmap(one, int_to_string); // contains "1"
+std::optional<int> empty{};
+std::optional<std::string> empty_as_string = fmap(empty, int_to_string); // contains nothing
+```
+
+To simplify the act of chaining multiple operations, an infix notation of _fmap_ is provided via overloading _operator&_:
+
+```
+auto string2int = [](auto& a){ return std::stoi(a); };
+auto int2string = [](auto& a){ return std::to_string(a); };
+std::optional<std::string> some_zero_as_string{"0"};
+std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
+```
+
 ## Build
 
 The _Makefile_ wraps the commands to download dependencies (Conan), generate the build configuration, build, run the

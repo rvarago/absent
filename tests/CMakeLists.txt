@@ -4,6 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 
 add_executable(${PROJECT_NAME}
         absent_tests.cpp
+        fmap_test.cpp
 )
 
 target_compile_features(${PROJECT_NAME}
