@@ -2,6 +2,8 @@
 
 A simple library to compose nullable types in a declarative style for the modern C++ programmer
 
+[![Build Status](https://travis-ci.org/rvarago/absent.svg?branch=master)](https://travis-ci.org/rvarago/absent)
+
 ## Description
 
 Handling nullable types has always been enforcing us to add a significant amount of boilerplate in our code, in such a way that it
