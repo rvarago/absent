@@ -1,0 +1,7 @@
+language: cpp
+
+services:
+  - docker
+
+script:
+  - make env-test
