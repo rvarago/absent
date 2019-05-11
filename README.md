@@ -84,6 +84,36 @@ std::optional<std::string> some_zero_as_string{"0"};
 std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
 ```
 
+#### bind
+
+Another useful combinator is _bind_ which allows to compose functions which by themselves also return values wrapped in
+a nullable, **partially** modelling a monad.
+
+Given a nullable _N[A]_ and a function _f: A -> N[B]_, _bind_ uses _f_ to map over _N[A]_, yielding another nullable
+_N[B]_. The main difference if compared to _fmap_ is that if you apply _f_ using _fmap_ you end up with _N[N[B]]_.
+Whereas _bind_ knows how it should flatten _N[N[B]]_ into _N[B]_. Think of a scenario where you invoke a function
+that might fail, and use a nullable to represent such failure, and then you use the value inside the nullable to invoke
+another function that might also fail, and so and so forth. That's a good use case to make use of _bind_.
+
+Example:
+
+```
+auto maybe_int_to_string = [](auto& a){ return std::optional{std::to_string(a)}; };
+std::optional<int> one{1};
+std::optional<std::string> one_as_string = bind(one, maybe_int_to_string); // contains "1"
+std::optional<int> empty{};
+std::optional<std::string> empty_as_string = bind(empty, maybe_int_to_string); // contains nothing
+```
+
+To simplify the act of chaining multiple operations, an infix notation of _bind_ is provided via overloading _operator>>_:
+
+```
+auto maybe_string2int = [](auto& a){ return std::optional{std::stoi(a)}; };
+auto maybe_int2string = [](auto& a){ return std::optional{std::to_string(a)}; };
+std::optional<std::string> some_zero_as_string{"0"};
+std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string >> maybe_string2int >> maybe_int2string; // contains "0"
+```
+
 ## Build
 
 The _Makefile_ wraps the commands to download dependencies (Conan), generate the build configuration, build, run the
