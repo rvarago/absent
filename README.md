@@ -15,9 +15,10 @@ common pattern in C++ would then be:
 ```
 auto const maybe_person = find_person();
 if (maybe_person) {
-    auto const maybe_address = (*maybe_person).address();
+    auto const maybe_address = find_address(*maybe_person);
     if (maybe_address) {
-        auto const zip_code = (*maybe_adress).zip_code();
+        auto const maybe_zip_code = zip_code(*maybe_address);
+        // And so on...
     }
 }
 ```
@@ -29,10 +30,10 @@ Now, compare it against the code without employing nullable types whatsoever, an
 fail:
 
 ```
-auto const zip_code = find_person().address().zip_code();
+auto const zip_code = zip_code(find_address(find_person()));
 ```
 
-So much simper, isn't it?
+A little simper, isn't it?
 
 The problem here is that the introduction of nullable type breaks our ability to compose the code by chaining
 elementary operations. We have to find a way to combine the type safety of nullable types together with the
@@ -54,6 +55,23 @@ that you're using, as long as it adheres to concept of nullable type expected by
 * It has to support the de-reference operation to extract the contained value.
 
 One example of nullable type that models this concept would then be: _std::optional_.
+
+#### Rewriting the person/address/zip_code example using absent
+
+Using the postfix notation, we can rewrite the above example using _absent_ as:
+
+```
+auto const maybe_zip_code =  fmap(bind(find_person(), find_address), zip_code);
+````
+
+Or using the infix notation based on overloaded symbols:
+```
+auto const maybe_zip_code =  find_person() >> find_address & zip_code;
+````
+
+Almost as simple as the version without using nullables at all, but with the type safety brought by nullable types.
+
+To understand the above snippet, here it follows a brief explanation of the combinators _fmap_ and _bind_.
 
 #### fmap
 
