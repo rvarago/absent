@@ -16,7 +16,7 @@ namespace rvarago::absent {
      * @return a new nullable containing the mapped value of type B, possibly empty if input is also empty.
      */
     template <typename A, template <typename> typename Nullable, typename Mapper>
-    constexpr auto fmap(Nullable<A> input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
+    constexpr auto fmap(Nullable<A> const& input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
         if (!input) {
             return {};
         }
@@ -28,7 +28,7 @@ namespace rvarago::absent {
      * Infix version of fmap.
      */
     template <typename A, template <typename> typename Nullable, typename Mapper>
-    constexpr auto operator&(Nullable<A> input, Mapper fn) -> decltype(fmap(input, fn)) {
+    constexpr auto operator&(Nullable<A> const& input, Mapper fn) -> decltype(fmap(input, fn)) {
         return fmap(input, fn);
     }
 
