@@ -1,7 +1,7 @@
 #ifndef RVARAGO_ABSENT_FMAP_H
 #define RVARAGO_ABSENT_FMAP_H
 
-#include "details.h"
+#include "member.h"
 
 #include <functional>
 #include <utility>
@@ -30,7 +30,7 @@ namespace rvarago::absent {
      * The same as fmap but for a member function that has to be const and parameterless.
      */
     template <typename A, typename B, template <typename> typename Nullable>
-    constexpr auto fmap(Nullable<A> const& input, details::MapperMember<const A, B> fn) -> Nullable<B> {
+    constexpr auto fmap(Nullable<A> const& input, member::Mapper<const A, B> fn) -> Nullable<B> {
         return fmap(input, [&fn](auto const& input_value){ return std::invoke(fn, input_value); });
     }
 
@@ -46,7 +46,7 @@ namespace rvarago::absent {
      * Infix version of fmap for a member function.
      */
     template <typename A, typename B, template <typename> typename Nullable>
-    constexpr auto operator&(Nullable<A> const& input, details::MapperMember<const A, B> fn) -> Nullable<B> {
+    constexpr auto operator&(Nullable<A> const& input, member::Mapper<const A, B> fn) -> Nullable<B> {
         return fmap(input, fn);
     }
 
