@@ -71,7 +71,14 @@ auto const maybe_zip_code =  find_person() >> find_address & zip_code;
 
 Almost as simple as the version without using nullables at all, but with the type safety brought by nullable types.
 
-To understand the above snippet, here it follows a brief explanation of the combinators _fmap_ and _bind_.
+In case _find_address_ and _zip_code_ are member functions, it's possible to wrap them inside lambdas and use _fmap_
+and _bind_. However, overloads are provided to simplify the caller code. Using the infix notation, we can do:
+
+```
+auto const maybe_zip_code =  find_person() >> &person::find_address & &address::zip_code;
+````
+
+To understand the above snippets, here it follows a brief explanation of the combinators _fmap_ and _bind_.
 
 #### fmap
 
