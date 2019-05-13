@@ -1,6 +1,5 @@
 #include <absent/bind.h>
 
-#include <memory>
 #include <optional>
 #include <string>
 
