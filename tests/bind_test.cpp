@@ -45,3 +45,15 @@ TEST(bind, given_AnOptional_when_NotEmptyAndThenEmpty_should_ReturnAnEmptyOption
 
     EXPECT_FALSE(some_zero_as_string >> maybe_string_to_int >> to_empty_of_string);
 }
+
+TEST(bind, given_AnOptionalAndAMemberFunction_when_Mapping_should_ReturnTheMappedValueWrappedInAnFlattenOptional) {
+    struct person {
+        std::optional<int> id() const{ return 1;}
+        std::optional<int> id_empty() const{ return std::optional<int>{};}
+    };
+
+    EXPECT_EQ(std::optional{1}, std::optional{person{}} >> &person::id);
+    EXPECT_FALSE(std::optional<person>{} >> &person::id);
+    EXPECT_FALSE(std::optional{person{}} >> &person::id_empty);
+    EXPECT_FALSE(std::optional<person>{} >> &person::id_empty);
+}

@@ -1,4 +1,6 @@
 #include <absent/absent.h>
+
+#include <utility>
 #include <gtest/gtest.h>
 
 using namespace rvarago::absent;
@@ -29,6 +31,25 @@ TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCode_when_anyIsEmp
     EXPECT_FALSE(find_person() >> find_address_empty & zip_code);
     EXPECT_FALSE(find_person_empty() >> find_address & zip_code);
     EXPECT_FALSE(find_person_empty() >> find_address_empty & zip_code);
+}
+
+TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCodeAsMemberFunction_when_allAreNotEmpty_shouldReturnTheZipCode) {
+    struct address{
+        std::string zip_code() const {return "123";}
+    };
+
+    struct person{
+        std::optional<address> find_address() const {return address{};}
+        std::optional<address> find_address_empty() const {return std::optional<address>{};}
+    };
+
+    auto const find_person = []{return std::optional{person{}};};
+    auto const find_person_empty = []{return std::optional<person>{};};
+
+    EXPECT_EQ(std::optional{"123"}, find_person() >> &person::find_address & &address::zip_code);
+    EXPECT_FALSE(find_person() >> &person::find_address_empty & &address::zip_code);
+    EXPECT_FALSE(find_person_empty() >> &person::find_address & &address::zip_code);
+    EXPECT_FALSE(find_person_empty() >> &person::find_address_empty & &address::zip_code);
 }
 
 int main(int argc, char **argv) {

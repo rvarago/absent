@@ -36,3 +36,11 @@ TEST(fmap, given_AnOptional_when_NotEmptyAndMappedToANewType_should_ReturnNewOpt
     EXPECT_EQ(std::optional(0), some_zero_as_string & string_to_int);
     EXPECT_EQ(std::optional("0"), some_zero_as_string & string_to_int & int_to_string);
 }
+
+TEST(fmap, given_AnOptionalAndAMemberFunction_when_Mapping_should_ReturnTheMappedValueWrappedInAnOptional) {
+    struct person {
+        int id() const{ return 1;}
+    };
+    EXPECT_EQ(std::optional(1), std::optional{person{}} & &person::id);
+    EXPECT_FALSE(std::optional<person>{} & &person::id);
+}

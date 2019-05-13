@@ -71,7 +71,14 @@ auto const maybe_zip_code =  find_person() >> find_address & zip_code;
 
 Almost as simple as the version without using nullables at all, but with the type safety brought by nullable types.
 
-To understand the above snippet, here it follows a brief explanation of the combinators _fmap_ and _bind_.
+In case _find_address_ and _zip_code_ are member functions, it's possible to wrap them inside lambdas and use _fmap_
+and _bind_. However, overloads are provided to simplify the caller code. Using the infix notation, we can do:
+
+```
+auto const maybe_zip_code =  find_person() >> &person::find_address & &address::zip_code;
+````
+
+To understand the above snippets, here it follows a brief explanation of the combinators _fmap_ and _bind_.
 
 #### fmap
 
@@ -102,6 +109,22 @@ std::optional<std::string> some_zero_as_string{"0"};
 std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
 ```
 
+There's an overload for _fmap_ that accepts a member function that has to be **const** and **parameterless** getter function.
+So you can do this:
+
+```
+struct person {
+    int id() const{ return 1; }
+};
+auto const maybe_id = std::optional{person{}} & &person::id; // contains 1
+```
+
+Which calls _id()_ if the std::optional contains a _person_ and wraps it inside a new _std::optional_. Otherwise, in
+case the _std::optional_ does not contain a _person_ it simply returns an empty _std::optional_.
+
+It's also possible to use the non-member overload for _fmap_, but at the call site the user has to wrap the member
+function inside a lambda, which adds a little bit of noise in the caller code.
+
 #### bind
 
 Another useful combinator is _bind_ which allows to compose functions which by themselves also return values wrapped in
@@ -131,6 +154,22 @@ auto maybe_int2string = [](auto& a){ return std::optional{std::to_string(a)}; };
 std::optional<std::string> some_zero_as_string{"0"};
 std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string >> maybe_string2int >> maybe_int2string; // contains "0"
 ```
+
+Similar to _fmap_, there's an overload for _bind_ that accepts a member function that has to be **const** and
+**parameterless** getter function. So you can do this:
+
+```
+struct person {
+     std::optional<int> id() const{ return 1; }
+};
+auto const maybe_id = std::optional{person{}} >> &person::id;
+```
+
+Which calls _id()_ if the std::optional contains a _person_ already wrapped in an _std::optional_. Otherwise, in
+case the _std::optional_ does not contain a _person_ it simply returns an empty _std::optional_.
+
+It's also possible to use the non-member overload for _bind_, but at the call site the user has to wrap the member
+function inside a lambda, which adds a little bit of noise in the caller code.
 
 ## Build
 
