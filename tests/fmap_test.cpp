@@ -1,6 +1,5 @@
 #include <absent/fmap.h>
 
-#include <memory>
 #include <optional>
 #include <string>
 
