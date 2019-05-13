@@ -54,6 +54,8 @@ that you're using, as long as it adheres to concept of nullable type expected by
 * It has to be convertible to bool in order to check the absence of a value.
 * It has to support the de-reference operation to extract the contained value.
 
+(See ```absent/nullable.h``` for more details.)
+
 One example of nullable type that models this concept would then be: _std::optional_.
 
 #### Rewriting the person/address/zip_code example using absent
