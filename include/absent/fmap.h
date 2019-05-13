@@ -1,9 +1,13 @@
 #ifndef RVARAGO_ABSENT_FMAP_H
 #define RVARAGO_ABSENT_FMAP_H
 
+#include <functional>
 #include <utility>
 
 namespace rvarago::absent {
+
+    template<typename A, typename B>
+    using MapperMember = B (A::*)() const;
 
     /***
      * Given a nullable type N<A> (i.e. optional like object), and an unary function f: A -> B:
@@ -23,12 +27,27 @@ namespace rvarago::absent {
         return fn(*input);
     }
 
+    /***
+     * The same as fmap but for a member function that has to be const and parameterless.
+     */
+    template <typename A, typename B, template <typename> typename Nullable>
+    constexpr auto fmap(Nullable<A> const& input, MapperMember<const A, B> fn) -> Nullable<B> {
+        return fmap(input, [&fn](auto const& input_value){ return std::invoke(fn, input_value); });
+    }
 
     /***
      * Infix version of fmap.
      */
     template <typename A, template <typename> typename Nullable, typename Mapper>
     constexpr auto operator&(Nullable<A> const& input, Mapper fn) -> decltype(fmap(input, fn)) {
+        return fmap(input, fn);
+    }
+
+    /**
+     * Infix version of fmap for a member function.
+     */
+    template <typename A, typename B, template <typename> typename Nullable>
+    constexpr auto operator&(Nullable<A> const& input, MapperMember<const A, B> fn) -> Nullable<B> {
         return fmap(input, fn);
     }
 

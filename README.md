@@ -102,6 +102,22 @@ std::optional<std::string> some_zero_as_string{"0"};
 std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
 ```
 
+There's an overload for _fmap_ that accepts a member function that has to be **const** and **parameterless** getter function.
+So you can do this:
+
+```
+struct person {
+    int id() const{ return 1; }
+};
+auto const maybe_id = std::optional{person{}} & &person::id; // contains 1
+```
+
+Which calls _id()_ if the std::optional contains a _person_ and wraps it inside a new _std::optional_. Otherwise, in
+case the _std::optional_ does not contain a _person_ it simply returns an empty _std::optional_.
+
+It's also possible to use the non-member overload for _fmap_, but at the call site the user has to wrap the member
+function inside a lambda, which adds a little bit of noise in the caller code.
+
 #### bind
 
 Another useful combinator is _bind_ which allows to compose functions which by themselves also return values wrapped in
