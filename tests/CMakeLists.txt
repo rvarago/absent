@@ -6,6 +6,7 @@ add_executable(${PROJECT_NAME}
         absent_tests.cpp
         bind_test.cpp
         fmap_test.cpp
+        foreach_test.cpp
 )
 
 target_compile_features(${PROJECT_NAME}
