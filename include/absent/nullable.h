@@ -5,7 +5,7 @@ namespace rvarago::absent::nullable {
 
     template <typename Nullable>
     constexpr auto empty(Nullable const& nullable) -> bool {
-        return static_cast<bool>(nullable);
+        return !nullable;
     }
 
     template <typename A, template <typename> typename Nullable>

@@ -173,6 +173,22 @@ case the _std::optional_ does not contain a _person_ it simply returns an empty 
 It's also possible to use the non-member overload for _bind_, but at the call site the user has to wrap the member
 function inside a lambda, which adds a little bit of noise in the caller code.
 
+#### foreach
+
+Another combinator, besides it might not be so useful as _fmap_ and _bind_, is _foreach_ which allows to run a function,
+a side-effect, that does not return any value, so only executes an action with the wrapped value as a parameter. 
+
+Given a nullable _N[A]_ and a function _f: A -> void_, _foreach_ executes _f_  providing _A_ from _N[A]_ as parameter.
+If _N[A]_ is empty, _foreach_ does nothing.
+
+
+One use-case for _foreach_ is where you would like to log the wrapped value, if any. Otherwise, in case of empty
+nullable, you don't want do anything:
+
+```
+foreach(std::optional{person{}}, log_person);
+```
+
 ## Build
 
 The _Makefile_ wraps the commands to download dependencies (Conan), generate the build configuration, build, run the
