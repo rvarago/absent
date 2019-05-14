@@ -61,7 +61,7 @@ Mainly:
 * It has to be convertible to bool in order to check the absence of a value.
 * It has to support the de-reference operation to extract the contained value.
 
-(See ```absent/nullable.h``` for more details.)
+(See ```absent/syntax/nullable.h``` for more details.)
 
 One example of a nullable type that models this concept would then be: _std::optional_, which, by the way, is going to
 have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
