@@ -70,6 +70,16 @@ Meanwhile, _absent_ may be used to fill the gap, and even after the introduction
 _std::optional_ it could still be interesting, since it's agnostic regarding the concrete nullable types, also working
 for types other than _std::optional_ as long as they adhere to the expected concept of a nullable type used by _absent_.
 
+#### Getting started
+
+_absent_ is packaged as a header-only library and, once installed, to get started with it you simply have to include the
+main header _absent/absent.h_, which includes all the combinators. Or you can include each combinator as you need them,
+example _absent/combinators/fmap.h_.
+
+You can find all the combinators inside the namespace _rvarago::absent_.
+
+Since the qualified names may be too verbose, an alias might be helpful.
+
 #### Rewriting the person/address/zip_code example using absent
 
 Using the postfix notation, we can rewrite the above example using _absent_ as:
