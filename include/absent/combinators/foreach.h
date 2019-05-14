@@ -1,7 +1,7 @@
 #ifndef RVARAGO_ABSENT_FOREACH_H
 #define RVARAGO_ABSENT_FOREACH_H
 
-#include "absent/nullable.h"
+#include "absent/syntax/nullable.h"
 
 namespace rvarago::absent {
 
@@ -15,8 +15,8 @@ namespace rvarago::absent {
      */
     template <typename A, template <typename> typename Nullable, typename Effect>
     constexpr auto foreach(Nullable<A> const& input, Effect fn) -> void {
-        if (!nullable::empty(input)) {
-            fn(nullable::value(input));
+        if (!syntax::nullable::empty(input)) {
+            fn(syntax::nullable::value(input));
         }
     }
 

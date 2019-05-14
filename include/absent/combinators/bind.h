@@ -2,7 +2,7 @@
 #define RVARAGO_ABSENT_BIND_H
 
 #include "absent/member.h"
-#include "absent/nullable.h"
+#include "absent/syntax/nullable.h"
 
 #include <functional>
 #include <utility>
@@ -21,10 +21,10 @@ namespace rvarago::absent {
      */
     template <typename A, template <typename> typename Nullable, typename Mapper>
     constexpr auto bind(Nullable<A> const& input, Mapper fn) -> decltype(fn(std::declval<A>())) {
-        if (nullable::empty(input)) {
+        if (syntax::nullable::empty(input)) {
             return {};
         }
-        return fn(nullable::value(input));
+        return fn(syntax::nullable::value(input));
     }
 
     /***

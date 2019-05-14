@@ -1,7 +1,7 @@
 #ifndef RVARAGO_ABSENT_NULLABLE_H
 #define RVARAGO_ABSENT_NULLABLE_H
 
-namespace rvarago::absent::nullable {
+namespace rvarago::absent::syntax::nullable {
 
     template <typename Nullable>
     constexpr auto empty(Nullable const& nullable) -> bool {
