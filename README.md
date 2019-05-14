@@ -133,7 +133,9 @@ To simplify the act of chaining multiple operations, an infix notation of _fmap_
 auto const string2int = [](auto const& a){ return std::stoi(a); };
 auto const int2string = [](auto const& a){ return std::to_string(a); };
 std::optional<std::string> const some_zero_as_string{"0"};
-std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string | string2int | int2string; // contains "0"
+std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string
+                                                                    | string2int
+                                                                    | int2string; // contains "0"
 ```
 
 There's an overload for _fmap_ that accepts a member function that has to be **const** and **parameterless** getter function.
@@ -179,7 +181,9 @@ To simplify the act of chaining multiple operations, an infix notation of _bind_
 auto const maybe_string2int = [](auto const& a){ return std::optional{std::stoi(a)}; };
 auto const maybe_int2string = [](auto const& a){ return std::optional{std::to_string(a)}; };
 std::optional<std::string> const some_zero_as_string{"0"};
-std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string >> maybe_string2int >> maybe_int2string; // contains "0"
+std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string
+                                                                    >> maybe_string2int
+                                                                    >> maybe_int2string; // contains "0"
 ```
 
 Similar to _fmap_, there's an overload for _bind_ that accepts a member function that has to be **const** and
