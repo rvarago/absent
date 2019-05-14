@@ -75,12 +75,12 @@ for types other than _std::optional_ as long as they adhere to the expected conc
 Using the postfix notation, we can rewrite the above example using _absent_ as:
 
 ```
-auto const maybe_zip_code =  fmap(bind(find_person(), find_address), zip_code);
+auto const maybe_zip_code = fmap(bind(find_person(), find_address), zip_code);
 ````
 
 Or using the infix notation based on overloaded symbols:
 ```
-auto const maybe_zip_code =  find_person() >> find_address & zip_code;
+auto const maybe_zip_code = find_person() >> find_address & zip_code;
 ````
 
 Almost as simple as the version without using nullable types at all, but with the type-safety brought by them.
@@ -90,6 +90,9 @@ and _bind_. However, overloads are provided to simplify the caller code. Using t
 
 ```
 auto const maybe_zip_code =  find_person() >> &person::find_address & &address::zip_code;
+if (maybe_zip_code) {
+    // You just have to check at the end before making the "final" use of the composition chain
+}
 ````
 
 To understand the above snippets, here it follows a brief explanation of the combinators _fmap_ and _bind_.
@@ -107,20 +110,20 @@ Furthermore, if the input nullable is empty, _fmap_ does nothing, and simply ret
 Example:
 
 ```
-auto int_to_string = [](auto& a){ return std::to_string(a); };
-std::optional<int> one{1};
-std::optional<std::string> one_as_string = fmap(one, int_to_string); // contains "1"
-std::optional<int> empty{};
-std::optional<std::string> empty_as_string = fmap(empty, int_to_string); // contains nothing
+auto int_to_string = [](auto const& a){ return std::to_string(a); };
+std::optional<int> const one{1};
+std::optional<std::string> const one_as_string = fmap(one, int_to_string); // contains "1"
+std::optional<int> const empty{};
+std::optional<std::string> const empty_as_string = fmap(empty, int_to_string); // contains nothing
 ```
 
 To simplify the act of chaining multiple operations, an infix notation of _fmap_ is provided via overloading _operator&_:
 
 ```
-auto string2int = [](auto& a){ return std::stoi(a); };
-auto int2string = [](auto& a){ return std::to_string(a); };
-std::optional<std::string> some_zero_as_string{"0"};
-std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
+auto const string2int = [](auto const& a){ return std::stoi(a); };
+auto const int2string = [](auto const& a){ return std::to_string(a); };
+std::optional<std::string> const some_zero_as_string{"0"};
+std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
 ```
 
 There's an overload for _fmap_ that accepts a member function that has to be **const** and **parameterless** getter function.
@@ -153,20 +156,20 @@ another function that might also fail, and so and so forth. That's a good use ca
 Example:
 
 ```
-auto maybe_int_to_string = [](auto& a){ return std::optional{std::to_string(a)}; };
-std::optional<int> one{1};
-std::optional<std::string> one_as_string = bind(one, maybe_int_to_string); // contains "1"
-std::optional<int> empty{};
-std::optional<std::string> empty_as_string = bind(empty, maybe_int_to_string); // contains nothing
+auto const maybe_int_to_string = [](auto const& a){ return std::optional{std::to_string(a)}; };
+std::optional<int> const one{1};
+std::optional<std::string> const one_as_string = bind(one, maybe_int_to_string); // contains "1"
+std::optional<int> const empty{};
+std::optional<std::string> const empty_as_string = bind(empty, maybe_int_to_string); // contains nothing
 ```
 
 To simplify the act of chaining multiple operations, an infix notation of _bind_ is provided via overloading _operator>>_:
 
 ```
-auto maybe_string2int = [](auto& a){ return std::optional{std::stoi(a)}; };
-auto maybe_int2string = [](auto& a){ return std::optional{std::to_string(a)}; };
-std::optional<std::string> some_zero_as_string{"0"};
-std::optional<std::string> mapped_some_of_zero_as_string = some_zero_as_string >> maybe_string2int >> maybe_int2string; // contains "0"
+auto const maybe_string2int = [](auto const& a){ return std::optional{std::stoi(a)}; };
+auto const maybe_int2string = [](auto const& a){ return std::optional{std::to_string(a)}; };
+std::optional<std::string> const some_zero_as_string{"0"};
+std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string >> maybe_string2int >> maybe_int2string; // contains "0"
 ```
 
 Similar to _fmap_, there's an overload for _bind_ that accepts a member function that has to be **const** and
