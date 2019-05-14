@@ -35,7 +35,7 @@ fail:
 auto const zip_code = zip_code(find_address(find_person()));
 ```
 
-A little simpler, isn't it?
+Which is simpler to read and therefore understand.
 
 The problem here is that the introduction of nullable types breaks our ability to compose the code by chaining
 elementary operations. We have to find a way to combine the type-safety of nullable types together with the
