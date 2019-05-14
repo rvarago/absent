@@ -1,4 +1,4 @@
-#include <absent/foreach.h>
+#include <absent/combinators/foreach.h>
 
 #include <optional>
 #include <string>

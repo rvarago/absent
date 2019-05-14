@@ -1,4 +1,4 @@
-#include <absent/bind.h>
+#include <absent/combinators/bind.h>
 
 #include <optional>
 #include <string>
