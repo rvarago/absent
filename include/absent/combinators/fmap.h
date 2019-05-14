@@ -1,8 +1,8 @@
 #ifndef RVARAGO_ABSENT_FMAP_H
 #define RVARAGO_ABSENT_FMAP_H
 
-#include "member.h"
-#include "nullable.h"
+#include "absent/member.h"
+#include "absent/nullable.h"
 
 #include <functional>
 #include <utility>
