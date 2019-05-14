@@ -17,8 +17,8 @@ auto const maybe_person = find_person();
 if (maybe_person) {
     auto const maybe_address = find_address(*maybe_person);
     if (maybe_address) {
-        auto const maybe_zip_code = zip_code(*maybe_address);
-        // And so on...
+        auto const zip_code = zip_code(*maybe_address);
+        // You have to check many times against empty. Moreover, you have to do it in the middle of your logic
     }
 }
 ```
@@ -89,9 +89,9 @@ In case _find_address_ and _zip_code_ are member functions, it's possible to wra
 and _bind_. However, overloads are provided to simplify the caller code. Using the infix notation, we can do:
 
 ```
-auto const maybe_zip_code =  find_person() >> &person::find_address & &address::zip_code;
+auto const maybe_zip_code = find_person() >> &person::find_address & &address::zip_code;
 if (maybe_zip_code) {
-    // You just have to check at the end before making the "final" use of the composition chain
+    // You just have to check at the end before making the "final" use of the outcome yielded by the composition chain
 }
 ````
 
