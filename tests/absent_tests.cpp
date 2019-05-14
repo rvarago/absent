@@ -13,7 +13,7 @@ TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCode_when_allAreNo
     auto const find_address = [](auto const&){return std::optional{address{}};};
     auto const zip_code = [](auto const&){return "123";};
 
-    EXPECT_EQ(std::optional{"123"}, find_person() >> find_address & zip_code);
+    EXPECT_EQ(std::optional{"123"}, find_person() >> find_address | zip_code);
 }
 
 TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCode_when_anyIsEmpty_shouldReturnAnEmptyZipCode) {
@@ -28,9 +28,9 @@ TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCode_when_anyIsEmp
 
     auto const zip_code = [](auto const&){return "123";};
 
-    EXPECT_FALSE(find_person() >> find_address_empty & zip_code);
-    EXPECT_FALSE(find_person_empty() >> find_address & zip_code);
-    EXPECT_FALSE(find_person_empty() >> find_address_empty & zip_code);
+    EXPECT_FALSE(find_person() >> find_address_empty | zip_code);
+    EXPECT_FALSE(find_person_empty() >> find_address | zip_code);
+    EXPECT_FALSE(find_person_empty() >> find_address_empty | zip_code);
 }
 
 TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCodeAsMemberFunction_when_allAreNotEmpty_shouldReturnTheZipCode) {
@@ -46,10 +46,10 @@ TEST(combine_bind_fmap, given_anHierarchyOfPersonAddressAndZipCodeAsMemberFuncti
     auto const find_person = []{return std::optional{person{}};};
     auto const find_person_empty = []{return std::optional<person>{};};
 
-    EXPECT_EQ(std::optional{"123"}, find_person() >> &person::find_address & &address::zip_code);
-    EXPECT_FALSE(find_person() >> &person::find_address_empty & &address::zip_code);
-    EXPECT_FALSE(find_person_empty() >> &person::find_address & &address::zip_code);
-    EXPECT_FALSE(find_person_empty() >> &person::find_address_empty & &address::zip_code);
+    EXPECT_EQ(std::optional{"123"}, find_person() >> &person::find_address | &address::zip_code);
+    EXPECT_FALSE(find_person() >> &person::find_address_empty | &address::zip_code);
+    EXPECT_FALSE(find_person_empty() >> &person::find_address | &address::zip_code);
+    EXPECT_FALSE(find_person_empty() >> &person::find_address_empty | &address::zip_code);
 }
 
 int main(int argc, char **argv) {

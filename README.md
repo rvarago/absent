@@ -80,7 +80,7 @@ auto const maybe_zip_code = fmap(bind(find_person(), find_address), zip_code);
 
 Or using the infix notation based on overloaded symbols:
 ```
-auto const maybe_zip_code = find_person() >> find_address & zip_code;
+auto const maybe_zip_code = find_person() >> find_address | zip_code;
 ````
 
 Almost as simple as the version without using nullable types at all, but with the type-safety brought by them.
@@ -89,7 +89,7 @@ In case _find_address_ and _zip_code_ are member functions, it's possible to wra
 and _bind_. However, overloads are provided to simplify the caller code. Using the infix notation, we can do:
 
 ```
-auto const maybe_zip_code = find_person() >> &person::find_address & &address::zip_code;
+auto const maybe_zip_code = find_person() >> &person::find_address | &address::zip_code;
 if (maybe_zip_code) {
     // You just have to check at the end before making the "final" use of the outcome yielded by the composition chain
 }
@@ -117,13 +117,13 @@ std::optional<int> const empty{};
 std::optional<std::string> const empty_as_string = fmap(empty, int_to_string); // contains nothing
 ```
 
-To simplify the act of chaining multiple operations, an infix notation of _fmap_ is provided via overloading _operator&_:
+To simplify the act of chaining multiple operations, an infix notation of _fmap_ is provided via overloading _operator|_:
 
 ```
 auto const string2int = [](auto const& a){ return std::stoi(a); };
 auto const int2string = [](auto const& a){ return std::to_string(a); };
 std::optional<std::string> const some_zero_as_string{"0"};
-std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string & string2int & int2string; // contains "0"
+std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_string | string2int | int2string; // contains "0"
 ```
 
 There's an overload for _fmap_ that accepts a member function that has to be **const** and **parameterless** getter function.
@@ -133,7 +133,7 @@ So you can do this:
 struct person {
     int id() const{ return 1; }
 };
-auto const maybe_id = std::optional{person{}} & &person::id; // contains 1
+auto const maybe_id = std::optional{person{}} | &person::id; // contains 1
 ```
 
 Which calls _id()_ if the std::optional contains a _person_ and wraps it inside a new _std::optional_. Otherwise, in

@@ -12,8 +12,8 @@ TEST(fmap, given_AnOptional_when_Empty_should_ReturnAnEmptyOptional) {
 
     std::optional<int> const empty_optional;
 
-    EXPECT_FALSE(empty_optional & increment);
-    EXPECT_FALSE(empty_optional & increment & increment);
+    EXPECT_FALSE(empty_optional | increment);
+    EXPECT_FALSE(empty_optional | increment | increment);
 }
 
 TEST(fmap, given_AnOptional_when_NotEmpty_should_ReturnNewOptionalWithTheMappedValue) {
@@ -21,9 +21,9 @@ TEST(fmap, given_AnOptional_when_NotEmpty_should_ReturnNewOptionalWithTheMappedV
 
     std::optional<int> const some_zero{0};
 
-    EXPECT_EQ(std::optional(1), some_zero & increment);
-    EXPECT_EQ(std::optional(2), some_zero & increment & increment);
-    EXPECT_EQ(std::optional(3), some_zero & increment & increment & increment);
+    EXPECT_EQ(std::optional(1), some_zero | increment);
+    EXPECT_EQ(std::optional(2), some_zero | increment | increment);
+    EXPECT_EQ(std::optional(3), some_zero | increment | increment | increment);
 }
 
 TEST(fmap, given_AnOptional_when_NotEmptyAndMappedToANewType_should_ReturnNewOptionalWithTheMappedValueOfTheNewType) {
@@ -32,14 +32,14 @@ TEST(fmap, given_AnOptional_when_NotEmptyAndMappedToANewType_should_ReturnNewOpt
 
     std::optional<std::string> const some_zero_as_string{"0"};
 
-    EXPECT_EQ(std::optional(0), some_zero_as_string & string_to_int);
-    EXPECT_EQ(std::optional("0"), some_zero_as_string & string_to_int & int_to_string);
+    EXPECT_EQ(std::optional(0), some_zero_as_string | string_to_int);
+    EXPECT_EQ(std::optional("0"), some_zero_as_string | string_to_int | int_to_string);
 }
 
 TEST(fmap, given_AnOptionalAndAMemberFunction_when_Mapping_should_ReturnTheMappedValueWrappedInAnOptional) {
     struct person {
         int id() const{ return 1;}
     };
-    EXPECT_EQ(std::optional(1), std::optional{person{}} & &person::id);
-    EXPECT_FALSE(std::optional<person>{} & &person::id);
+    EXPECT_EQ(std::optional(1), std::optional{person{}} | &person::id);
+    EXPECT_FALSE(std::optional<person>{} | &person::id);
 }
