@@ -39,7 +39,7 @@ namespace rvarago::absent {
      * Infix version of fmap.
      */
     template <typename A, template <typename> typename Nullable, typename Mapper>
-    constexpr auto operator&(Nullable<A> const& input, Mapper fn) -> decltype(fmap(input, fn)) {
+    constexpr auto operator|(Nullable<A> const& input, Mapper fn) -> decltype(fmap(input, fn)) {
         return fmap(input, fn);
     }
 
@@ -47,7 +47,7 @@ namespace rvarago::absent {
      * Infix version of fmap for a member function.
      */
     template <typename A, typename B, template <typename> typename Nullable>
-    constexpr auto operator&(Nullable<A> const& input, member::Mapper<const A, B> fn) -> Nullable<B> {
+    constexpr auto operator|(Nullable<A> const& input, member::Mapper<const A, B> fn) -> Nullable<B> {
         return fmap(input, fn);
     }
 
