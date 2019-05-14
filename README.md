@@ -97,7 +97,7 @@ if (maybe_zip_code) {
 
 To understand the above snippets, here it follows a brief explanation of the combinators _fmap_ and _bind_.
 
-#### fmap
+#### fmap (|)
 
 One of the most basic and useful operations to allow the composition of nullable types is _fmap_. Which roughly
 speaking turns a nullable type containing a value of type _A_ into a functor.
@@ -142,7 +142,7 @@ case the _std::optional_ does not contain a _person_ it simply returns an empty 
 It's also possible to use the non-member overload for _fmap_, but at the call site the user has to wrap the member
 function inside a lambda, which adds a little bit of noise in the caller code.
 
-#### bind
+#### bind (>>)
 
 Another useful combinator is _bind_ which allows the composition of functions which by themselves also return values
 wrapped in a nullable, **partially** modelling a monad.
