@@ -70,7 +70,7 @@ Meanwhile, _absent_ may be used to fill the gap, and even after the introduction
 _std::optional_ it could still be interesting, since it's agnostic regarding the concrete nullable types, also working
 for types other than _std::optional_ as long as they adhere to the expected concept of a nullable type used by _absent_.
 
-#### Getting started
+### Getting started
 
 _absent_ is packaged as a header-only library and, once installed, to get started with it you simply have to include the
 main header _absent/absent.h_, which includes all the combinators. Or you can include each combinator as you need them,
@@ -80,7 +80,7 @@ You can find all the combinators inside the namespace _rvarago::absent_.
 
 Since the qualified names may be too verbose, an alias might be helpful.
 
-#### Rewriting the person/address/zip_code example using absent
+### Rewriting the person/address/zip_code example using absent
 
 Using the postfix notation, we can rewrite the above example using _absent_ as:
 
@@ -238,13 +238,13 @@ make PROFILE=<path_to_your_profile>
 make test
 ```
 
-* Clear the _build_ folder:
+* To clean the _build_ folder:
 
 ```
 make clean
 ```
 
-## Run tests inside a Docker container
+### Run tests inside a Docker container
 
 Optionally, it's possible to run the tests inside a Docker container by running:
 
