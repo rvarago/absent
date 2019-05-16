@@ -8,8 +8,8 @@ using namespace rvarago::absent;
 namespace {
     template<typename T>
     struct custom_nullable final {
-        custom_nullable() = default;
-        custom_nullable(T val) : value{std::move(val)}, has_value(true) {}
+        explicit custom_nullable() = default;
+        explicit custom_nullable(T val) : value{std::move(val)}, has_value(true) {}
 
         T value;
         bool const has_value{false};
