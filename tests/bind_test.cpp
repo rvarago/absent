@@ -10,10 +10,10 @@ using namespace rvarago::absent;
 TEST(bind, given_AnOptional_when_Empty_should_DoNothing) {
     auto const maybe_increment = [](auto const& a){ return std::optional{a + 1}; };
 
-    std::optional<int> const empty_optional;
+    std::optional<int> const none;
 
-    EXPECT_FALSE(empty_optional >> maybe_increment);
-    EXPECT_FALSE(empty_optional >> maybe_increment >> maybe_increment);
+    EXPECT_FALSE(none >> maybe_increment);
+    EXPECT_FALSE(none >> maybe_increment >> maybe_increment);
 }
 
 TEST(bind, given_AnOptional_when_NotEmpty_should_ReturnNewOptionalWithTheMappedValue) {
@@ -38,17 +38,17 @@ TEST(bind, given_AnOptional_when_NotEmptyAndMappedToANewType_should_ReturnNewOpt
 
 TEST(bind, given_AnOptional_when_NotEmptyAndThenEmpty_should_ReturnAnEmptyOptional) {
     auto const maybe_string_to_int = [](auto const& a){ return std::optional{std::stoi(a)}; };
-    auto const to_empty_of_string = [](auto const&){ return std::optional<std::string>{}; };
+    auto const to_of_string_empty = [](auto const&) -> std::optional<std::string> { return std::nullopt; };
 
     std::optional<std::string> const some_zero_as_string{"0"};
 
-    EXPECT_FALSE(some_zero_as_string >> maybe_string_to_int >> to_empty_of_string);
+    EXPECT_FALSE(some_zero_as_string >> maybe_string_to_int >> to_of_string_empty);
 }
 
 TEST(bind, given_AnOptionalAndAMemberFunction_when_Mapping_should_ReturnTheMappedValueWrappedInAnFlattenOptional) {
     struct person {
         std::optional<int> id() const{ return 1;}
-        std::optional<int> id_empty() const{ return std::optional<int>{};}
+        std::optional<int> id_empty() const{ return std::nullopt;}
     };
 
     EXPECT_EQ(std::optional{1}, std::optional{person{}} >> &person::id);

@@ -123,8 +123,8 @@ Example:
 auto int_to_string = [](auto const& a){ return std::to_string(a); };
 std::optional<int> const one{1};
 std::optional<std::string> const one_as_string = fmap(one, int_to_string); // contains "1"
-std::optional<int> const empty{};
-std::optional<std::string> const empty_as_string = fmap(empty, int_to_string); // contains nothing
+std::optional<int> const none{};
+std::optional<std::string> const empty_as_string = fmap(none, int_to_string); // contains nothing
 ```
 
 To simplify the act of chaining multiple operations, an infix notation of _fmap_ is provided via overloading _operator|_:
@@ -171,8 +171,8 @@ Example:
 auto const maybe_int_to_string = [](auto const& a){ return std::optional{std::to_string(a)}; };
 std::optional<int> const one{1};
 std::optional<std::string> const one_as_string = bind(one, maybe_int_to_string); // contains "1"
-std::optional<int> const empty{};
-std::optional<std::string> const empty_as_string = bind(empty, maybe_int_to_string); // contains nothing
+std::optional<int> const none{};
+std::optional<std::string> const none_as_string = bind(none, maybe_int_to_string); // contains nothing
 ```
 
 To simplify the act of chaining multiple operations, an infix notation of _bind_ is provided via overloading _operator>>_:

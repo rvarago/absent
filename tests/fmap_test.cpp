@@ -10,10 +10,10 @@ using namespace rvarago::absent;
 TEST(fmap, given_AnOptional_when_Empty_should_ReturnAnEmptyOptional) {
     auto const increment = [](auto const& a){ return a + 1; };
 
-    std::optional<int> const empty_optional;
+    std::optional<int> const none;
 
-    EXPECT_FALSE(empty_optional | increment);
-    EXPECT_FALSE(empty_optional | increment | increment);
+    EXPECT_FALSE(none | increment);
+    EXPECT_FALSE(none | increment | increment);
 }
 
 TEST(fmap, given_AnOptional_when_NotEmpty_should_ReturnNewOptionalWithTheMappedValue) {
@@ -38,8 +38,9 @@ TEST(fmap, given_AnOptional_when_NotEmptyAndMappedToANewType_should_ReturnNewOpt
 
 TEST(fmap, given_AnOptionalAndAMemberFunction_when_Mapping_should_ReturnTheMappedValueWrappedInAnOptional) {
     struct person {
-        int id() const{ return 1;}
+        int id() const{ return 1; }
     };
+
     EXPECT_EQ(std::optional(1), std::optional{person{}} | &person::id);
     EXPECT_FALSE(std::optional<person>{} | &person::id);
 }
