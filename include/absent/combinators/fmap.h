@@ -21,10 +21,10 @@ namespace rvarago::absent {
      */
     template <typename A, template <typename> typename Nullable, typename Mapper>
     constexpr auto fmap(Nullable<A> const& input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
-        if (syntax::nullable::empty(input)) {
+        if (syntax::nullable::empty<A, Nullable>::_(input)) {
             return {};
         }
-        return fn(syntax::nullable::value(input));
+        return fn(syntax::nullable::value<A, Nullable>::_(input));
     }
 
     /***
