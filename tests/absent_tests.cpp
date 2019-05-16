@@ -1,6 +1,8 @@
 #include <absent/absent.h>
 
+#include <optional>
 #include <utility>
+
 #include <gtest/gtest.h>
 
 using namespace rvarago::absent;
