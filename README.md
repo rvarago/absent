@@ -58,10 +58,16 @@ as long as it adheres to the concept of a nullable type expected by _absent_.
 
 Mainly:
 
+* It has to have a type parameter.
+* It has to be default constructible in order to express an empty state.
+
+And to work out of the box, it has to have the following properties:
+
 * It has to be convertible to bool in order to check the absence of a value.
 * It has to support the de-reference operation to extract the contained value.
 
-(See ```absent/syntax/nullable.h``` for more details.)
+However, these last two requirements can be adapted by providing template specializations.
+See ```absent/syntax/nullable.h``` for more details, and ```test/customnullable_test.cpp``` for an example.
 
 One example of a nullable type that models this concept would then be: _std::optional_, which, by the way, is going to
 have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.

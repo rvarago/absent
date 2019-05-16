@@ -5,6 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 add_executable(${PROJECT_NAME}
         absent_tests.cpp
         bind_test.cpp
+        customnullable_test.cpp
         fmap_test.cpp
         foreach_test.cpp
 )
