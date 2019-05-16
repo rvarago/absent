@@ -15,8 +15,8 @@ namespace rvarago::absent {
      */
     template <typename A, template <typename> typename Nullable, typename Effect>
     constexpr auto foreach(Nullable<A> const& input, Effect fn) -> void {
-        if (!syntax::nullable::empty(input)) {
-            fn(syntax::nullable::value(input));
+        if (!syntax::nullable::empty<A, Nullable>::_(input)) {
+            fn(syntax::nullable::value<A, Nullable>::_(input));
         }
     }
 
