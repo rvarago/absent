@@ -1,4 +1,4 @@
-project(absent_tests)
+project(absent_tests LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 
@@ -15,10 +15,15 @@ target_compile_features(${PROJECT_NAME}
             cxx_std_17
 )
 
-if (NOT MSVC)
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU|Clang")
     target_compile_options(${PROJECT_NAME}
             PRIVATE
                 -Wall -Wextra -Werror -ansi -pedantic
+    )
+else()
+    target_compile_options(${PROJECT_NAME}
+            PRIVATE
+                /Wall /W4
     )
 endif()
 
