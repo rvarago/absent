@@ -1,4 +1,4 @@
-project(absent_tests)
+project(absent_tests LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 
