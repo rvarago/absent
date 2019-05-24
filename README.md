@@ -260,14 +260,22 @@ unit tests, and clear the build folder.
 make
 ```
 
-It assumes that the default profile (*profiles/common*) applies to your build, if not, then you can specify your
-profile by appending _PROFILE_ as:
+By default, it also builds the unit tests, you can disable the behavior by:
+
+```
+make BUILD_TESTING=false
+```
+
+
+The build always assumes that the default profile (*profiles/common*) applies to your build. If that's not, then you
+can specify your profile by setting _PROFILE_ as:
  
 ```
 make PROFILE=<path_to_your_profile>
 ```
 
-* Run the unit tests:
+
+* To run the unit tests:
 
 ```
 make test
@@ -279,9 +287,9 @@ make test
 make clean
 ```
 
-### Run tests inside a Docker container
+### Run unit tests inside a Docker container
 
-Optionally, it's possible to run the tests inside a Docker container by running:
+Optionally, it's also possible to run the unit tests inside a Docker container by executing:
 
 ```
 make env-test

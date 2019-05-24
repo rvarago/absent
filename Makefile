@@ -1,5 +1,6 @@
 PROJECT_NAME=absent
 PROFILE=../profiles/common
+BUILD_TESTING=true
 
 .PHONY: all test compile gen dep mk clean env env-test
 
@@ -18,7 +19,7 @@ compile: gen
 	cd build && cmake --build .
 
 gen: dep
-	cd build && cmake ..
+	cd build && cmake -D BUILD_TESTING=${BUILD_TESTING} ..
 
 dep: mk
 	cd build && conan install .. --build=missing -pr ${PROFILE}
