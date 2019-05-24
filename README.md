@@ -274,7 +274,6 @@ can specify your profile by setting _PROFILE_ as:
 make PROFILE=<path_to_your_profile>
 ```
 
-
 * To run the unit tests:
 
 ```
@@ -293,4 +292,22 @@ Optionally, it's also possible to run the unit tests inside a Docker container b
 
 ```
 make env-test
+```
+
+## Installation
+
+To install the _absent_:
+
+```
+sudo make install
+```
+
+This will install it into _${CMAKE_INSTALL_PREFIX}/include/absent_. And it also make it available from the local CMake
+package repository.
+
+Then, it's possible to import _absent_ into some target _myExample_ by simply adding the following to its _CMakeLists.txt_:
+
+```
+find_package(absent REQUIRED)
+target_link_libraries(myExample rvarago::absent)
 ```
