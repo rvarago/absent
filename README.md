@@ -1,6 +1,6 @@
 # absent
 
-A simple library to compose nullable types in a declarative style for the modern C++ programmer
+A simple library to compose nullable types in a declarative style for the modern C++ programmer.
 
 [![Build Status](https://travis-ci.org/rvarago/absent.svg?branch=master)](https://travis-ci.org/rvarago/absent)
 
@@ -91,7 +91,7 @@ Since the qualified names may be too verbose, an alias might be helpful.
 
 ### Rewriting the person/address/zip_code example using absent
 
-Using the postfix notation, we can rewrite the above example using _absent_ as:
+Using a prefix notation, we can rewrite the above example using _absent_ as:
 
 ```
 auto const maybe_zip_code = fmap(bind(find_person(), find_address), zip_code);
