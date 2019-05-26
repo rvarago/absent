@@ -83,7 +83,7 @@ regarding the concrete nullable types, also working for optional-like types othe
 
 _absent_ is packaged as a header-only library and, once installed, to get started with it you simply have to include the
 main header _absent/absent.h_, which includes all the combinators. Or you can include each combinator as you need them,
-for example _absent/combinators/fmap.h_.
+for example, _absent/combinators/fmap.h_.
 
 You can find all the combinators inside the namespace _rvarago::absent_.
 
@@ -172,7 +172,7 @@ auto const maybe_id = std::optional{person{}} | &person::id; // contains 1
 Which calls _id()_ if the std::optional contains a _person_ and wraps it inside a new _std::optional_. Otherwise, in
 case the _std::optional_ does not contain a _person_ it simply returns an empty _std::optional_.
 
-It's also possible to use the non-member overload for _fmap_, but at the call site the user has to wrap the member
+It's also possible to use the non-member overload for _fmap_, but at the call site, the user has to wrap the member
 function inside a lambda, which adds a little bit of noise to the caller code.
 
 #### bind (>>)
@@ -224,7 +224,7 @@ auto const maybe_id = std::optional{person{}} >> &person::id;
 Which calls _id()_ if the std::optional contains a _person_ already wrapped in an _std::optional_. Otherwise, in
 case the _std::optional_ does not contain a _person_ it simply returns an empty _std::optional_.
 
-It's also possible to use the non-member overload for _bind_, but at the call site the user has to wrap the member
+It's also possible to use the non-member overload for _bind_, but at the call site, the user has to wrap the member
 function inside a lambda, which adds a little bit of noise to the caller code.
 
 #### foreach
@@ -248,6 +248,18 @@ Where _log_ may be:
 ```
 void log(person const&) const;
 ```
+
+## Requirements
+
+* C++17
+* Make
+* CMake
+* Conan
+* Docker
+
+Note that Docker is only required if you want to run the tests inside a container. In that case you just need Make, since
+all the other requirements are shipped inside the docker image. Therefore for quick exploration and collaboration, it might
+be a good idea.
 
 ## Build
 
@@ -296,16 +308,17 @@ make env-test
 
 ## Installation
 
-To install the _absent_:
+To install _absent_:
 
 ```
 sudo make install
 ```
 
-This will install it into _${CMAKE_INSTALL_PREFIX}/include/absent_. And it also make it available from the local CMake
-package repository.
+This will install _absent_ into _${CMAKE_INSTALL_PREFIX}/include/absent_ and make it available into CMake local package
+repository.
 
-Then, it's possible to import _absent_ into some target _myExample_ by simply adding the following to its _CMakeLists.txt_:
+Then, it's possible to import _absent_ into external CMake projects, say in a target _myExample_, by simply adding the
+following commands to its _CMakeLists.txt_:
 
 ```
 find_package(absent REQUIRED)
