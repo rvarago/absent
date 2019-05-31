@@ -306,7 +306,7 @@ Optionally, it's also possible to run the unit tests inside a Docker container b
 make env-test
 ```
 
-## Installation
+## Installing on the system
 
 To install _absent_:
 
@@ -324,3 +324,13 @@ following commands to its _CMakeLists.txt_:
 find_package(absent REQUIRED)
 target_link_libraries(myExample rvarago::absent)
 ```
+
+## Packaging via Conan
+
+To generate a package via Conan:
+
+```
+make conan-package
+```
+
+This will build the package _absent_, run a test package, and then install it in the local Conan cache.
