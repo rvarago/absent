@@ -5,3 +5,4 @@ services:
 
 script:
   - make env-test
+  - make env-conan-package
