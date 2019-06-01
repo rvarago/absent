@@ -334,3 +334,14 @@ make conan-package
 ```
 
 This will build the package _absent_, run a test package, and then install it in the local Conan cache.
+
+
+### Deploying to remote
+
+To deploy the package to a remote repository:
+
+```
+make conan-upload REMOTE=<REMOTE_NAME>
+```
+
+Will deploy the package to the specified remote.
