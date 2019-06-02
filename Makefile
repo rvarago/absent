@@ -9,13 +9,13 @@ PACKAGE_REFERENCE=${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 all: compile
 
 env:
-	docker build -t ${PROJECT_NAME}:0.1 -f Dockerfile .
+	docker build -t ${PROJECT_NAME} .
 
 env-test: env
-	docker run --rm -t ${PROJECT_NAME}:0.1
+	docker run --rm ${PROJECT_NAME}
 
 env-conan-package: env
-	docker run --rm -t ${PROJECT_NAME}:0.1 make conan-package
+	docker run --rm ${PROJECT_NAME} make conan-package
 
 install: compile
 	cd build && cmake --build . --target install
