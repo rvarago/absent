@@ -67,8 +67,8 @@ Mainly:
 
 And to work out of the box, it has to have the following properties:
 
-* It has to be convertible to bool in order to check the absence of a value.
-* It has to support the de-reference operation to extract the contained value.
+* It has to provide a predicate _has_value()_ as member function to check the presence of the contained value.
+* It has to provide a member function _value()_ to extract the contained value.
 
 However, these last two requirements can be adapted by providing template specializations.
 See ```absent/syntax/nullable.h``` for more details, and ```test/customnullable_test.cpp``` for an example.
