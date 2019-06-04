@@ -19,18 +19,18 @@ namespace rvarago::absent {
      * @param fn an unary function A -> B.
      * @return a new nullable containing the mapped value of type B, possibly empty if input is also empty.
      */
-    template <typename A, template <typename> typename Nullable, typename Mapper>
+    template <template <typename> typename Nullable, typename Mapper, typename A>
     constexpr auto fmap(Nullable<A> const& input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
-        if (syntax::nullable::empty<A, Nullable>::_(input)) {
+        if (syntax::nullable::empty<Nullable, A>::_(input)) {
             return Nullable<decltype(fn(std::declval<A>()))>{};
         }
-        return Nullable{fn(syntax::nullable::value<A, Nullable>::_(input))};
+        return Nullable{fn(syntax::nullable::value<Nullable, A>::_(input))};
     }
 
     /***
      * The same as fmap but for a member function that has to be const and parameterless.
      */
-    template <typename A, typename B, template <typename> typename Nullable>
+    template <template <typename> typename Nullable, typename A, typename B>
     constexpr auto fmap(Nullable<A> const& input, syntax::member::Mapper<const A, B> fn) -> Nullable<B> {
         return fmap(input, [&fn](auto const& input_value){ return std::invoke(fn, input_value); });
     }
@@ -38,7 +38,7 @@ namespace rvarago::absent {
     /***
      * Infix version of fmap.
      */
-    template <typename A, template <typename> typename Nullable, typename Mapper>
+    template <template <typename> typename Nullable, typename Mapper, typename A>
     constexpr auto operator|(Nullable<A> const& input, Mapper fn) -> decltype(fmap(input, fn)) {
         return fmap(input, fn);
     }
@@ -46,7 +46,7 @@ namespace rvarago::absent {
     /**
      * Infix version of fmap for a member function.
      */
-    template <typename A, typename B, template <typename> typename Nullable>
+    template <template <typename> typename Nullable, typename A, typename B>
     constexpr auto operator|(Nullable<A> const& input, syntax::member::Mapper<const A, B> fn) -> Nullable<B> {
         return fmap(input, fn);
     }
