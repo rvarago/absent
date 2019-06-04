@@ -3,14 +3,14 @@
 
 namespace rvarago::absent::syntax::nullable {
 
-    template <typename A, template <typename> typename Nullable>
+    template <template <typename> typename Nullable, typename A>
     struct empty final {
         static constexpr auto _(Nullable<A> const& nullable) -> bool {
             return !nullable.has_value();
         }
     };
 
-    template <typename A, template <typename> typename Nullable>
+    template <template <typename> typename Nullable, typename A>
     struct value final {
         static constexpr auto _(Nullable<A> const &nullable) -> A {
             return nullable.value();

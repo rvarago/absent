@@ -24,14 +24,14 @@ namespace {
 namespace rvarago::absent::syntax::nullable {
 
     template <typename A>
-    struct empty<A, custom_nullable> final {
+    struct empty<custom_nullable, A> final {
         static constexpr auto _(custom_nullable<A> const& nullable) -> bool {
             return !nullable.has_value;
         }
     };
 
     template <typename A>
-    struct value<A, custom_nullable> final {
+    struct value<custom_nullable, A> final {
         static constexpr auto _(custom_nullable<A> const &nullable) -> A {
             return nullable.value;
         }
