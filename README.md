@@ -57,7 +57,7 @@ ones that you're using.
 
 Hence, an interesting caveat of _absent_ is that:
 
-> _absent_ is agnostic regarding the concrete implementation of a nullable type that you're using, 
+> Up to some extend, _absent_ is agnostic regarding the concrete implementation of a nullable type that you're using, 
 as long as it adheres to the concept of a nullable type expected by the library.
 
 Mainly:
@@ -70,8 +70,11 @@ And to work out of the box, it has to have the following properties:
 * It has to provide a predicate _has_value()_ as member function to check the presence of the contained value.
 * It has to provide a member function _value()_ to extract the contained value.
 
-However, these last two requirements can be adapted by providing template specializations.
-See ```absent/syntax/nullable.h``` for more details, and ```test/customnullable_test.cpp``` for an example.
+However, these last two requirements can be adapted by providing template specializations. And some adaptors are also
+available, such as for ```boost::optional``` (see ```absent/adaptors/boost_optional.h``` for details).
+
+More details can be found in ```absent/syntax/nullable.h``` and ```test/customnullable_test.cpp``` for an example.
+
 
 One example of a nullable type that models this concept would obviously then be: _std::optional_, which, by the way, is going to
 have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
