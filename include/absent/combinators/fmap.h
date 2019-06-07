@@ -1,8 +1,8 @@
 #ifndef RVARAGO_ABSENT_FMAP_H
 #define RVARAGO_ABSENT_FMAP_H
 
+#include "absent/combinators/bind.h"
 #include "absent/syntax/member.h"
-#include "absent/syntax/nullable.h"
 
 #include <functional>
 #include <utility>
@@ -21,10 +21,7 @@ namespace rvarago::absent {
      */
     template <template <typename> typename Nullable, typename Mapper, typename A>
     constexpr auto fmap(Nullable<A> const& input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
-        if (syntax::nullable::empty<Nullable, A>::_(input)) {
-            return Nullable<decltype(fn(std::declval<A>()))>{};
-        }
-        return Nullable{fn(syntax::nullable::value<Nullable, A>::_(input))};
+        return bind(input, [&fn](auto const& value){ return Nullable<decltype(fn(std::declval<A>()))>{fn(value)}; });
     }
 
     /***
