@@ -1,8 +1,8 @@
-PROJECT_NAME=absent
-PROFILE=../profiles/common
-BUILD_TESTING=true
-PACKAGE_VERSION=0.0.1
-PACKAGE_REFERENCE=${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
+PROJECT_NAME        = absent
+PROFILE             = ../profiles/common
+BUILD_TESTING       = true
+PACKAGE_VERSION     =
+PACKAGE_REFERENCE   = ${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 
 .PHONY: all conan-upload conan-package env-conan-package test install compile gen dep mk clean env env-test
 
@@ -15,16 +15,13 @@ env-test: env
 	docker run --rm ${PROJECT_NAME}
 
 env-conan-package: env
-	docker run --rm ${PROJECT_NAME} make conan-package
+	docker run --rm ${PROJECT_NAME} make conan-package PACKAGE_VERSION=${PACKAGE_VERSION}
 
 install: compile
 	cd build && cmake --build . --target install
 
 conan-package: test
 	conan create . ${PACKAGE_REFERENCE}
-
-conan-upload: conan-package
-	conan upload ${PACKAGE_REFERENCE} --all -r ${REMOTE}
 
 test: compile
 	cd build && ctest .
