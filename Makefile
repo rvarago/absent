@@ -4,7 +4,7 @@ BUILD_TESTING       = true
 PACKAGE_VERSION     =
 PACKAGE_REFERENCE   = ${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 
-.PHONY: all conan-upload conan-package env-conan-package test install compile gen dep mk clean env env-test
+.PHONY: all conan-package env-conan-package test install compile gen dep mk clean env env-test
 
 all: compile
 
