@@ -1,9 +1,14 @@
 #ifndef RVARAGO_ABSENT_FOREACH_H
 #define RVARAGO_ABSENT_FOREACH_H
 
-#include "absent/syntax/nullable.h"
+#include "absent/combinators/bind.h"
 
 namespace rvarago::absent {
+
+    namespace detail {
+        struct empty final{};
+        static auto constexpr unit = empty{};
+    }
 
     /***
      * Given a nullable type N<A> (i.e. optional like object), and an unary function f: A -> void:
@@ -13,13 +18,10 @@ namespace rvarago::absent {
      * @param input any optional like object that can be checked against empty and provide access to its wrapped value.
      * @param fn an unary function A -> void.
      */
-    template <template <typename> typename Nullable, typename Effect, typename A>
-    constexpr auto foreach(Nullable<A> const& input, Effect fn) -> void {
-        if (!syntax::nullable::empty<Nullable, A>::_(input)) {
-            fn(syntax::nullable::value<Nullable, A>::_(input));
-        }
+    template <template <typename, typename...> typename Nullable, typename Effect, typename A, typename... Rest>
+    constexpr auto foreach(Nullable<A, Rest...> input, Effect fn) -> void {
+        bind(input, [&fn](auto value) { fn(std::move(value)); return detail::unit; });
     }
-
 
 }
 

@@ -73,8 +73,7 @@ And to work out of the box, it has to have the following properties:
 However, these last two requirements can be adapted by providing template specializations. And some adaptors are also
 available, such as for ```boost::optional``` (see ```absent/adaptors/boost_optional.h``` for details).
 
-More details can be found in ```absent/syntax/nullable.h``` and ```test/customnullable_test.cpp``` for an example.
-
+More details can be found in ```absent/syntax/nullable.h```.
 
 One example of a nullable type that models this concept would obviously then be: _std::optional_, which, by the way, is going to
 have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
