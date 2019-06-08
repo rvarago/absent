@@ -3,7 +3,7 @@
 
 #include <utility>
 
-namespace rvarago::absent::syntax {
+namespace rvarago::absent::syntax::nullable {
 
     /**
      * This is one of the fundamental building blocks of absent, and combinator are built on top of it.
@@ -16,7 +16,7 @@ namespace rvarago::absent::syntax {
      * @tparam A wrapped type
      */
     template <template <typename, typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
-    struct nullable final {
+    struct binder final {
 
         /***
          * Given a nullable type N<A> (i.e. optional like object), and an unary function f: A -> N<B>:
@@ -33,6 +33,17 @@ namespace rvarago::absent::syntax {
                 return decltype(fn(std::declval<A>())){};
             }
             return fn(std::move(input.value()));
+        }
+
+    };
+
+    template <template <typename, typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
+    struct fmapper final {
+
+        static constexpr auto fmap(Nullable<A, Rest...> input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
+            using Result = Nullable<decltype(fn(std::declval<A>()))>;
+            auto const flat_mapper = [&fn](auto value){ return Result{fn(std::move(value))}; };
+            return binder<Nullable, decltype(flat_mapper), A, Rest...>::bind(std::move(input), flat_mapper);
         }
 
     };
