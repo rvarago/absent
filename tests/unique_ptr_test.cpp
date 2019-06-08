@@ -1,5 +1,5 @@
 #include <absent/absent.h>
-#include <absent/adaptors/unique_ptr.h>
+#include <absent/adapters/unique_ptr.h>
 
 #include <gtest/gtest.h>
 

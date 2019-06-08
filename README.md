@@ -70,7 +70,7 @@ And to work out of the box, it has to have the following properties:
 * It has to provide a predicate _has_value()_ as member function to check the presence of the contained value.
 * It has to provide a member function _value()_ to extract the contained value.
 
-However, these last two requirements can be adapted by providing template specializations. And some adaptors are also
+However, these last two requirements can be adapted by providing template specializations. And some adapters are also
 available, such as for:
 
 * ```boost::optional```.
