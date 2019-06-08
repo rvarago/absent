@@ -10,16 +10,17 @@ namespace rvarago::absent::syntax {
     template <typename Mapper, typename A>
     struct nullable<boost::optional, Mapper, A> final {
 
-        static constexpr auto bind(boost::optional<A> const& input, Mapper fn) -> decltype(fn(std::declval<A>())) {
+        static constexpr auto bind(boost::optional<A> input, Mapper fn) -> decltype(fn(std::declval<A>())) {
             if (!input) {
                 return decltype(fn(std::declval<A>())){};
             }
-            return fn(input.value());
+            return fn(std::move(input.value()));
         }
 
     };
 
 }
+
 #endif
 
 #endif // RVARAGO_ABSENT_BOOST_OPTIONAL_H

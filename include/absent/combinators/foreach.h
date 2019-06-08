@@ -19,8 +19,8 @@ namespace rvarago::absent {
      * @param fn an unary function A -> void.
      */
     template <template <typename> typename Nullable, typename Effect, typename A>
-    constexpr auto foreach(Nullable<A> const& input, Effect fn) -> void {
-        bind(input, [&fn](auto const& value) { fn(value); return detail::unit; });
+    constexpr auto foreach(Nullable<A> input, Effect fn) -> void {
+        bind(input, [&fn](auto value) { fn(std::move(value)); return detail::unit; });
     }
 
 }

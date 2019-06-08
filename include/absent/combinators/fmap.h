@@ -20,32 +20,32 @@ namespace rvarago::absent {
      * @return a new nullable containing the mapped value of type B, possibly empty if input is also empty.
      */
     template <template <typename> typename Nullable, typename Mapper, typename A>
-    constexpr auto fmap(Nullable<A> const& input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
-        return bind(input, [&fn](auto const& value){ return Nullable<decltype(fn(std::declval<A>()))>{fn(value)}; });
+    constexpr auto fmap(Nullable<A> input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
+        return bind(std::move(input), [&fn](auto value){ return Nullable<decltype(fn(std::declval<A>()))>{fn(std::move(value))}; });
     }
 
     /***
      * The same as fmap but for a member function that has to be const and parameterless.
      */
     template <template <typename> typename Nullable, typename A, typename B>
-    constexpr auto fmap(Nullable<A> const& input, syntax::member::Mapper<const A, B> fn) -> Nullable<B> {
-        return fmap(input, [&fn](auto const& input_value){ return std::invoke(fn, input_value); });
+    constexpr auto fmap(Nullable<A> input, syntax::member::Mapper<const A, B> fn) -> Nullable<B> {
+        return fmap(std::move(input), [&fn](auto value){ return std::invoke(fn, std::move(value)); });
     }
 
     /***
      * Infix version of fmap.
      */
     template <template <typename> typename Nullable, typename Mapper, typename A>
-    constexpr auto operator|(Nullable<A> const& input, Mapper fn) -> decltype(fmap(input, fn)) {
-        return fmap(input, fn);
+    constexpr auto operator|(Nullable<A> input, Mapper fn) -> decltype(fmap(input, fn)) {
+        return fmap(std::move(input), fn);
     }
 
     /**
      * Infix version of fmap for a member function.
      */
     template <template <typename> typename Nullable, typename A, typename B>
-    constexpr auto operator|(Nullable<A> const& input, syntax::member::Mapper<const A, B> fn) -> Nullable<B> {
-        return fmap(input, fn);
+    constexpr auto operator|(Nullable<A> input, syntax::member::Mapper<const A, B> fn) -> Nullable<B> {
+        return fmap(std::move(input), fn);
     }
 
 }
