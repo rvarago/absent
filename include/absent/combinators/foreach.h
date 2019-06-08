@@ -20,7 +20,7 @@ namespace rvarago::absent {
      */
     template <template <typename, typename...> typename Nullable, typename Effect, typename A, typename... Rest>
     constexpr auto foreach(Nullable<A, Rest...> input, Effect fn) -> void {
-        bind(input, [&fn](auto value) { fn(std::move(value)); return detail::unit; });
+        bind(std::move(input), [&fn](auto value) { fn(std::move(value)); return detail::unit; });
     }
 
 }
