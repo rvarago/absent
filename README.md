@@ -71,7 +71,14 @@ And to work out of the box, it has to have the following properties:
 * It has to provide a member function _value()_ to extract the contained value.
 
 However, these last two requirements can be adapted by providing template specializations. And some adaptors are also
-available, such as for ```boost::optional``` (see ```absent/adaptors/boost_optional.h``` for details).
+available, such as for:
+
+* ```boost::optional```.
+* ```std::unique_ptr```.
+
+**Note**: Despite the fact _std::unique_ptr_ is supported, I would not recommend using to express nullability. Since a
+pointer usually has more than this sole meaning, e.g. it can be used in order to enable sub-typing polymorphism.
+Therefore, using may cause confusion.
 
 More details can be found in ```absent/syntax/nullable.h```.
 
