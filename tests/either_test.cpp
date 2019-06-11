@@ -7,49 +7,47 @@ using namespace rvarago::absent;
 using syntax::either;
 
 namespace {
+
+    struct error final {};
+    struct person final {};
+    struct address final {};
+
     template<typename Expected, typename A, typename E>
     void expect_alternative_of_type(either<A, E> const &it) {
         EXPECT_TRUE(std::holds_alternative<Expected>(it));
     }
-}
 
-TEST(either, given_andEither_when_notEmpty_shouldApplyForeachToIncrementCounter) {
-    struct error{};
-    int counter = 0;
-    auto const add_to_counter = [&counter](auto const& a){ counter += a; };
 
-    auto one = either<int, error>{1};
-    foreach(one, add_to_counter);
+    TEST(either, given_andEither_when_notError_shouldApplyForeachToIncrementCounter) {
+        int counter = 0;
+        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
 
-    expect_alternative_of_type<int>(one);
-    EXPECT_EQ(1, counter);
-}
+        auto one = either<int, error>{1};
+        foreach(one, add_to_counter);
 
-TEST(either, given_anEither_when_IsError_should_ReturnError) {
-    struct error{};
-    struct person{};
-    struct address{};
+        expect_alternative_of_type<int>(one);
+        EXPECT_EQ(1, counter);
+    }
 
-    auto const find_person_error = []{ return either<person, error>{error{}}; };
-    auto const find_address = [](auto const&){ return either<address, error>{address{}}; };
-    auto const zip_code = [](auto const&){return "123";};
+    TEST(either, given_anEither_when_IsError_should_ReturnError) {
+        auto const find_person_error = [] { return either<person, error>{error{}}; };
+        auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
+        auto const zip_code = [](auto const &) { return 42; };
 
-    auto const either_zip_code = find_person_error() >> find_address | zip_code;
+        auto const either_zip_code = find_person_error() >> find_address | zip_code;
 
-    expect_alternative_of_type<error>(either_zip_code);
-}
+        expect_alternative_of_type<error>(either_zip_code);
+    }
 
-TEST(either, given_anEither_when_NotError_shouldReturnNewTransformedEither) {
-    struct error{};
-    struct person{};
-    struct address{};
+    TEST(either, given_anEither_when_NotError_shouldReturnNewTransformedEither) {
+        auto const find_person = [] { return either<person, error>{person{}}; };
+        auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
+        auto const zip_code = [](auto const &) { return 42; };
 
-    auto const find_person_error = []{ return either<person, error>{person{}}; };
-    auto const find_address = [](auto const&){ return either<address, error>{address{}}; };
-    auto const zip_code = [](auto const&){return "123";};
+        auto const either_zip_code = find_person() >> find_address | zip_code;
 
-    auto const either_zip_code = find_person_error() >> find_address | zip_code;
+        expect_alternative_of_type<int>(either_zip_code);
+        EXPECT_EQ(42, std::get<int>(either_zip_code));
+    }
 
-    expect_alternative_of_type<const char*>(either_zip_code);
-    EXPECT_EQ("123", std::get<const char*>(either_zip_code));
 }
