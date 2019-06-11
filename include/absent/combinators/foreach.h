@@ -5,11 +5,6 @@
 
 namespace rvarago::absent {
 
-    namespace detail {
-        struct empty final{};
-        static auto constexpr unit = empty{};
-    }
-
     /***
      * Given a nullable type N<A> (i.e. optional like object), and an unary function f: A -> void:
      * - When empty: it should do nothing.
@@ -20,7 +15,7 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename Effect, typename A, typename... Rest>
     constexpr auto foreach(Nullable<A, Rest...> input, Effect fn) -> void {
-        bind(std::move(input), [&fn](auto value) { fn(std::move(value)); return detail::unit; });
+        bind(std::move(input), [&fn](auto value) { fn(std::move(value)); return Nullable<A, Rest...>{}; });
     }
 
 }
