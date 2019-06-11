@@ -57,7 +57,7 @@ ones that you're using.
 
 Hence, an interesting caveat of _absent_ is that:
 
-> Up to some extend, _absent_ is agnostic regarding the concrete implementation of a nullable type that you're using, 
+> Up to some extent, _absent_ is agnostic regarding the concrete implementation of a nullable type that you're using,
 as long as it adheres to the concept of a nullable type expected by the library.
 
 Mainly:
@@ -67,18 +67,19 @@ Mainly:
 
 And to work out of the box, it has to have the following properties:
 
-* It has to provide a predicate _has_value()_ as member function to check the presence of the contained value.
+* It has to provide a predicate _has_value()_ as a member function to check the presence of the contained value.
 * It has to provide a member function _value()_ to extract the contained value.
 
 However, these last two requirements can be adapted by providing template specializations. And some adapters are also
 available, such as for:
 
-* ```boost::optional```.
-* ```std::unique_ptr```.
+* ```boost::optional<A>```.
+* ```rvarago::absent::syntax::either<A, E> which is a left-biased alias std::variant<A, E>```.
+* ```std::unique_ptr<A>```.
 
-**Note**: Despite the fact _std::unique_ptr_ is supported, I would not recommend using to express nullability. Since a
+**Note**: Although _std::unique_ptr_ is a supported nullable, I would not recommend using to express nullability. Because a
 pointer usually has more than this sole meaning, e.g. it can be used in order to enable sub-typing polymorphism.
-Therefore, using may cause confusion.
+Therefore, using it may cause confusion and yield a less expressive code.
 
 More details can be found in ```absent/syntax/nullable.h```.
 
@@ -187,7 +188,8 @@ function inside a lambda, which adds a little bit of noise to the caller code.
 #### bind (>>)
 
 Another useful combinator is _bind_ which allows the composition of functions which by themselves also return values
-wrapped in a nullable. Roughly speaking, it's modelling a monad.
+wrapped in a nullable. Roughly speaking, it's modelling a monad. Please, note that you don't have to know about monads
+to benefit from the practical applications of _absent_.
 
 Given a nullable _N[A]_ and a function _f: A -> N[B]_, _bind_ uses _f_ to map over _N[A]_, yielding another nullable
 _N[B]_.
@@ -266,9 +268,9 @@ void log(person const&) const;
 * Conan
 * Docker
 
-Note that Docker is only required if you want to run the tests inside a container. In that case you just need Make, since
-all the other requirements are shipped inside the docker image. Therefore for quick exploration and collaboration, it might
-be a good idea.
+Note that Docker is only required if you want to run the tests inside a container. In that case, you just need to have Make,
+since all the other requirements are shipped inside the docker image. Therefore for quick exploration and collaboration,
+it might be a good idea.
 
 ## Build
 
