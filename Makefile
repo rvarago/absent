@@ -15,12 +15,12 @@ env-test: env
 	docker run --rm ${PROJECT_NAME}
 
 env-conan-package: env
-	docker run --rm ${PROJECT_NAME} make conan-package PACKAGE_VERSION=${PACKAGE_VERSION}
+	docker run --rm ${PROJECT_NAME} make conan-package BUILD_TESTING=${BUILD_TESTING} PACKAGE_VERSION=${PACKAGE_VERSION}
 
 install: compile
 	cd build && cmake --build . --target install
 
-conan-package: test
+conan-package: compile
 	conan create . ${PACKAGE_REFERENCE}
 
 test: compile
