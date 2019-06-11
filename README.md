@@ -286,7 +286,7 @@ make
 By default, it also builds the unit tests, you can disable the behavior by:
 
 ```
-make BUILD_TESTING=false
+make WITH_TESTS=false
 ```
 
 
@@ -344,4 +344,4 @@ To generate a package via Conan:
 make conan-package
 ```
 
-This will build the package _absent_, run a test package, and then install it in the local Conan cache.
+This will build the package _absent_, run the test package, and then install it in the local Conan cache.
