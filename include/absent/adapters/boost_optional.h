@@ -10,7 +10,7 @@ namespace rvarago::absent::syntax::nullable {
     template <typename Mapper, typename A>
     struct binder<boost::optional, Mapper, A> final {
 
-        static constexpr decltype(auto) bind(boost::optional<A> input, Mapper fn) {
+        static constexpr decltype(auto) _(boost::optional<A> input, Mapper fn) {
             if (!input) {
                 return decltype(fn(std::declval<A>())){};
             }
