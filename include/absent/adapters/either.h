@@ -13,7 +13,7 @@ namespace rvarago::absent::syntax {
         template<typename Mapper, typename A, typename E>
         struct binder<std::variant, Mapper, A, E> final {
 
-            static constexpr decltype(auto) bind(std::variant<A, E> input, Mapper fn) {
+            static constexpr decltype(auto) _(std::variant<A, E> input, Mapper fn) {
                 using Result = decltype(fn(std::declval<A>()));
                 if (!std::holds_alternative<A>(input)) {
                     return Result{std::get<E>(input)};
@@ -26,10 +26,10 @@ namespace rvarago::absent::syntax {
         template<typename Mapper, typename A, typename E>
         struct fmapper<std::variant, Mapper, A, E> final {
 
-            static constexpr decltype(auto) fmap(std::variant<A, E> input, Mapper fn) {
+            static constexpr decltype(auto) _(std::variant<A, E> input, Mapper fn) {
                 using Result = std::variant<decltype(fn(std::declval<A>())), E>;
                 auto const flat_mapper = [&fn](auto value) { return Result{fn(std::move(value))}; };
-                return binder<std::variant, decltype(flat_mapper), A, E>::bind(std::move(input), flat_mapper);
+                return binder<std::variant, decltype(flat_mapper), A, E>::_(std::move(input), flat_mapper);
             }
         };
     }

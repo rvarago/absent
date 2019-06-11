@@ -26,7 +26,7 @@ namespace rvarago::absent::syntax::nullable {
     template <typename Mapper, typename A>
     struct binder<custom_nullable, Mapper, A> final {
 
-        static constexpr decltype(auto) bind(custom_nullable<A> input, Mapper fn) {
+        static constexpr decltype(auto) _(custom_nullable<A> input, Mapper fn) {
             if (!input.has_value) {
                 return decltype(fn(std::declval<A>())){};
             }
