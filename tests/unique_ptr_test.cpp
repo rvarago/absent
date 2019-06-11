@@ -5,7 +5,7 @@
 
 using namespace rvarago::absent;
 
-TEST(unique_ptr, given_andUniquePtr_when_InvokeAbsent_shouldMoveItAndLeaveItNullAfterwards) {
+TEST(unique_ptr, given_andUniquePtr_when_InvokeAbsent_should_MoveItAndLeaveItNullAfterwards) {
     auto zero = std::make_unique<int>(0);
     auto const one = std::move(zero) | [](auto value){ return value + 1; };
 
@@ -14,7 +14,7 @@ TEST(unique_ptr, given_andUniquePtr_when_InvokeAbsent_shouldMoveItAndLeaveItNull
     EXPECT_EQ(1, *one);
 }
 
-TEST(unique_ptr, given_andUniquePtr_when_notEmpty_shouldApplyForeachToIncrementCounter) {
+TEST(unique_ptr, given_andUniquePtr_when_notEmpty_should_ApplyForeachToIncrementCounter) {
     int counter = 0;
     auto const add_to_counter = [&counter](auto const& a){ counter += a; };
 
@@ -25,7 +25,7 @@ TEST(unique_ptr, given_andUniquePtr_when_notEmpty_shouldApplyForeachToIncrementC
     EXPECT_EQ(1, counter);
 }
 
-TEST(unique_ptr, given_anUniquePtr_when_notEmpty_shouldReturnEmptyUniquePtr) {
+TEST(unique_ptr, given_anUniquePtr_when_Empty_should_ReturnEmptyUniquePtr) {
     struct person{};
     struct address{};
 
@@ -36,7 +36,7 @@ TEST(unique_ptr, given_anUniquePtr_when_notEmpty_shouldReturnEmptyUniquePtr) {
     EXPECT_FALSE(find_person_empty() >> find_address | zip_code);
 }
 
-TEST(unique_ptr, given_anUniquePtr_when_notNotEmpty_shouldReturnNewUniquePtr) {
+TEST(unique_ptr, given_anUniquePtr_when_NotEmpty_should_ReturnNewTransformedUniquePtr) {
     struct person{};
     struct address{};
 
