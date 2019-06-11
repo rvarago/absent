@@ -5,44 +5,45 @@
 
 using namespace rvarago::absent;
 
-TEST(unique_ptr, given_andUniquePtr_when_InvokeAbsent_should_MoveItAndLeaveItNullAfterwards) {
-    auto zero = std::make_unique<int>(0);
-    auto const one = std::move(zero) | [](auto value){ return value + 1; };
+namespace {
 
-    EXPECT_FALSE(zero);
-    EXPECT_TRUE(one);
-    EXPECT_EQ(1, *one);
-}
+    struct person final {};
+    struct address final {};
 
-TEST(unique_ptr, given_andUniquePtr_when_notEmpty_should_ApplyForeachToIncrementCounter) {
-    int counter = 0;
-    auto const add_to_counter = [&counter](auto const& a){ counter += a; };
+    TEST(unique_ptr, given_andUniquePtr_when_InvokeAbsent_should_MoveItAndLeaveItNullAfterwards) {
+        auto zero = std::make_unique<int>(0);
+        auto const one = std::move(zero) | [](auto value) { return value + 1; };
 
-    auto one = std::make_unique<int>(1);
-    foreach(std::move(one), add_to_counter);
+        EXPECT_FALSE(zero);
+        EXPECT_TRUE(one);
+        EXPECT_EQ(1, *one);
+    }
 
-    EXPECT_FALSE(one);
-    EXPECT_EQ(1, counter);
-}
+    TEST(unique_ptr, given_andUniquePtr_when_notEmpty_should_ApplyForeachToIncrementCounter) {
+        int counter = 0;
+        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
 
-TEST(unique_ptr, given_anUniquePtr_when_Empty_should_ReturnEmptyUniquePtr) {
-    struct person{};
-    struct address{};
+        auto one = std::make_unique<int>(1);
+        foreach(std::move(one), add_to_counter);
 
-    auto const find_person_empty = []() -> std::unique_ptr<person> { return nullptr; };
-    auto const find_address = [](auto const&){ return std::make_unique<address>(); };
-    auto const zip_code = [](auto const&){return "123";};
+        EXPECT_FALSE(one);
+        EXPECT_EQ(1, counter);
+    }
 
-    EXPECT_FALSE(find_person_empty() >> find_address | zip_code);
-}
+    TEST(unique_ptr, given_anUniquePtr_when_Empty_should_ReturnEmptyUniquePtr) {
+        auto const find_person_empty = []() -> std::unique_ptr<person> { return nullptr; };
+        auto const find_address = [](auto const &) { return std::make_unique<address>(); };
+        auto const zip_code = [](auto const &) { return 42; };
 
-TEST(unique_ptr, given_anUniquePtr_when_NotEmpty_should_ReturnNewTransformedUniquePtr) {
-    struct person{};
-    struct address{};
+        EXPECT_FALSE(find_person_empty() >> find_address | zip_code);
+    }
 
-    auto const find_person = []{ return std::make_unique<person>(); };
-    auto const find_address = [](auto const&){ return std::make_unique<address>(); };
-    auto const zip_code = [](auto const&){return "123";};
+    TEST(unique_ptr, given_anUniquePtr_when_NotEmpty_should_ReturnNewTransformedUniquePtr) {
+        auto const find_person = [] { return std::make_unique<person>(); };
+        auto const find_address = [](auto const &) { return std::make_unique<address>(); };
+        auto const zip_code = [](auto const &) { return 42; };
 
-    EXPECT_EQ("123", *(find_person() >> find_address | zip_code));
+        EXPECT_EQ(42, *(find_person() >> find_address | zip_code));
+    }
+
 }
