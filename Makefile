@@ -1,6 +1,6 @@
 PROJECT_NAME        = absent
 PROFILE             = ../profiles/common
-BUILD_TESTING       = true
+WITH_TESTS          = true
 PACKAGE_VERSION     =
 PACKAGE_REFERENCE   = ${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 
@@ -15,7 +15,7 @@ env-test: env
 	docker run --rm ${PROJECT_NAME}
 
 env-conan-package: env
-	docker run --rm ${PROJECT_NAME} make conan-package BUILD_TESTING=${BUILD_TESTING} PACKAGE_VERSION=${PACKAGE_VERSION}
+	docker run --rm ${PROJECT_NAME} make conan-package WITH_TESTS=${WITH_TESTS} PACKAGE_VERSION=${PACKAGE_VERSION}
 
 install: compile
 	cd build && cmake --build . --target install
@@ -30,7 +30,7 @@ compile: gen
 	cd build && cmake --build .
 
 gen: dep
-	cd build && cmake -D BUILD_TESTING=${BUILD_TESTING} ..
+	cd build && cmake -D WITH_TESTS=${WITH_TESTS} ..
 
 dep: mk
 	cd build && conan install .. --build=missing -pr ${PROFILE}

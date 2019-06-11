@@ -47,6 +47,6 @@ export(PACKAGE ${PROJECT_NAME})
 
 include(CTest)
 
-if(BUILD_TESTING)
+if(WITH_TESTS)
     add_subdirectory(tests)
 endif()
