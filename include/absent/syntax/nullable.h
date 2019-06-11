@@ -15,7 +15,7 @@ namespace rvarago::absent::syntax::nullable {
      * @tparam Mapper function that maps from A => N<B>
      * @tparam A wrapped type
      */
-    template <template <typename, typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
+    template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
     struct binder final {
 
         static constexpr auto bind(Nullable<A, Rest...> input, Mapper fn) -> decltype(fn(std::declval<A>())) {
@@ -35,7 +35,7 @@ namespace rvarago::absent::syntax::nullable {
      * @tparam Mapper function that maps from A => B
      * @tparam A wrapped type
      */
-    template <template <typename, typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
+    template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
     struct fmapper final {
 
         static constexpr auto fmap(Nullable<A, Rest...> input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {

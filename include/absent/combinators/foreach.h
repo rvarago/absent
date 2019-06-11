@@ -18,7 +18,7 @@ namespace rvarago::absent {
      * @param input any optional like object that can be checked against empty and provide access to its wrapped value.
      * @param fn an unary function A -> void.
      */
-    template <template <typename, typename...> typename Nullable, typename Effect, typename A, typename... Rest>
+    template <template <typename...> typename Nullable, typename Effect, typename A, typename... Rest>
     constexpr auto foreach(Nullable<A, Rest...> input, Effect fn) -> void {
         bind(std::move(input), [&fn](auto value) { fn(std::move(value)); return detail::unit; });
     }
