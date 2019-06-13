@@ -52,4 +52,22 @@ namespace {
         EXPECT_EQ(-1, eval(std::unique_ptr<int>{}, to_minus_one));
     }
 
+    TEST(unique_ptr, given_ANullable_when_NotEmpty_should_CallCtorAndDtorTheSameNumberOfTimes) {
+        static int calls_to_ctor = 0;
+        static int calls_to_dtor = 0;
+
+        struct foo {
+            foo() {++calls_to_ctor;}
+            ~foo() {++calls_to_dtor;}
+        };
+
+        auto const new_some = [] { return std::make_unique<foo>(); };
+        auto const to_new_some = [](auto const &) { return std::make_unique<foo>(); };
+        auto const to_new_some_but_throw_before = [](auto const &) { throw 0; return std::make_unique<foo>(); };
+        auto const to_number = [](auto const &) { return 42; };
+
+        try {new_some() >> to_new_some >> to_new_some_but_throw_before >> to_new_some | to_number;} catch (...) {}
+        EXPECT_EQ(calls_to_ctor, calls_to_dtor) << "Unequal number of calls to Ctor and Dtor: it might cause memory leak";
+    }
+
 }
