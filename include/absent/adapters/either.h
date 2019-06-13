@@ -3,25 +3,43 @@
 
 #include <variant>
 
-namespace rvarago::absent::syntax {
+namespace rvarago::absent::nullable {
 
     template<typename A, typename E>
     using either = std::variant<A, E>;
 
-    namespace nullable {
+    namespace syntax {
 
-        template<typename Mapper, typename A, typename E>
-        struct binder<std::variant, Mapper, A, E> final {
+        template <typename A, typename E>
+        struct empty<std::variant, A, E> final {
 
-            static constexpr decltype(auto) _(std::variant<A, E> input, Mapper fn) {
-                using Result = decltype(fn(std::declval<A>()));
-                if (!std::holds_alternative<A>(input)) {
-                    return Result{std::get<E>(input)};
-                }
-                return fn(std::get<A>(input));
+            static constexpr auto _(std::variant<A, E> const& input) -> bool {
+                return !std::holds_alternative<A>(input);
             }
 
         };
+
+        template <typename A, typename E>
+        struct value<std::variant, A, E> final {
+
+            static constexpr auto _(std::variant<A, E> input) -> A {
+                return std::get<A>(input);
+            }
+
+        };
+
+        template <typename A, typename B, typename E>
+        struct make_empty<std::variant<A, E>, std::variant<B, E>> final {
+
+            static constexpr auto _(std::variant<A, E> input) -> std::variant<B, E> {
+                return std::variant<B, E>{std::get<E>(input)};
+            }
+
+        };
+    }
+
+
+    namespace instances {
 
         template<typename Mapper, typename A, typename E>
         struct fmapper<std::variant, Mapper, A, E> final {
@@ -32,6 +50,7 @@ namespace rvarago::absent::syntax {
                 return binder<std::variant, decltype(flat_mapper), A, E>::_(std::move(input), flat_mapper);
             }
         };
+
     }
 }
 

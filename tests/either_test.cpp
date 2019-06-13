@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 using namespace rvarago::absent;
-using syntax::either;
+using nullable::either;
 
 namespace {
 
