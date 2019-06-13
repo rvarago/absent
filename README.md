@@ -81,7 +81,7 @@ available, such as for:
 pointer usually has more than this sole meaning, e.g. it can be used in order to enable sub-typing polymorphism.
 Therefore, using it may cause confusion and yield a less expressive code.
 
-More details can be found in ```absent/syntax/nullable.h```.
+More details can be found in the folder ```absent/nullable/```.
 
 One example of a nullable type that models this concept would obviously then be: _std::optional_, which, by the way, is going to
 have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
