@@ -50,4 +50,12 @@ namespace {
         EXPECT_EQ(42, std::get<int>(either_zip_code));
     }
 
+    TEST(either, given_AnOptional_when_Empty_should_CallTheFallback) {
+        auto const to_minus_one = [] { return -1; };
+
+        auto const none = either<int, error>{error{}};
+
+        EXPECT_EQ(-1, eval(none, to_minus_one));
+    }
+
 }

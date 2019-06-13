@@ -260,6 +260,30 @@ Where _log_ may be:
 void log(person const&) const;
 ```
 
+#### eval
+
+Another combinator is _eval_ which returns the wrapped value inside nullable if present, or evaluates the
+fallback function in case the nullable is empty. Therefore, providing a lazy version of ```std::optional<T>::value_or```
+that avoid wasting computations since in that case the evaluation always happens, even if the nullable contains is not
+empty.
+
+Given a nullable _N[A]_ and a function _f: void -> A_, _eval_ returns the wrapped _A_ inside _N[A]_ if not empty,
+or evaluates _f_ that returns a fallback instance of _A_.
+
+One use-case for _eval_ is where you happen to have a default value for the nullable, but its computation is
+expensive or it has some side-effect that only makes sense to be executed in case of an empty nullable. For instance:
+
+
+```
+eval(std::optional{person{}}, make_fallback_person);
+```
+
+Where _make_fallback_person_ may be:
+
+```
+person make_fallback_person();
+```
+
 ## Requirements
 
 * C++17
