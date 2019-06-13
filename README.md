@@ -74,7 +74,7 @@ However, these last two requirements can be adapted by providing template specia
 available, such as for:
 
 * ```boost::optional<A>```.
-* ```rvarago::absent::nullable::either<A, E> which is a left-biased alias std::variant<A, E>```.
+* ```rvarago::absent::adapters::either<A, E> which is a left-biased alias std::variant<A, E>```.
 * ```std::unique_ptr<A>```.
 
 **Note**: Although _std::unique_ptr_ is a supported nullable, I would not recommend using to express nullability. Because a
