@@ -5,11 +5,6 @@
 
 #include <gtest/gtest.h>
 
-#define WITH_ADAPTER_FOR_BOOST_OPTIONAL 1
-
-#include <absent/adapters/boost_optional.h>
-
-#include <boost/optional.hpp>
 using namespace rvarago::absent;
 
 namespace {

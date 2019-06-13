@@ -303,6 +303,15 @@ make PROFILE=<path_to_your_profile>
 make test
 ```
 
+* And to compile with the tests for ```boost::optional```:
+
+```
+make test  WITH_TESTS_FOR_BOOST=true
+```
+
+**Note**: So far, _absent_ does NOT provide the library for ```boost::optional``` transitively, therefore it expects it
+has been already installed in order to execute the tests.
+
 * To clean the _build_ folder:
 
 ```
