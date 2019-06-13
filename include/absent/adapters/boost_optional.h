@@ -5,16 +5,13 @@
 
 #include <boost/optional.hpp>
 
-namespace rvarago::absent::syntax::nullable {
+namespace rvarago::absent::nullable::syntax {
 
-    template <typename Mapper, typename A>
-    struct binder<boost::optional, Mapper, A> final {
+    template <typename A>
+    struct empty<boost::optional, A> final {
 
-        static constexpr decltype(auto) _(boost::optional<A> input, Mapper fn) {
-            if (!input) {
-                return decltype(fn(std::declval<A>())){};
-            }
-            return fn(std::move(input.value()));
+        static constexpr auto _(boost::optional<A> const& input) -> bool {
+            return !input;
         }
 
     };

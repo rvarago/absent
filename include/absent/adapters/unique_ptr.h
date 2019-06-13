@@ -3,28 +3,31 @@
 
 #include <memory>
 
-namespace rvarago::absent::syntax::nullable {
+namespace rvarago::absent::nullable::syntax {
 
-    template <typename Mapper, typename A, typename... Rest>
-    struct binder<std::unique_ptr, Mapper, A, Rest...> final {
+    template <typename A, typename... Rest>
+    struct empty<std::unique_ptr, A, Rest...> final {
 
-        static constexpr decltype(auto) _(std::unique_ptr<A, Rest...> input, Mapper fn) {
-            using Result = decltype(fn(std::declval<A>()));
-            if (!input) {
-                return Result{};
-            }
-            return fn(*input.release());
+        static constexpr auto _(std::unique_ptr<A, Rest...> const& input) -> bool {
+            return !input;
         }
 
     };
 
-    template <typename Mapper, typename A, typename... Rest>
-    struct fmapper<std::unique_ptr, Mapper, A, Rest...> final {
+    template <typename A, typename... Rest>
+    struct value<std::unique_ptr, A, Rest...> final {
 
-        static constexpr decltype(auto) _(std::unique_ptr<A, Rest...> input, Mapper fn) {
-            using Result = decltype(fn(std::declval<A>()));
-            auto const flat_mapper = [&fn](auto value){ return std::make_unique<Result>(fn(std::move(value))); };
-            return binder<std::unique_ptr, decltype(flat_mapper), A, Rest...>::_(std::move(input), flat_mapper);
+        static constexpr auto _(std::unique_ptr<A, Rest...> input) -> A {
+            return *input.release();
+        }
+
+    };
+
+    template <typename... Rest>
+    struct make<std::unique_ptr, Rest...> final {
+
+        static constexpr auto _(Rest... args) -> std::unique_ptr<Rest...> {
+            return std::make_unique<Rest...>(args...);
         }
 
     };

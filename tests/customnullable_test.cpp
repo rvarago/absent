@@ -21,16 +21,22 @@ namespace {
     }
 }
 
-namespace rvarago::absent::syntax::nullable {
+namespace rvarago::absent::nullable::syntax {
 
-    template <typename Mapper, typename A>
-    struct binder<custom_nullable, Mapper, A> final {
+    template <typename A>
+    struct empty<custom_nullable, A> final {
 
-        static constexpr decltype(auto) _(custom_nullable<A> input, Mapper fn) {
-            if (!input.has_value) {
-                return decltype(fn(std::declval<A>())){};
-            }
-            return fn(std::move(input.value));
+        static constexpr auto _(custom_nullable<A> const& input) -> bool {
+            return !input.has_value;
+        }
+
+    };
+
+    template <typename A>
+    struct value<custom_nullable, A> final {
+
+        static constexpr auto _(custom_nullable<A> input) -> A {
+            return std::move(input.value);
         }
 
     };
