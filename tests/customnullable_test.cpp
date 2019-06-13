@@ -6,6 +6,7 @@
 using namespace rvarago::absent;
 
 namespace {
+
     template<typename T>
     struct custom_nullable final {
         explicit custom_nullable() = default;
@@ -19,26 +20,23 @@ namespace {
     bool operator==(custom_nullable<T> const& rhs, custom_nullable<T> const& lhs) {
         return rhs.has_value && lhs.has_value && rhs.value == rhs.value;
     }
+
 }
 
 namespace rvarago::absent::nullable::syntax {
 
     template <typename A>
     struct empty<custom_nullable, A> final {
-
         static constexpr auto _(custom_nullable<A> const& input) -> bool {
             return !input.has_value;
         }
-
     };
 
     template <typename A>
     struct value<custom_nullable, A> final {
-
         static constexpr auto _(custom_nullable<A> input) -> A {
             return std::move(input.value);
         }
-
     };
 
 }

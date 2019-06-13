@@ -14,40 +14,32 @@ namespace rvarago::absent {
 
         namespace syntax {
 
-            template<typename A, typename E>
+            template <typename A, typename E>
             struct empty<std::variant, A, E> final {
-
                 static constexpr auto _(std::variant<A, E> const &input) -> bool {
                     return !std::holds_alternative<A>(input);
                 }
-
             };
 
-            template<typename A, typename E>
+            template <typename A, typename E>
             struct value<std::variant, A, E> final {
-
                 static constexpr auto _(std::variant<A, E> input) -> A {
                     return std::get<A>(input);
                 }
-
             };
 
-            template<typename A, typename B, typename E>
+            template <typename A, typename B, typename E>
             struct make_empty<std::variant<A, E>, std::variant<B, E>> final {
-
                 static constexpr auto _(std::variant<A, E> input) -> std::variant<B, E> {
                     return std::variant<B, E>{std::get<E>(input)};
                 }
-
             };
         }
 
+        namespace instance {
 
-        namespace instances {
-
-            template<typename Mapper, typename A, typename E>
+            template <typename Mapper, typename A, typename E>
             struct fmapper<std::variant, Mapper, A, E> final {
-
                 static constexpr decltype(auto) _(std::variant<A, E> input, Mapper fn) {
                     using Result = std::variant<decltype(fn(std::declval<A>())), E>;
                     auto const flat_mapper = [&fn](auto value) { return Result{fn(std::move(value))}; };
@@ -56,6 +48,7 @@ namespace rvarago::absent {
             };
 
         }
+
     }
 }
 
