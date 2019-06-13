@@ -1,7 +1,7 @@
 #ifndef RVARAGO_ABSENT_BIND_H
 #define RVARAGO_ABSENT_BIND_H
 
-#include "absent/syntax/member.h"
+#include "absent/member/member.h"
 #include "absent/nullable/instance.h"
 
 #include <functional>
@@ -28,7 +28,7 @@ namespace rvarago::absent {
      * The same as bind but for a member function that has to be const and parameterless.
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-    constexpr decltype(auto) bind(Nullable<A, Rest...> input, syntax::member::Mapper<const A, Nullable<B, Rest...>> fn) {
+    constexpr decltype(auto) bind(Nullable<A, Rest...> input, member::Mapper<const A, Nullable<B, Rest...>> fn) {
         return bind(input, [&fn](auto value){ return std::invoke(fn, std::move(value)); });
     }
 
@@ -44,7 +44,7 @@ namespace rvarago::absent {
      * Infix version of bind for a member function.
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-    constexpr decltype(auto) operator>>(Nullable<A, Rest...> input, syntax::member::Mapper<const A, Nullable<B, Rest...>> fn) {
+    constexpr decltype(auto) operator>>(Nullable<A, Rest...> input, member::Mapper<const A, Nullable<B, Rest...>> fn) {
         return bind(std::move(input), fn);
     }
 
