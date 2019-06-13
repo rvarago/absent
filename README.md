@@ -4,6 +4,12 @@ A simple library to compose nullable types in a declarative style for the modern
 
 [![Build Status](https://travis-ci.org/rvarago/absent.svg?branch=master)](https://travis-ci.org/rvarago/absent)
 
+## A word of caution
+
+I don't believe in silver bullets and _absent_ does NOT solve all the problems. Actually, it's far away from it. _absent_ simply aims to provide an alternative way to solve a very specific problem of enabling some kinds of compositions for some kinds of nullable types. Of course, there are several ways to do achieve pretty much the same goal. Sometimes some solutions may be better than others given a set of criteria, and it might depend on the specific scenario and constraints that we happen to have. IMHO, I think we should be ready to assess the pros and cons, and then pick the right tool for the right job.
+
+Hopefully, _absent_ may be such a tool for some jobs, or at least give us some ideas about how we may want to use other tools as well.
+
 ## Description
 
 Handling nullable types has always been forcing us to add a significant amount of boilerplate in our code, in such a
@@ -325,7 +331,7 @@ make PROFILE=<path_to_your_profile>
 make test
 ```
 
-* And to compile with the tests for ```boost::optional```:
+* And to compile and run with the tests for ```boost::optional```:
 
 ```
 make test  WITH_TESTS_FOR_BOOST=true
