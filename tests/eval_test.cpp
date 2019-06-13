@@ -9,7 +9,7 @@ using namespace rvarago::absent;
 
 namespace {
 
-    TEST(eval, given_anOptional_when_Empty_should_CallTheFallback) {
+    TEST(eval, given_ANullable_when_Empty_should_CallTheFallback) {
         auto const to_minus_one = [] { return -1; };
 
         std::optional<int> const none;
@@ -17,7 +17,7 @@ namespace {
         EXPECT_EQ(-1, eval(none, to_minus_one));
     }
 
-    TEST(eval, given_anOptional_when_NotEmpty_should_ReturnTheWrappedValue) {
+    TEST(eval, given_ANullable_when_NotEmpty_should_ReturnTheWrappedValue) {
         auto const to_minus_one = [] { return -1; };
 
         auto const one = std::optional<int>{1};

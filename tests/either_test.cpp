@@ -18,7 +18,7 @@ namespace {
     }
 
 
-    TEST(either, given_andEither_when_notError_shouldApplyForeachToIncrementCounter) {
+    TEST(either, given_ANullable_when_NotEmpty_should_ApplyForeachToIncrementTheCounter) {
         int counter = 0;
         auto const add_to_counter = [&counter](auto const &a) { counter += a; };
 
@@ -29,7 +29,7 @@ namespace {
         EXPECT_EQ(1, counter);
     }
 
-    TEST(either, given_anEither_when_IsError_should_ReturnError) {
+    TEST(either, given_ANullable_when_Empty_should_ReturnAnEmptyNullable) {
         auto const find_person_error = [] { return either<person, error>{error{}}; };
         auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
         auto const zip_code = [](auto const &) { return 42; };
@@ -39,7 +39,7 @@ namespace {
         expect_alternative_of_type<error>(either_zip_code);
     }
 
-    TEST(either, given_anEither_when_NotError_shouldReturnNewTransformedEither) {
+    TEST(either, given_ANullable_when_NotEmpty_should_ReturnANewTransformedNullable) {
         auto const find_person = [] { return either<person, error>{person{}}; };
         auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
         auto const zip_code = [](auto const &) { return 42; };
@@ -50,7 +50,7 @@ namespace {
         EXPECT_EQ(42, std::get<int>(either_zip_code));
     }
 
-    TEST(either, given_AnOptional_when_Empty_should_CallTheFallback) {
+    TEST(either, given_ANullable_when_Empty_should_CallTheFallback) {
         auto const to_minus_one = [] { return -1; };
 
         auto const none = either<int, error>{error{}};
