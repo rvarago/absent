@@ -6,7 +6,6 @@ add_executable(${PROJECT_NAME}
         absent_tests.cpp
         bind_test.cpp
         boost_optional_test.cpp
-        customnullable_test.cpp
         either_test.cpp
         fmap_test.cpp
         foreach_test.cpp
