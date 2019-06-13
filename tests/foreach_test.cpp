@@ -7,24 +7,28 @@
 
 using namespace rvarago::absent;
 
-TEST(foreach, given_AnOptional_when_Empty_should_DoNothing) {
-    int counter = 0;
-    auto const add_to_counter = [&counter](auto const& a){ counter += a; };
+namespace {
 
-    std::optional<int> const none;
+    TEST(foreach, given_ANullable_when_Empty_should_DoNothing) {
+        int counter = 0;
+        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
 
-    foreach(none, add_to_counter);
+        std::optional<int> const none;
 
-    EXPECT_EQ(0, counter);
-}
+        foreach(none, add_to_counter);
 
-TEST(foreach, given_AnOptional_when_NotEmpty_should_RunTheEffectToAddToTheCounter) {
-    int counter = 0;
-    auto const add_to_counter = [&counter](auto const& a){ counter += a; };
+        EXPECT_EQ(0, counter);
+    }
 
-    std::optional<int> const some_one{1};
+    TEST(foreach, given_ANullable_when_NotEmpty_should_RunTheEffectToAddToTheCounter) {
+        int counter = 0;
+        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
 
-    foreach(some_one, add_to_counter);
+        std::optional<int> const some_one{1};
 
-    EXPECT_EQ(1, counter);
+        foreach(some_one, add_to_counter);
+
+        EXPECT_EQ(1, counter);
+    }
+
 }

@@ -11,7 +11,7 @@ namespace {
     struct person final {};
     struct address final {};
 
-    TEST(boost_optional, given_aBoostOptional_when_IsError_should_ReturnError) {
+    TEST(boost_optional, given_ANullable_when_Empty_should_ReturnAnEmptyNullable) {
         boost::optional<person> const person_empty = boost::none;
         auto const find_address = [](auto const &) { return boost::optional<address>{address{}}; };
         auto const zip_code = [](auto const &) { return 42; };
@@ -19,7 +19,7 @@ namespace {
         EXPECT_FALSE(person_empty >> find_address | zip_code);
     }
 
-    TEST(boost_optional, given_aBoostOptional_when_NotEmpty_shouldReturnNewTransformedBoostOptional) {
+    TEST(boost_optional, given_ANullable_when_NotEmpty_should_ReturnANewTransformedNullable) {
         auto const person_some =  boost::optional<person>{person{}};
         auto const find_address = [](auto const &) { return boost::optional<address>{address{}}; };
         auto const zip_code = [](auto const &) { return 42; };
@@ -30,7 +30,7 @@ namespace {
         EXPECT_EQ(42, maybe_zip_code.value());
     }
 
-    TEST(boost_optional, given_aBoostOptional_when_Empty_should_CallTheFallback) {
+    TEST(boost_optional, given_ANullable_when_Empty_should_CallTheFallback) {
         auto const to_minus_one = [] { return -1; };
 
         boost::optional<int> const none;
