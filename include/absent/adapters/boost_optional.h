@@ -9,15 +9,13 @@ namespace rvarago::absent::nullable::syntax {
 
     template <typename A>
     struct empty<boost::optional, A> final {
-
         static constexpr auto _(boost::optional<A> const& input) -> bool {
             return !input;
         }
-
     };
 
 }
 
-#endif
+#endif // WITH_ADAPTER_FOR_BOOST_OPTIONAL
 
 #endif // RVARAGO_ABSENT_BOOST_OPTIONAL_H
