@@ -30,21 +30,21 @@ namespace {
     }
 
     TEST(either, given_ANullable_when_Empty_should_ReturnAnEmptyNullable) {
-        auto const find_person_error = [] { return either<person, error>{error{}}; };
+        auto const person_empty = either<person, error>{error{}};
         auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
         auto const zip_code = [](auto const &) { return 42; };
 
-        auto const either_zip_code = find_person_error() >> find_address | zip_code;
+        auto const either_zip_code = person_empty >> find_address | zip_code;
 
         expect_alternative_of_type<error>(either_zip_code);
     }
 
     TEST(either, given_ANullable_when_NotEmpty_should_ReturnANewTransformedNullable) {
-        auto const find_person = [] { return either<person, error>{person{}}; };
+        auto const person_some = either<person, error>{person{}};
         auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
         auto const zip_code = [](auto const &) { return 42; };
 
-        auto const either_zip_code = find_person() >> find_address | zip_code;
+        auto const either_zip_code = person_some >> find_address | zip_code;
 
         expect_alternative_of_type<int>(either_zip_code);
         EXPECT_EQ(42, std::get<int>(either_zip_code));
