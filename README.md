@@ -19,7 +19,7 @@ Hopefully, _absent_ may be such a tool for some jobs, or at least give us some i
 Handling nullable types has always been forcing us to add a significant amount of boilerplate in our code, in such a
 way that it sometimes even hides the business logic which we are trying to express in our code.
 
-Consider an API that makes use of nullable types, such as std::optional<A>. We may have the following functions:
+Consider an API that makes use of nullable types, such as _std::optional<A>_. We may have the following functions:
 
 ```
 std::optional<person> find_person() const;
@@ -49,11 +49,38 @@ that nothing can fail:
 auto const zip_code = zip_code(find_address(find_person()));
 ```
 
-Which is simpler to read and therefore understand.
+Which is hopefully simpler to read and therefore to understand.
 
-The problem here is that the introduction of nullable types breaks our ability to compose the code by chaining
-elementary operations. We have to find a way to combine the type-safety of nullable types together with the
-expressiveness achieved by composing simple functions as we do for the non-nullable types.
+Furthermore, with the unwrapped types, we can do function composition to reduce the pipeline of function applications:
+
+```
+(void -> person) andThen (person -> address) andThen (address -> zip)
+```
+
+Where _andThen_ means the usual function composition, that evaluates the first function and then feed the return value into the second function:
+
+```
+f: A -> B, g: B -> C => (f andThen g)(x) = g(f(x))
+```
+
+Since the types compose, we can reduce the pipeline of functions into a function composition:
+
+```
+void -> zip
+```
+
+However, for nullable types we have:
+
+```
+(void -> std::optional<person>) andThen (person -> std::optional<address>) andThen (address -> zip)
+```
+
+That can't be composed, because the types don't match anymore, and so _andThen_ can't be used. We can't feed an _std::optional<person>_ into a function that expects a _person_.
+
+So, in its essence, the problem lies in the observation that introducing nullable types breaks our ability to compose the code by chaining elementary operations.
+
+We have to find a way to combine both: type-safety brought by nullable types and the
+expressiveness achieved by composing simple functions as we can do for non-nullable types.
 
 ### Enters _absent_
 
@@ -97,7 +124,7 @@ One example of a nullable type that models this concept would obviously then be:
 have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
 
 Meanwhile, _absent_ may be used to fill that gap. And even after it could still be interesting, since it's agnostic
-regarding the concrete nullable types, also working for optional-like types other than _std::optional_.
+regarding the concrete nullable types, also working for optional-like types other than _std::optional_. For instance, you might want to return more information to explain why a function has failed to produce a value, maybe by returning not an _std::optional<A>_, but an _std::variant<A, E>_, where _E_ is the type of the returned error, _absent_ might help here as well.
 
 ### Getting started
 
@@ -117,13 +144,31 @@ Using a prefix notation, we can rewrite the above example using _absent_ as:
 auto const maybe_zip_code = fmap(bind(find_person(), find_address), zip_code);
 ````
 
-Or using the infix notation based on overloaded operators:
+Which solves the initial problem for the lack of composition for nullable types, now we express the pipeline as:
+
+```
+(void -> std::optional<person>) bind (person -> std::optional<address>) fmap (address -> zip)
+```
+
+That's equivalent to:
+
+```
+(void -> std::optional<zip>)
+```
+
+An alternative syntax is also available via infix notation based on overloaded operators:
 
 ```
 auto const maybe_zip_code = find_person() >> find_address | zip_code;
 ````
 
-Almost as easy to read as the version without using nullable types, but with the expressiveness and type-safety
+Which is very similar to the notation used to express the pipeline:
+
+```
+(void -> std::optional<person>) >> (person -> std::optional<address>) | (address -> zip)
+```
+
+Almost as easy to read as the version without using nullable types (maybe even more?) and with the expressiveness and type-safety
 brought by them.
 
 In the case where _find_address_ and _zip_code_ are "getter" member functions, such as:
