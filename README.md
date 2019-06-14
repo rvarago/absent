@@ -60,7 +60,7 @@ Furthermore, with the unwrapped types, we can do function composition to reduce 
 Where _andThen_ means the usual function composition, that evaluates the first function and then feed the return value into the second function:
 
 ```
-f: A -> B, g: B -> C => (f andThen g)(x) = g(f(x))
+f: A -> B, g: B -> C => f andThen g: A -> C = g(f(x))
 ```
 
 Since the types compose, we can reduce the pipeline of functions into a function composition:
