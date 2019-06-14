@@ -6,7 +6,11 @@ A simple library to compose nullable types in a declarative style for the modern
 
 ## A word of caution
 
-I don't believe in silver bullets and _absent_ does NOT solve all the problems. Actually, it's far away from it. _absent_ simply aims to provide an alternative way to solve a very specific problem of enabling some kinds of compositions for some kinds of nullable types. Of course, there are several ways to do achieve pretty much the same goal. Sometimes some solutions may be better than others given a set of criteria, and it might depend on the specific scenario and constraints that we happen to have. IMHO, I think we should be ready to assess the pros and cons, and then pick the right tool for the right job.
+I don't believe in silver bullets and _absent_ does NOT solve all the problems. Actually, it's far away from it. _absent_ simply aims to provide an alternative way to solve a very specific problem of enabling some kinds of compositions for some kinds of nullable types. Of course, there are several ways to do achieve pretty much the same goal.
+
+_absent_ represents a humble contribution that aims to leverage composition via immutable operations that don't mutate the argument but create brand new instances that are returned. It may be a pro, because by restricting mutation the likelihood of some of introducing a class of bugs may be reduced. However, it may also be a con, because for each operation a new instance is created and then destroyed, few copies might be optimized away by the compiler, but there's no guarantee, but it brings potential source of performance-related concerns, that should be taken into account, preferably via objective measurements that prove that it's a real problem for the specific project in which _absent_ is applied.  
+
+Furthermore, some solutions may be better than others given a set of criteria, and it might depend on the specific scenario and constraints that we happen to have. IMHO, I think we should be ready to assess the pros and cons, and then pick the right tool for the right job.
 
 Hopefully, _absent_ may be such a tool for some jobs, or at least give us some ideas about how we may want to use other tools as well.
 
