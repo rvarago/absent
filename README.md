@@ -60,14 +60,16 @@ Furthermore, with the unwrapped types, we can do function composition to reduce 
 Where _andThen_ means the usual function composition, that evaluates the first function and then feed the return value into the second function:
 
 ```
-f: A -> B, g: B -> C => f andThen g: A -> C = g(f(x))
+f: A -> B, g: B -> C => (f andThen g): A -> C = g(f(x)), forall x in A
 ```
 
 Since the types compose, we can reduce the pipeline of functions into a function composition:
 
 ```
-void -> zip
+(void -> zip)
 ```
+
+And that's _functionally_ equivalent.
 
 However, for nullable types we have:
 
@@ -150,7 +152,7 @@ Which solves the initial problem for the lack of composition for nullable types,
 (void -> std::optional<person>) bind (person -> std::optional<address>) fmap (address -> zip)
 ```
 
-That's equivalent to:
+And that's _functionally_ equivalent to:
 
 ```
 (void -> std::optional<zip>)
