@@ -320,11 +320,14 @@ void log(person const&) const;
 #### eval
 
 Another combinator is _eval_ which returns the wrapped value inside nullable if present or evaluates the
-fallback function in case the nullable is empty. Therefore, providing a lazy version of ```std::optional::value_or```
-that avoids wasting computations since in that case the evaluation always happens, even if the nullable is not empty.
+fallback function in case the nullable is empty. Therefore, providing a simulated "call-by-need" version of _std::optional::value_or_.
 
-Given a nullable _N[A]_ and a function _f: void -> A_, _eval_ returns the wrapped _A_ inside _N[A]_ if not empty,
-or evaluates _f_ that returns a fallback instance of _A_.
+Here, call-by-need roughly means that the evaluation of the fallback is deferred to point when it really needs to happen, which is: inside _eval_ only when the nullable is empty.
+
+Therefore, it avoids wasting computations as it happens with _std::optional::value_or_, because in this case, the function's argument is evaluated *before* reaching _std::optional::value_or_ even if the nullable is not empty, in which case the value is then discarded. So, any computation that was already performed becomes useless and, maybe even more critical, it might've triggered potential side-effects that would only make sense when the nullable is empty.
+
+Given a nullable _N[A]_ and a function _f: void -> A_, _eval_ returns the un-wrapped _A_ inside _N[A]_ if it's not empty,
+or evaluates _f_ that returns a fallback, or default, instance for _A_.
 
 One use-case for _eval_ is where you happen to have a default value for the nullable, but its computation is
 expensive or it has some side-effect that only makes sense to be executed in case of an empty nullable. For instance:
