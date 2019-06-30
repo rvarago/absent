@@ -42,6 +42,8 @@ auto const zip_code = zip_code(*maybe_address);
 We have mixed business logic with error handling, it'd be nice to have these two concerns apart from each other. It's a lot
 of boilerplate to achieve such a simple requirement as obtaining the zip code of a given person.
 
+Furthermore, we have to make several calls to _std::optional<T>_ accessor member function, in those cases to `value()`, and for each call, we have to make sure we’ve checked that it's not empty before accessing its value. Otherwise, we would trigger a *bad_optional_access*. Thus, it’d be nice to minimize the direct calls to `value()` by wrapping intermediary ones inside a function that does the checking and then accesses the value. And only make the direct call to `value()` from our code at the very end of the composition.
+
 Now, compare it against the code that does not make use of nullable types whatsoever. And of course, it expects
 that nothing can fail:
 
