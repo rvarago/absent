@@ -21,7 +21,7 @@ namespace rvarago::absent::nullable::syntax {
     template <template<typename...> typename Nullable, typename A, typename... Rest>
     struct value final {
         static constexpr auto _(Nullable<A, Rest...> input) -> A {
-            return input.value();
+            return *input;
         }
     };
 
