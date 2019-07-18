@@ -6,13 +6,6 @@
 namespace rvarago::absent::nullable::syntax {
 
     template <typename A, typename... Rest>
-    struct empty<std::unique_ptr, A, Rest...> final {
-        static constexpr auto _(std::unique_ptr<A, Rest...> const& input) -> bool {
-            return !input;
-        }
-    };
-
-    template <typename A, typename... Rest>
     struct value<std::unique_ptr, A, Rest...> final {
         static constexpr auto _(std::unique_ptr<A, Rest...> input) -> A {
             return *input.release();

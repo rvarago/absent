@@ -1,7 +1,6 @@
 #ifdef WITH_ADAPTER_FOR_BOOST_OPTIONAL
 
 #include <absent/absent.h>
-#include <absent/adapters/boost_optional.h>
 #include <gtest/gtest.h>
 
 using namespace rvarago::absent;
