@@ -21,9 +21,10 @@ namespace rvarago::absent::nullable::instance {
         static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) -> decltype(fn(std::declval<A>())) {
             using Result = decltype(fn(std::declval<A>()));
             if (syntax::empty<Nullable, A, Rest...>::_(input)) {
-                return syntax::make_empty<decltype(input), Result>::_(std::move(input));
+                return syntax::make_empty<Nullable<A, Rest...>, Result>::_(std::move(input));
             }
-            return fn(syntax::value<Nullable, A, Rest...>::_(std::move(input)));
+            auto const value = syntax::value<Nullable, A, Rest...>::_(std::move(input));
+            return fn(std::move(value));
         }
     };
 
@@ -39,10 +40,11 @@ namespace rvarago::absent::nullable::instance {
     struct fmapper final {
         static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
             using ValueT = decltype(fn(std::declval<A>()));
-            auto const flat_mapper = [&fn](auto value) {
-                return syntax::make<Nullable, ValueT>::_(fn(std::move(value)));
-            };
-            return binder<Nullable, decltype(flat_mapper), A, Rest...>::_(std::move(input), flat_mapper);
+            if (syntax::empty<Nullable, A, Rest...>::_(input)) {
+                return syntax::make_empty<Nullable<A, Rest...>, Nullable<ValueT>>::_(std::move(input));
+            }
+            auto const value = syntax::value<Nullable, A, Rest...>::_(std::move(input));
+            return syntax::make<Nullable, ValueT>::_(fn(std::move(value)));
         }
     };
 
