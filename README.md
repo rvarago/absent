@@ -1,18 +1,18 @@
 # absent
 
-A simple library to compose nullable types in a declarative style for the modern C++ programmer.
+This is a small header-only library meant to simplify the composition of nullable types in a declarative style for some C++ types constructors.
 
 [![Build Status](https://travis-ci.org/rvarago/absent.svg?branch=master)](https://travis-ci.org/rvarago/absent)
 
 ## A word of caution
 
-I don't believe in silver bullets and _absent_ does NOT solve all the problems. Actually, it's far away from it. _absent_ simply aims to provide an alternative way to solve a very specific problem of enabling some kinds of compositions for some kinds of nullable types. Of course, there are several ways to do achieve pretty much the same goal.
+_absent_ provides an alternative way to solve a very specific problem of enabling some kinds of compositions for some kinds of nullable types. Of course, there are several ways to do achieve pretty much the same goal.
 
-_absent_ represents a humble contribution that aims to leverage composition via immutable operations that don't mutate the argument but create brand new instances that are returned. It may be a pro, because by restricting mutation the likelihood of some of introducing a class of bugs may be reduced. However, it may also be a con, because for each operation a new instance is created and then destroyed, few copies might be optimized away by the compiler, but there's no guarantee, but it brings potential source of performance-related concerns, that should be taken into account, preferably via objective measurements that prove that it's a real problem for the specific project in which _absent_ is applied.  
+_absent_ represents a tiny contribution that aims to leverage composition via immutable operations that don't mutate the argument, instead, they create and return brand new instances.
 
-Furthermore, some solutions may be better than others given a set of criteria, and it might depend on the specific scenario and constraints that we happen to have. IMHO, I think we should be ready to assess the pros and cons, and then pick the right tool for the right job.
+It may be a pro, because by restricting mutation the likelihood of introducing a class of bugs may be reduced as well.
 
-Hopefully, _absent_ may be such a tool for some jobs, or at least give us some ideas about how we may want to use other tools as well.
+However, it may also be a con, because for each operation a new instance is created and then destroyed. Hopefully, few copies would be optimized away by the compiler, but there's no guarantee. So it's important to keep this in mind, maybe via objective measurements that prove that it's a real problem for the specific project in which _absent_ is planned to be used.
 
 ## Description
 
@@ -41,6 +41,8 @@ auto const zip_code = zip_code(*maybe_address);
 
 We have mixed business logic with error handling, it'd be nice to have these two concerns apart from each other. It's a lot
 of boilerplate to achieve such a simple requirement as obtaining the zip code of a given person.
+
+Furthermore, we have to make several calls to _std::optional<T>_ accessor member function, in those cases to `value()`, and for each call, we have to make sure we’ve checked that it's not empty before accessing its value. Otherwise, we would trigger a *bad_optional_access*. Thus, it’d be nice to minimize the direct calls to `value()` by wrapping intermediary ones inside a function that does the checking and then accesses the value. And only make the direct call to `value()` from our code at the very end of the composition.
 
 Now, compare it against the code that does not make use of nullable types whatsoever. And of course, it expects
 that nothing can fail:
