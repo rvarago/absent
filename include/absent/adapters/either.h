@@ -41,8 +41,8 @@ namespace rvarago::absent {
             template <typename Mapper, typename A, typename E>
             struct fmapper<std::variant, Mapper, A, E> final {
                 static constexpr decltype(auto) _(std::variant<A, E> input, Mapper fn) {
-                    using Result = std::variant<decltype(fn(std::declval<A>())), E>;
-                    auto const flat_mapper = [&fn](auto value) { return Result{fn(std::move(value))}; };
+                    using ResultT = std::variant<decltype(fn(std::declval<A>())), E>;
+                    auto const flat_mapper = [&fn](auto value) { return ResultT{fn(std::move(value))}; };
                     return binder<std::variant, decltype(flat_mapper), A, E>::_(std::move(input), flat_mapper);
                 }
             };
