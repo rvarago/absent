@@ -15,7 +15,7 @@ namespace rvarago::absent::nullable::syntax {
     template <typename... Rest>
     struct make<std::unique_ptr, Rest...> final {
         static constexpr auto _(Rest... args) -> std::unique_ptr<Rest...> {
-            return std::make_unique<Rest...>(args...);
+            return std::make_unique<Rest...>(std::move(args)...);
         }
     };
 

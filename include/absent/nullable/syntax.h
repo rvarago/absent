@@ -31,7 +31,7 @@ namespace rvarago::absent::nullable::syntax {
     template <template<typename...> typename Nullable, typename... Rest>
     struct make final {
         static constexpr auto _(Rest... args) -> Nullable<Rest...> {
-            return Nullable<Rest...>{args...};
+            return Nullable<Rest...>{std::move(args)...};
         }
     };
 
