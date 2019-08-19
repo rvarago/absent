@@ -25,7 +25,7 @@ conan-package: compile
 	conan create . ${PACKAGE_REFERENCE}
 
 test: compile
-	cd build && ctest .
+	cd build && ctest -VV .
 
 compile: gen
 	cd build && cmake --build .
