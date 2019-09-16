@@ -5,9 +5,9 @@
 
 #include <gtest/gtest.h>
 
-using namespace rvarago::absent;
-
 namespace {
+
+    using namespace rvarago::absent;
 
     TEST(bind, given_ANullable_when_Empty_should_DoNothing) {
         auto const maybe_increment = [](auto const &a) { return std::optional{a + 1}; };

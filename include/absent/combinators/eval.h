@@ -17,7 +17,7 @@ namespace rvarago::absent {
      * @return the wrapped value inside the nullable or the result of fn if the nullable is empty.
      */
     template <template <typename...> typename Nullable, typename Fallback, typename A, typename... Rest>
-    constexpr decltype(auto) eval(Nullable<A, Rest...> input, Fallback fn) {
+    constexpr decltype(auto) eval(Nullable<A, Rest...> input, Fallback fn) noexcept {
         if (nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
             return fn();
         }

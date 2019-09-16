@@ -3,10 +3,10 @@
 
 #include <gtest/gtest.h>
 
-using namespace rvarago::absent;
-using adapters::either;
-
 namespace {
+
+    using namespace rvarago::absent;
+    using adapters::either;
 
     struct error final {};
     struct person final {};

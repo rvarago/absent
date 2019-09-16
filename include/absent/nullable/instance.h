@@ -18,7 +18,7 @@ namespace rvarago::absent::nullable::instance {
      */
     template<template<typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
     struct binder final {
-        static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) -> decltype(fn(std::declval<A>())) {
+        static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) noexcept -> decltype(fn(std::declval<A>())) {
             using ResultT = decltype(fn(std::declval<A>()));
             if (syntax::empty<Nullable, A, Rest...>::_(input)) {
                 return syntax::make_empty<Nullable<A, Rest...>, ResultT>::_(std::move(input));
@@ -38,7 +38,7 @@ namespace rvarago::absent::nullable::instance {
      */
     template<template<typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
     struct fmapper final {
-        static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) -> Nullable<decltype(fn(std::declval<A>()))> {
+        static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) noexcept -> Nullable<decltype(fn(std::declval<A>()))> {
             using ValueT = decltype(fn(std::declval<A>()));
             if (syntax::empty<Nullable, A, Rest...>::_(input)) {
                 return syntax::make_empty<Nullable<A, Rest...>, Nullable<ValueT>>::_(std::move(input));

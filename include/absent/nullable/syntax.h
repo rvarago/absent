@@ -10,7 +10,7 @@ namespace rvarago::absent::nullable::syntax {
      */
     template <template<typename...> typename Nullable, typename A, typename... Rest>
     struct empty final {
-        static constexpr auto _(Nullable<A, Rest...> const &input) -> bool {
+        static constexpr auto _(Nullable<A, Rest...> const &input) noexcept -> bool {
             return !input;
         }
     };
@@ -20,7 +20,7 @@ namespace rvarago::absent::nullable::syntax {
      */
     template <template<typename...> typename Nullable, typename A, typename... Rest>
     struct value final {
-        static constexpr auto _(Nullable<A, Rest...> input) -> A {
+        static constexpr auto _(Nullable<A, Rest...> input) noexcept -> A {
             return *input;
         }
     };
@@ -30,7 +30,7 @@ namespace rvarago::absent::nullable::syntax {
      */
     template <template<typename...> typename Nullable, typename... Rest>
     struct make final {
-        static constexpr auto _(Rest... args) -> Nullable<Rest...> {
+        static constexpr auto _(Rest... args) noexcept -> Nullable<Rest...> {
             return Nullable<Rest...>{std::move(args)...};
         }
     };
@@ -40,7 +40,7 @@ namespace rvarago::absent::nullable::syntax {
      */
     template <typename NullableIn, typename NullableOut>
     struct make_empty final {
-        static constexpr auto _(NullableIn) -> NullableOut {
+        static constexpr auto _(NullableIn) noexcept -> NullableOut {
             return NullableOut{};
         }
     };
