@@ -10,7 +10,6 @@ add_executable(${PROJECT_NAME}
         eval_test.cpp
         fmap_test.cpp
         foreach_test.cpp
-        unique_ptr_test.cpp
 )
 
 target_compile_features(${PROJECT_NAME}

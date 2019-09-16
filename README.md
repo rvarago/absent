@@ -116,11 +116,6 @@ available, such as for:
 
 * ```boost::optional<A>```.
 * ```rvarago::absent::adapters::either<A, E> which is a left-biased alias std::variant<A, E>```.
-* ```std::unique_ptr<A>```.
-
-**Note**: Although _std::unique_ptr_ is a supported nullable, I would not recommend using to express nullability. Because a
-pointer usually has more than this sole meaning, e.g. it can be used in order to enable sub-typing polymorphism.
-Therefore, using it may cause confusion and yield a less expressive code.
 
 More details can be found in the folder ```absent/nullable/```.
 
