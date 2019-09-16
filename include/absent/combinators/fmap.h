@@ -20,7 +20,7 @@ namespace rvarago::absent {
      * @return a new nullable containing the mapped value of type B, possibly empty if input is also empty.
      */
     template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
-    constexpr decltype(auto) fmap(Nullable<A, Rest...> input, Mapper fn) {
+    constexpr decltype(auto) fmap(Nullable<A, Rest...> input, Mapper fn) noexcept {
         return nullable::instance::fmapper<Nullable, Mapper, A, Rest...>::_(std::move(input), fn);
     }
 
@@ -28,7 +28,7 @@ namespace rvarago::absent {
      * The same as fmap but for a member function that has to be const and parameterless.
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-    constexpr decltype(auto) fmap(Nullable<A, Rest...> input, member::Mapper<const A, B> fn) {
+    constexpr decltype(auto) fmap(Nullable<A, Rest...> input, member::Mapper<const A, B> fn) noexcept {
         return fmap(std::move(input), [&fn](auto value){ return std::invoke(fn, std::move(value)); });
     }
 
@@ -36,7 +36,7 @@ namespace rvarago::absent {
      * Infix version of fmap.
      */
     template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
-    constexpr decltype(auto) operator|(Nullable<A, Rest...> input, Mapper fn) {
+    constexpr decltype(auto) operator|(Nullable<A, Rest...> input, Mapper fn) noexcept {
         return fmap(std::move(input), fn);
     }
 
@@ -44,7 +44,7 @@ namespace rvarago::absent {
      * Infix version of fmap for a member function.
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-    constexpr decltype(auto) operator|(Nullable<A, Rest...> input, member::Mapper<const A, B> fn) {
+    constexpr decltype(auto) operator|(Nullable<A, Rest...> input, member::Mapper<const A, B> fn) noexcept {
         return fmap(std::move(input), fn);
     }
 
