@@ -27,6 +27,7 @@ include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}Config
 )
+
 install(DIRECTORY include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
@@ -41,12 +42,11 @@ install(EXPORT ${PROJECT_NAME}Config
 export(EXPORT ${PROJECT_NAME}Config
        NAMESPACE rvarago::
 )
+
 export(PACKAGE ${PROJECT_NAME})
 
 # Tests
-
-include(CTest)
-
 if(WITH_TESTS)
+    include(CTest)
     add_subdirectory(tests)
 endif()
