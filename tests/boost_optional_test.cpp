@@ -3,9 +3,9 @@
 #include <absent/absent.h>
 #include <gtest/gtest.h>
 
-using namespace rvarago::absent;
-
 namespace {
+
+    using namespace rvarago::absent;
 
     struct person final {};
     struct address final {};

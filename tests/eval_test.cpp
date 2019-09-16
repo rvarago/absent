@@ -5,9 +5,10 @@
 
 #include <gtest/gtest.h>
 
-using namespace rvarago::absent;
-
 namespace {
+
+    using namespace rvarago::absent;
+
 
     TEST(eval, given_ANullable_when_Empty_should_CallTheFallback) {
         auto const to_minus_one = [] { return -1; };

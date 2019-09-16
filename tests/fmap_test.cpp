@@ -5,9 +5,9 @@
 
 #include <gtest/gtest.h>
 
-using namespace rvarago::absent;
-
 namespace {
+
+    using namespace rvarago::absent;
 
     TEST(fmap, given_ANullable_when_Empty_should_ReturnAnEmptyNullable) {
         auto const increment = [](auto const &a) { return a + 1; };
