@@ -38,13 +38,13 @@ namespace rvarago::absent::nullable::instance {
      */
     template<template<typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
     struct fmapper final {
-        static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) noexcept -> Nullable<decltype(fn(std::declval<A>()))> {
+        static constexpr auto _(Nullable<A, Rest...> input, Mapper fn) noexcept -> Nullable<decltype(fn(std::declval<A>())), Rest...> {
             using ValueT = decltype(fn(std::declval<A>()));
             if (syntax::empty<Nullable, A, Rest...>::_(input)) {
-                return syntax::make_empty<Nullable<A, Rest...>, Nullable<ValueT>>::_(std::move(input));
+                return syntax::make_empty<Nullable<A, Rest...>, Nullable<ValueT, Rest...>>::_(std::move(input));
             }
             auto const value = syntax::value<Nullable, A, Rest...>::_(std::move(input));
-            return syntax::make<Nullable, ValueT>::_(fn(std::move(value)));
+            return syntax::make<Nullable, ValueT, Rest...>::_(fn(std::move(value)));
         }
     };
 
