@@ -2,6 +2,8 @@ project(absent_tests LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 
+option(BUILD_TESTS_FOR_BOOST "Build tests for Boost.Optional" OFF)
+
 add_executable(${PROJECT_NAME}
         absent_tests.cpp
         bind_test.cpp
@@ -17,7 +19,7 @@ target_compile_features(${PROJECT_NAME}
             cxx_std_17
 )
 
-if (WITH_TESTS_FOR_BOOST)
+if (BUILD_TESTS_FOR_BOOST)
     target_compile_definitions(${PROJECT_NAME} PRIVATE WITH_ADAPTER_FOR_BOOST_OPTIONAL)
 endif()
 

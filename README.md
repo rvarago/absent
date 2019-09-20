@@ -385,7 +385,7 @@ make test
 * And to compile and run with the tests for ```boost::optional```:
 
 ```
-make test  WITH_TESTS_FOR_BOOST=true
+make test  BUILD_TESTS_FOR_BOOST=ON
 ```
 
 **Note**: So far, _absent_ does NOT provide the library for ```boost::optional``` transitively, therefore it expects it
