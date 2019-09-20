@@ -3,8 +3,6 @@
 
 #include "absent/nullable/syntax.h"
 
-#include <utility>
-
 namespace rvarago::absent {
 
     /***
@@ -17,11 +15,11 @@ namespace rvarago::absent {
      * @return the wrapped value inside the nullable or the result of fn if the nullable is empty.
      */
     template <template <typename...> typename Nullable, typename Fallback, typename A, typename... Rest>
-    constexpr decltype(auto) eval(Nullable<A, Rest...> input, Fallback fn) noexcept {
+    constexpr decltype(auto) eval(Nullable<A, Rest...> const& input, Fallback fn) noexcept {
         if (nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
             return fn();
         }
-        return nullable::syntax::value<Nullable, A, Rest...>::_(std::move(input));
+        return nullable::syntax::value<Nullable, A, Rest...>::_(input);
     }
 
 }
