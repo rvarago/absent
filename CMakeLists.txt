@@ -4,6 +4,8 @@ project(absent LANGUAGES CXX)
 
 # Definition
 
+option(BUILD_TESTS "Build test executable" ON)
+
 add_library(${PROJECT_NAME} INTERFACE)
 
 add_library(rvarago::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -46,7 +48,7 @@ export(EXPORT ${PROJECT_NAME}Config
 export(PACKAGE ${PROJECT_NAME})
 
 # Tests
-if(WITH_TESTS)
+if(BUILD_TESTS)
     include(CTest)
     add_subdirectory(tests)
 endif()

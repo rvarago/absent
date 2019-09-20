@@ -5,4 +5,4 @@ services:
 
 script:
   - make env-test
-  - make env-conan-package WITH_TESTS=false PACKAGE_VERSION=ci
+  - make env-conan-package BUILD_TESTS=OFF PACKAGE_VERSION=ci
