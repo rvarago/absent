@@ -357,7 +357,7 @@ person make_fallback_person();
 The _Makefile_ wraps the commands to download dependencies (Conan), generate the build configuration, build, run the
 unit tests, and clear the build folder.
 
-* Compile (by default, it also compiles the unit tests):
+* Compile:
 
 ```
 make
@@ -366,9 +366,8 @@ make
 By default, it also builds the unit tests, you can disable the behavior by:
 
 ```
-make WITH_TESTS=false
+make BUILD_TESTS=OFF
 ```
-
 
 The build always assumes that the default profile (*profiles/common*) applies to your build. If that's not, then you
 can specify your profile by setting _PROFILE_ as:
