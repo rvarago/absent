@@ -376,6 +376,12 @@ can specify your profile by setting _PROFILE_ as:
 make PROFILE=<path_to_your_profile>
 ```
 
+And to build with Release mode (by default it builds with Debug mode enabled):
+
+``
+make BUILD_TYPE=Release
+``
+
 * To run the unit tests:
 
 ```

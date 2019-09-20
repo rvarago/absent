@@ -5,6 +5,7 @@ BUILD_TESTS_FOR_BOOST   = OFF
 PACKAGE_VERSION         =
 PACKAGE_REFERENCE       = ${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 BUILD_DIR               = build
+BUILD_TYPE              = Debug
 
 .PHONY: all conan-package env-conan-package test install compile gen dep mk clean env env-test
 
@@ -17,7 +18,7 @@ env-test: env
 	docker run --rm ${PROJECT_NAME} make compile test --no-print-directory
 
 env-conan-package: env
-	docker run --rm ${PROJECT_NAME} make compile conan-package BUILD_TESTS=${BUILD_TESTS} PACKAGE_VERSION=${PACKAGE_VERSION} --no-print-directory
+	docker run --rm ${PROJECT_NAME} make compile conan-package BUILD_TYPE=${BUILD_TYPE} BUILD_TESTS=${BUILD_TESTS} PACKAGE_VERSION=${PACKAGE_VERSION} --no-print-directory
 
 install:
 	cd ${BUILD_DIR} && cmake --build . --target install
@@ -32,10 +33,10 @@ compile: gen
 	cd ${BUILD_DIR} && cmake --build .
 
 gen: dep
-	cd ${BUILD_DIR} && cmake -D BUILD_TESTS=${BUILD_TESTS} -D BUILD_TESTS_FOR_BOOST=${BUILD_TESTS_FOR_BOOST} ..
+	cd ${BUILD_DIR} && cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=${BUILD_TESTS} -DBUILD_TESTS_FOR_BOOST=${BUILD_TESTS_FOR_BOOST} ..
 
 dep: mk
-	cd ${BUILD_DIR} && conan install .. --build=missing -pr ${PROFILE}
+	cd ${BUILD_DIR} && conan install .. --build=missing -pr ${PROFILE} -s build_type=${BUILD_TYPE}
 
 mk:
 	mkdir -p ${BUILD_DIR}
