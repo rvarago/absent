@@ -1,7 +1,7 @@
 PROJECT_NAME            = absent
 PROFILE                 = ../profiles/common
 BUILD_TESTS             = ON
-WITH_TESTS_FOR_BOOST    = false
+BUILD_TESTS_FOR_BOOST   = OFF
 PACKAGE_VERSION         =
 PACKAGE_REFERENCE       = ${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 BUILD_DIR               = build
@@ -32,7 +32,7 @@ compile: gen
 	cd ${BUILD_DIR} && cmake --build .
 
 gen: dep
-	cd ${BUILD_DIR} && cmake -D BUILD_TESTS=${BUILD_TESTS} -D WITH_TESTS_FOR_BOOST=${WITH_TESTS_FOR_BOOST} ..
+	cd ${BUILD_DIR} && cmake -D BUILD_TESTS=${BUILD_TESTS} -D BUILD_TESTS_FOR_BOOST=${BUILD_TESTS_FOR_BOOST} ..
 
 dep: mk
 	cd ${BUILD_DIR} && conan install .. --build=missing -pr ${PROFILE}
