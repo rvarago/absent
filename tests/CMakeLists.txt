@@ -20,7 +20,7 @@ target_compile_features(${PROJECT_NAME}
 )
 
 if (BUILD_TESTS_FOR_BOOST)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE WITH_ADAPTER_FOR_BOOST_OPTIONAL)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE ABSENT_WITH_ADAPTER_FOR_BOOST_OPTIONAL)
 endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU|Clang")
