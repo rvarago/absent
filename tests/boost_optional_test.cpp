@@ -1,4 +1,4 @@
-#ifdef WITH_ADAPTER_FOR_BOOST_OPTIONAL
+#ifdef ABSENT_WITH_ADAPTER_FOR_BOOST_OPTIONAL
 
 #include <absent/absent.h>
 #include <gtest/gtest.h>
