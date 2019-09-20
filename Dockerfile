@@ -6,4 +6,4 @@ WORKDIR absent
 
 COPY . .
 
-CMD ["make", "test", "--no-print-directory"]
+CMD ["/bin/bash"]
