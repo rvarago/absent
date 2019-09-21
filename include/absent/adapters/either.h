@@ -10,9 +10,7 @@ namespace rvarago::absent {
         using either = std::variant<A, E>;
     }
 
-    namespace nullable {
-
-        namespace syntax {
+    namespace nullable::syntax {
 
             template <typename A, typename E>
             struct empty<std::variant, A, E> final {
@@ -35,21 +33,6 @@ namespace rvarago::absent {
                 }
             };
         }
-
-        namespace instance {
-
-            template <typename Mapper, typename A, typename E>
-            struct fmapper<std::variant, Mapper, A, E> final {
-                static constexpr decltype(auto) _(std::variant<A, E> const& input, Mapper fn) noexcept {
-                    using ResultT = std::variant<decltype(fn(std::declval<A>())), E>;
-                    auto const flat_mapper = [&fn](auto value) { return ResultT{fn(value)}; };
-                    return binder<std::variant, decltype(flat_mapper), A, E>::_(input, flat_mapper);
-                }
-            };
-
-        }
-
-    }
 }
 
 #endif // RVARAGO_ABSENT_EITHER_H
