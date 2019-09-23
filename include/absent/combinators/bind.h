@@ -2,7 +2,7 @@
 #define RVARAGO_ABSENT_BIND_H
 
 #include "absent/member/member.h"
-#include "absent/nullable/instance.h"
+#include "absent/nullable/syntax.h"
 
 #include <functional>
 
@@ -20,8 +20,12 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
     constexpr decltype(auto) bind(Nullable<A, Rest...> const& input, Mapper fn) noexcept {
-        return nullable::instance::binder<Nullable, Mapper, A, Rest...>::_(input, fn);
-    }
+        using ResultT = decltype(fn(std::declval<A>()));
+        if (nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
+            return nullable::syntax::make_empty<Nullable<A, Rest...>, ResultT>::_(input);
+        }
+        auto const value = nullable::syntax::value<Nullable, A, Rest...>::_(input);
+        return fn(value);    }
 
     /***
      * The same as bind but for a member function that has to be const and parameterless.
