@@ -18,38 +18,38 @@ namespace rvarago::absent {
      * @param fn an unary function A -> B.
      * @return a new nullable containing the mapped value of type B, possibly empty if input is also empty.
      */
-    template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
-    constexpr decltype(auto) fmap(Nullable<A, Rest...> const& input, Mapper fn) noexcept {
-        using ValueT = decltype(fn(std::declval<A>()));
+    template <template <typename...> typename Nullable, typename UnaryFunction, typename A, typename... Rest>
+    constexpr decltype(auto) fmap(Nullable<A, Rest...> const& input, UnaryFunction mapper) noexcept {
+        using ValueT = decltype(mapper(std::declval<A>()));
         if (nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
             return nullable::syntax::make_empty<Nullable<A, Rest...>, Nullable<ValueT, Rest...>>::_(input);
         }
         auto const value = nullable::syntax::value<Nullable, A, Rest...>::_(input);
-        return nullable::syntax::make<Nullable, ValueT, Rest...>::_(fn(value));
+        return nullable::syntax::make<Nullable, ValueT, Rest...>::_(mapper(value));
     }
 
     /***
      * The same as fmap but for a member function that has to be const and parameterless.
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-    constexpr decltype(auto) fmap(Nullable<A, Rest...> const& input, member::Mapper<const A, B> fn) noexcept {
-        return fmap(input, [&fn](auto value){ return std::invoke(fn, value); });
+    constexpr decltype(auto) fmap(Nullable<A, Rest...> const& input, member::Mapper<const A, B> mapper) noexcept {
+        return fmap(input, [&mapper](auto value){ return std::invoke(mapper, value); });
     }
 
     /***
      * Infix version of fmap.
      */
     template <template <typename...> typename Nullable, typename Mapper, typename A, typename... Rest>
-    constexpr decltype(auto) operator|(Nullable<A, Rest...> const& input, Mapper fn) noexcept {
-        return fmap(input, fn);
+    constexpr decltype(auto) operator|(Nullable<A, Rest...> const& input, Mapper mapper) noexcept {
+        return fmap(input, mapper);
     }
 
     /**
      * Infix version of fmap for a member function.
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-    constexpr decltype(auto) operator|(Nullable<A, Rest...> const& input, member::Mapper<const A, B> fn) noexcept {
-        return fmap(input, fn);
+    constexpr decltype(auto) operator|(Nullable<A, Rest...> const& input, member::Mapper<const A, B> mapper) noexcept {
+        return fmap(input, mapper);
     }
 
 }
