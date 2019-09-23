@@ -9,7 +9,7 @@ namespace rvarago::absent::nullable::syntax {
      * For custom types that have a different way to check if they are empty.
      */
     template <template<typename...> typename Nullable, typename A, typename... Rest>
-    struct empty final {
+    struct empty {
         static constexpr auto _(Nullable<A, Rest...> const& input) noexcept -> bool {
             return !input;
         }
@@ -19,7 +19,7 @@ namespace rvarago::absent::nullable::syntax {
      * For custom types that have a different way to access its wrapped value.
      */
     template <template<typename...> typename Nullable, typename A, typename... Rest>
-    struct value final {
+    struct value {
         static constexpr auto _(Nullable<A, Rest...> const& input) noexcept -> A {
             return *input;
         }
@@ -29,7 +29,7 @@ namespace rvarago::absent::nullable::syntax {
      * For custom types that have a different way to create new instances of itself from arguments.
      */
     template <template<typename...> typename Nullable, typename... Rest>
-    struct make final {
+    struct make {
         template <typename... Args>
         static constexpr auto _(Args&&... args) noexcept -> Nullable<Rest...> {
             return Nullable<Rest...>{std::forward<Args>(args)...};
@@ -40,7 +40,7 @@ namespace rvarago::absent::nullable::syntax {
      * For custom types that have a different concept of empty state.
      */
     template <typename NullableIn, typename NullableOut>
-    struct make_empty final {
+    struct make_empty {
         static constexpr auto _(NullableIn const&) noexcept -> NullableOut {
             return NullableOut{};
         }
