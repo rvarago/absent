@@ -34,7 +34,7 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
     constexpr decltype(auto) fmap(Nullable<A, Rest...> const& input, member::Mapper<const A, B> mapper) noexcept {
-        return fmap(input, [&mapper](auto value){ return std::invoke(mapper, value); });
+        return fmap(input, [&mapper](auto const& value){ return std::invoke(mapper, value); });
     }
 
     /***
