@@ -34,7 +34,7 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
     constexpr decltype(auto) bind(Nullable<A, Rest...> const& input, member::Mapper<const A, Nullable<B, Rest...>> mapper) noexcept {
-        return bind(input, [&mapper](auto value){ return std::invoke(mapper, value); });
+        return bind(input, [&mapper](auto const& value){ return std::invoke(mapper, value); });
     }
 
     /***
