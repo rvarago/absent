@@ -15,8 +15,9 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename UnaryFunction, typename A, typename... Rest>
     constexpr auto foreach(Nullable<A, Rest...> const& input, UnaryFunction action) noexcept -> void {
-        if (!nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
-            action(nullable::syntax::value<Nullable, A, Rest...>::_(input));
+        using namespace nullable::syntax;
+        if (!empty<Nullable, A, Rest...>::_(input)) {
+            action(value<Nullable, A, Rest...>::_(input));
         }
     }
 

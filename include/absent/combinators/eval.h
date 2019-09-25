@@ -16,10 +16,11 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename NullaryFunction, typename A, typename... Rest>
     constexpr decltype(auto) eval(Nullable<A, Rest...> const& input, NullaryFunction fallback) noexcept {
-        if (nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
+        using namespace nullable::syntax;
+        if (empty<Nullable, A, Rest...>::_(input)) {
             return fallback();
         }
-        return nullable::syntax::value<Nullable, A, Rest...>::_(input);
+        return value<Nullable, A, Rest...>::_(input);
     }
 
 }

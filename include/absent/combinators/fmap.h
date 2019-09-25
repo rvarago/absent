@@ -20,12 +20,13 @@ namespace rvarago::absent {
      */
     template <template <typename...> typename Nullable, typename UnaryFunction, typename A, typename... Rest>
     constexpr decltype(auto) fmap(Nullable<A, Rest...> const& input, UnaryFunction mapper) noexcept {
+        using namespace nullable::syntax;
         using ValueT = decltype(mapper(std::declval<A>()));
-        if (nullable::syntax::empty<Nullable, A, Rest...>::_(input)) {
-            return nullable::syntax::make_empty<Nullable<A, Rest...>, Nullable<ValueT, Rest...>>::_(input);
+        if (empty<Nullable, A, Rest...>::_(input)) {
+            return make_empty<Nullable<A, Rest...>, Nullable<ValueT, Rest...>>::_(input);
         }
-        auto const value = nullable::syntax::value<Nullable, A, Rest...>::_(input);
-        return nullable::syntax::make<Nullable, ValueT, Rest...>::_(mapper(value));
+        auto const input_value = value<Nullable, A, Rest...>::_(input);
+        return make<Nullable, ValueT, Rest...>::_(mapper(input_value));
     }
 
     /***
