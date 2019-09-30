@@ -5,13 +5,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 option(BUILD_TESTS_FOR_BOOST "Build tests for Boost.Optional" OFF)
 
 add_executable(${PROJECT_NAME}
-        absent_tests.cpp
         bind_test.cpp
         boost_optional_test.cpp
         either_test.cpp
         eval_test.cpp
         fmap_test.cpp
         foreach_test.cpp
+        main.cpp
 )
 
 target_compile_features(${PROJECT_NAME}
