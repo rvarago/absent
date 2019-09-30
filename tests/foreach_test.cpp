@@ -3,32 +3,38 @@
 #include <optional>
 #include <string>
 
-#include <gtest/gtest.h>
+#include <catch2/catch.hpp>
 
 namespace {
 
     using namespace rvarago::absent;
 
-    TEST(foreach, given_ANullable_when_Empty_should_DoNothing) {
-        int counter = 0;
-        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
+    SCENARIO( "foreach provides a generic and type-safe way to perform a side-effect in the value wrapped inside a nullable", "[foreach]" ) {
 
-        std::optional<int> const none;
+        GIVEN("A nullable") {
 
-        foreach(none, add_to_counter);
+            int counter = 0;
+            auto const add_counter = [&counter](auto v) { counter += v; };
 
-        EXPECT_EQ(0, counter);
+            WHEN("empty") {
+                THEN("do nothing") {
+                    std::optional<int> const none = std::nullopt;
+
+                    foreach(none, add_counter);
+
+                    CHECK(counter == 0);
+                }
+            }
+
+            WHEN("not empty") {
+                THEN("perform the side-effect of incrementing the counter") {
+                    std::optional<int> const some_one{1};
+
+                    foreach(some_one, add_counter);
+
+                    CHECK(counter == 1);
+                }
+            }
+        }
     }
-
-    TEST(foreach, given_ANullable_when_NotEmpty_should_RunTheEffectToAddToTheCounter) {
-        int counter = 0;
-        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
-
-        std::optional<int> const some_one{1};
-
-        foreach(some_one, add_to_counter);
-
-        EXPECT_EQ(1, counter);
-    }
-
 }

@@ -30,11 +30,11 @@ else()
     message("Unknown compiler...skipping configuration for warnings")
 endif()
 
-find_package(gtest REQUIRED)
+find_package(catch2 REQUIRED)
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE
-            gtest::gtest
+            catch2::catch2
             rvarago::absent
 )
 

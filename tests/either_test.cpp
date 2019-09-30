@@ -1,61 +1,72 @@
 #include <absent/absent.h>
 #include <absent/adapters/either.h>
 
-#include <gtest/gtest.h>
+#include <catch2/catch.hpp>
 
 namespace {
 
     using namespace rvarago::absent;
     using adapters::either;
 
-    struct error final {};
-    struct person final {};
-    struct address final {};
+    struct Error{};
+    struct Person{};
+    struct Address{};
 
     template<typename Expected, typename A, typename E>
-    void expect_alternative_of_type(either<A, E> const &it) {
-        EXPECT_TRUE(std::holds_alternative<Expected>(it));
+    void expect_alternative_of_type(either<A, E> e) {
+        CHECK(std::holds_alternative<Expected>(e));
     }
 
+    SCENARIO( "either lawfully works as a nullable", "[either]" ) {
 
-    TEST(either, given_ANullable_when_NotEmpty_should_ApplyForeachToIncrementTheCounter) {
-        int counter = 0;
-        auto const add_to_counter = [&counter](auto const &a) { counter += a; };
+        GIVEN( "An either" ) {
 
-        auto one = either<int, error>{1};
-        foreach(one, add_to_counter);
+            WHEN( "empty" ) {
 
-        expect_alternative_of_type<int>(one);
-        EXPECT_EQ(1, counter);
+                THEN( "return a new empty nullable" ) {
+                    auto const find_address = [](auto) { return either<Address, Error>{Address{}}; };
+                    auto const get_zip_code = [](auto) { return 42; };
+                    auto const either_error = either<Person, Error>{Error{}};
+
+                    auto const either_zip_code = either_error >> find_address | get_zip_code;
+
+                    expect_alternative_of_type<Error>(either_zip_code);
+                }
+
+                THEN( "return the result of calling the fallback function" ) {
+                    auto const to_minus_one = [] { return -1; };
+
+                    auto const either_error = either<int, Error>{Error{}};
+
+                    CHECK(eval(either_error, to_minus_one) == -1);
+                }
+            }
+
+            WHEN( "not empty" ) {
+
+                THEN( "return a new transformed nullable" ) {
+                    auto const find_address = [](auto) { return either<Address, Error>{Address{}}; };
+                    auto const get_zip_code = [](auto) { return 42; };
+                    auto const either_person = either<Person, Error>{Person{}};
+
+                    auto const either_zip_code = either_person >> find_address | get_zip_code;
+
+                    expect_alternative_of_type<int>(either_zip_code);
+                    CHECK(std::get<int>(either_zip_code) == 42);
+                }
+
+                THEN( "apply foreach to increment the counter" ) {
+                    int counter = 0;
+                    auto const add_counter = [&counter](auto v) { counter += v; };
+
+                    either<int, Error> const either_one = either<int, Error>{1};
+                    foreach(either_one, add_counter);
+
+                    expect_alternative_of_type<int>(either_one);
+                    CHECK(counter == 1);
+                }
+            }
+
+        }
     }
-
-    TEST(either, given_ANullable_when_Empty_should_ReturnAnEmptyNullable) {
-        auto const person_empty = either<person, error>{error{}};
-        auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
-        auto const zip_code = [](auto const &) { return 42; };
-
-        auto const either_zip_code = person_empty >> find_address | zip_code;
-
-        expect_alternative_of_type<error>(either_zip_code);
-    }
-
-    TEST(either, given_ANullable_when_NotEmpty_should_ReturnANewTransformedNullable) {
-        auto const person_some = either<person, error>{person{}};
-        auto const find_address = [](auto const &) { return either<address, error>{address{}}; };
-        auto const zip_code = [](auto const &) { return 42; };
-
-        auto const either_zip_code = person_some >> find_address | zip_code;
-
-        expect_alternative_of_type<int>(either_zip_code);
-        EXPECT_EQ(42, std::get<int>(either_zip_code));
-    }
-
-    TEST(either, given_ANullable_when_Empty_should_CallTheFallback) {
-        auto const to_minus_one = [] { return -1; };
-
-        auto const none = either<int, error>{error{}};
-
-        EXPECT_EQ(-1, eval(none, to_minus_one));
-    }
-
 }

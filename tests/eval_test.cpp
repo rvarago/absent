@@ -1,29 +1,34 @@
 #include <absent/combinators/eval.h>
 
 #include <optional>
-#include <string>
 
-#include <gtest/gtest.h>
+#include <catch2/catch.hpp>
 
 namespace {
 
     using namespace rvarago::absent;
 
+    SCENARIO( "eval provides a generic, type-safe, and lazy way to access a nullable", "[eval]" ) {
 
-    TEST(eval, given_ANullable_when_Empty_should_CallTheFallback) {
-        auto const to_minus_one = [] { return -1; };
+        GIVEN("A nullable") {
 
-        std::optional<int> const none;
+            auto const to_minus_one = [] { return -1; };
 
-        EXPECT_EQ(-1, eval(none, to_minus_one));
+            WHEN("empty") {
+                THEN("return the result of calling the fallback function") {
+                    std::optional<int> const none = std::nullopt;
+
+                    CHECK(eval(none, to_minus_one) == -1);
+                }
+            }
+
+            WHEN("not empty") {
+                THEN("return the wrapped value") {
+                    auto const one = std::optional<int>{1};
+
+                    CHECK(eval(one, to_minus_one) == 1);
+                }
+            }
+        }
     }
-
-    TEST(eval, given_ANullable_when_NotEmpty_should_ReturnTheWrappedValue) {
-        auto const to_minus_one = [] { return -1; };
-
-        auto const one = std::optional<int>{1};
-
-        EXPECT_EQ(1, eval(one, to_minus_one));
-    }
-
 }
