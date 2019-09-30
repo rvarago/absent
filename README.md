@@ -114,7 +114,6 @@ And to work out of the box, it has to have the following properties:
 However, these last two requirements can be adapted by providing template specializations. And some adapters are also
 available, such as for:
 
-* ```boost::optional<A>```.
 * ```rvarago::absent::adapters::either<A, E> which is a left-biased alias std::variant<A, E>```.
 
 More details can be found in the folder ```absent/nullable/```.
@@ -387,15 +386,6 @@ make BUILD_TYPE=Release
 ```
 make test
 ```
-
-* And to compile and run with the tests for ```boost::optional```:
-
-```
-make test  BUILD_TESTS_FOR_BOOST=ON
-```
-
-**Note**: So far, _absent_ does NOT provide the library for ```boost::optional``` transitively, therefore it expects it
-has been already installed in order to execute the tests.
 
 * To clean the _build_ folder:
 
