@@ -1,7 +1,7 @@
 #ifndef RVARAGO_ABSENT_FOREACH_H
 #define RVARAGO_ABSENT_FOREACH_H
 
-#include "absent/combinators/bind.h"
+#include "absent/nullable/syntax.h"
 
 namespace rvarago::absent {
 
