@@ -26,8 +26,9 @@ namespace rvarago::absent {
                 }
             };
 
-            template <typename A, typename B, typename E>
-            struct make_empty<std::variant<A, E>, std::variant<B, E>> final {
+            template <typename B, typename E>
+            struct make_empty<std::variant<B, E>> final {
+                template <typename A>
                 static constexpr auto _(std::variant<A, E> const& input) noexcept -> std::variant<B, E> {
                     return std::variant<B, E>{std::get<E>(input)};
                 }

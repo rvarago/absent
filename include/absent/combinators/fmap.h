@@ -23,7 +23,7 @@ namespace rvarago::absent {
         using namespace nullable::syntax;
         using ValueT = decltype(mapper(std::declval<A>()));
         if (empty<Nullable, A, Rest...>::_(input)) {
-            return make_empty<Nullable<A, Rest...>, Nullable<ValueT, Rest...>>::_(input);
+            return make_empty<Nullable<ValueT, Rest...>>::_(input);
         }
         auto const input_value = value<Nullable, A, Rest...>::_(input);
         return make<Nullable, ValueT, Rest...>::_(mapper(input_value));
