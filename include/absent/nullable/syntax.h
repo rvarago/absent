@@ -39,10 +39,11 @@ namespace rvarago::absent::nullable::syntax {
     /**
      * For custom types that have a different concept of empty state.
      */
-    template <typename NullableIn, typename NullableOut>
+    template <typename Nullable>
     struct make_empty {
-        static constexpr auto _(NullableIn const&) noexcept -> NullableOut {
-            return NullableOut{};
+        template <typename... Args>
+        static constexpr auto _(Args&&...) noexcept -> Nullable {
+            return Nullable{};
         }
     };
 
