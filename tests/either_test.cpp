@@ -1,6 +1,8 @@
 #include <absent/absent.h>
 #include <absent/adapters/either.h>
 
+#include <stdexcept>
+
 #include <catch2/catch.hpp>
 
 namespace {
@@ -64,6 +66,34 @@ namespace {
 
                     expect_alternative_of_type<int>(either_one);
                     CHECK(counter == 1);
+                }
+
+            }
+
+            WHEN( "wrapping a function that may throw an exception" ) {
+                AND_WHEN("throw an excepted exception") {
+
+                    auto always_throw = []() -> int {
+                        throw std::runtime_error{"failed"};
+                    };
+
+                    THEN( "return a new failed either" ) {
+                        auto const failed = attempt<either, std::exception>::run(always_throw);
+                        expect_alternative_of_type<std::exception>(failed);
+                    }
+                }
+
+                AND_WHEN("do not throw an exception") {
+
+                    auto never_throw = []() -> int {
+                        return 42;
+                    };
+
+                    THEN( "return the result inside a non-failed either" ) {
+                        auto const success = attempt<either, std::exception>::run(never_throw);
+                        expect_alternative_of_type<int>(success);
+                        CHECK(std::get<int>(success) == 42);
+                    }
                 }
             }
 

@@ -3,6 +3,7 @@ project(absent_tests LANGUAGES CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 
 add_executable(${PROJECT_NAME}
+        attempt_test.cpp
         bind_test.cpp
         either_test.cpp
         eval_test.cpp

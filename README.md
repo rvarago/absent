@@ -338,6 +338,25 @@ Where _make_fallback_person_ may be:
 person make_fallback_person();
 ```
 
+#### attempt
+
+Sometimes we have to interface code that throws exceptions with nullable types, e.g wrap the exception into a nullable,
+which shall be empty if the exception was thrown or shall contain the returned value if no exception was thrown. For
+this sole purpose, _absent_ provides a combinator called _attempt_:
+
+```
+auto const result = attempt<std::optional>::run<std::logic_error>(may_throw_an_exception);
+```
+
+Where _may_throw_an_exception_ has the following signature:
+
+```
+int may_throw_an_exception();
+```
+
+So it returns either value of type _int_, in which case _result_ will be an _std::optional<int>_ that wraps the returned value.
+Or it throws an exception derived from _std::logic_error_, in which case _result_ will be an empty _std::optional<int>_.
+
 ## Requirements
 
 * C++17
