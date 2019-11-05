@@ -32,6 +32,10 @@ namespace rvarago::absent {
                 static constexpr auto _(std::variant<A, E> const& input) noexcept -> std::variant<B, E> {
                     return std::variant<B, E>{std::get<E>(input)};
                 }
+
+                static constexpr auto _(E const& right_choice) noexcept -> std::variant<B, E> {
+                    return std::variant<B, E>{right_choice};
+                }
             };
         }
 }
