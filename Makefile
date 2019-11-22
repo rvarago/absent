@@ -6,12 +6,15 @@ PACKAGE_REFERENCE       = ${PROJECT_NAME}/${PACKAGE_VERSION}@rvarago/stable
 BUILD_DIR               = build
 BUILD_TYPE              = Debug
 
-.PHONY: all conan-package env-conan-package test install compile gen dep mk clean env env-test
+.PHONY: all conan-package env-conan-package test install compile gen dep mk clean env env-test env-format-check format-check format
 
 all: compile
 
 env:
 	docker build -t ${PROJECT_NAME} .
+
+env-format-check: env
+	docker run --rm ${PROJECT_NAME} make format-check --no-print-directory
 
 env-test: env
 	docker run --rm ${PROJECT_NAME} make compile test --no-print-directory
@@ -42,3 +45,11 @@ mk:
 
 clean:
 	rm -rf ${BUILD_DIR}
+
+format-check:
+	@if git ls-files -- '*.cpp' '*.h' | xargs clang-format -style=file -output-replacements-xml | grep -q "<replacement "; then \
+		echo "Source code did not adhere to the expected formatting style"; exit 1; \
+	fi
+
+format:
+	@git ls-files -- '*.cpp' '*.h' | xargs clang-format -i -style=file

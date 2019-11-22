@@ -7,4 +7,4 @@
 #include "absent/combinators/fmap.h"
 #include "absent/combinators/foreach.h"
 
-#endif //RVARAGO_ABSENT_ABSENT_H
+#endif // RVARAGO_ABSENT_ABSENT_H

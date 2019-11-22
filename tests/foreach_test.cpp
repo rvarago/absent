@@ -7,34 +7,37 @@
 
 namespace {
 
-    using namespace rvarago::absent;
+using namespace rvarago::absent;
 
-    SCENARIO( "foreach provides a generic and type-safe way to perform a side-effect in the value wrapped inside a nullable", "[foreach]" ) {
+SCENARIO("foreach provides a generic and type-safe way to perform a side-effect in the value wrapped inside a nullable",
+         "[foreach]") {
 
-        GIVEN("A nullable") {
+    GIVEN("A nullable") {
 
-            int counter = 0;
-            auto const add_counter = [&counter](auto v) { counter += v; };
+        int counter = 0;
+        auto const add_counter = [&counter](auto v) { counter += v; };
 
-            WHEN("empty") {
-                THEN("do nothing") {
-                    std::optional<int> const none = std::nullopt;
+        WHEN("empty") {
+            THEN("do nothing") {
+                std::optional<int> const none = std::nullopt;
 
-                    foreach(none, add_counter);
+                foreach (none, add_counter)
+                    ;
 
-                    CHECK(counter == 0);
-                }
+                CHECK(counter == 0);
             }
+        }
 
-            WHEN("not empty") {
-                THEN("perform the side-effect of incrementing the counter") {
-                    std::optional<int> const some_one{1};
+        WHEN("not empty") {
+            THEN("perform the side-effect of incrementing the counter") {
+                std::optional<int> const some_one{1};
 
-                    foreach(some_one, add_counter);
+                foreach (some_one, add_counter)
+                    ;
 
-                    CHECK(counter == 1);
-                }
+                CHECK(counter == 1);
             }
         }
     }
+}
 }
