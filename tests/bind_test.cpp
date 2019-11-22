@@ -1,4 +1,6 @@
 #include <absent/combinators/bind.h>
+#include <absent/support/blank.h>
+#include <absent/support/sink.h>
 
 #include <optional>
 #include <string>
@@ -74,6 +76,40 @@ SCENARIO("bind provides a generic and type-safe way to map and then flat a nulla
                 std::optional<Person> const some_person = std::optional{Person{}};
                 CHECK((some_person >> &Person::id_as_some) == std::optional{1});
                 CHECK((some_person >> &Person::id_as_none) == std::nullopt);
+            }
+        }
+        AND_GIVEN("bind used for chaining parameterless functions") {
+
+            bool is_set = false;
+            auto set_flag = [&is_set] {
+                is_set = true;
+                return std::make_optional(support::unit);
+            };
+
+            WHEN("when first is empty") {
+
+                std::optional<int> const none;
+
+                THEN("do nothing and return an empty nullable to stop the chaining") {
+
+                    auto const then_none = none >> support::sink(set_flag);
+
+                    CHECK(!then_none.has_value());
+                    CHECK(!is_set);
+                }
+            }
+
+            WHEN("when first is not empty") {
+
+                auto const some = std::optional{1};
+
+                THEN("run the function that triggers a side-effect and return a non-empty nullable") {
+
+                    auto const then_some = some >> support::sink(set_flag);
+
+                    CHECK(then_some.has_value());
+                    CHECK(is_set);
+                }
             }
         }
     }
