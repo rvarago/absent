@@ -360,15 +360,10 @@ Or it throws an exception derived from _std::logic_error_, in which case _result
 ## Requirements
 
 * C++17
-* Make
 * CMake
-* Conan
-* Docker
-
-### Notes
-
-- Make is only required if you want to use it to orchestrate task execution, for instance to invoke Conan, CMake, etc.
-- Docker is only required if you want to run the tests inside a container.
+* Make (_only if you want to use it to orchestrate task execution_)
+* Conan (_only if you want generate a package or build the tests using conan as a provider for the test framework_)
+* Docker (_only if you want build from inside a docker container_)
 
 ## Build
 
@@ -425,7 +420,7 @@ make env-test
 To install _absent_:
 
 ```
-sudo make install
+make install
 ```
 
 This will install _absent_ into _${CMAKE_INSTALL_PREFIX}/include/absent_ and make it available into CMake local package
@@ -439,9 +434,13 @@ find_package(absent REQUIRED)
 target_link_libraries(myExample rvarago::absent)
 ```
 
-## Packaging via Conan
+## Conan package
 
-To generate a package via Conan:
+absent can also be consumed a conan [package](https://bintray.com/conan/conan-center/absent%3A_) available in the conan-center.
+
+### Packaging via Conan
+
+It's also possible to generate a package via Conan directly from the source tree:
 
 ```
 make conan-package
