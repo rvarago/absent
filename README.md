@@ -291,6 +291,45 @@ case the _std::optional_ does not contain a _person_ it simply returns an empty 
 It's also possible to use the non-member overload for _bind_, but at the call site, the user has to wrap the member
 function inside a lambda, which adds a little bit of noise to the caller code.
 
+Another common use-case for _bind_ is for multiple error handling.
+One way to do multiple error handling if by threading a sequence of
+computations that return _std::optional_ to represent success or error,
+and the computations shall stop as soon as the first one returns an empty
+_std::optional_, meaning error, for instance:
+
+```
+std::optional<blank> first();
+std::optional<blank> second();
+
+auto const success = first() >> sink(second);
+
+if (success) {
+    // handle success
+}
+else {
+    // handle error
+}
+```
+
+Where:
+
+* `rvarago::absent::support::blank` is a type that conveys the idea
+of a _unit_, i.e. it contains only one value or state, which is
+`blank{}`, that is also exported by the helpful constant `rvarago::absent::support::unit`.
+* `rvarago::absent::support::sink` wraps a callable that should receive
+parameters in another callable that discards the referred parameters.
+
+Please notice that, if you had to provide parameters to `second`,
+then you would have to wrap it inside a lambda that captures all required
+objects, and then forwards them to `second`, for instance:
+
+```
+std::optional<blank> second(std::string, int);
+
+std::string x = "123"s;
+auto const success = first() >> support::sink([&second, &x] { return second(x, 42); });
+```
+
 #### foreach
 
 Another combinator is _foreach_ which allows running a function that does not return any value, so only executing an 
