@@ -2,8 +2,8 @@
 #define RVARAGO_ABSENT_MEMBER_H
 
 namespace rvarago::absent::member {
-    template<typename A, typename B>
-    using Mapper = B (A::*)() const;
+template <typename A, typename B>
+using Mapper = B (A::*)() const;
 }
 
-#endif //RVARAGO_ABSENT_MEMBER_H
+#endif // RVARAGO_ABSENT_MEMBER_H

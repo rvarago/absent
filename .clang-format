@@ -1,0 +1,10 @@
+﻿---
+BasedOnStyle: Microsoft
+BreakBeforeBraces: Attach
+UseTab: Never
+---
+Language: Cpp
+SortIncludes: true
+SortUsingDeclarations: true
+FixNamespaceComments: false
+AlwaysBreakTemplateDeclarations: Yes
