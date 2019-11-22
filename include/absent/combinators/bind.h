@@ -1,8 +1,8 @@
 #ifndef RVARAGO_ABSENT_BIND_H
 #define RVARAGO_ABSENT_BIND_H
 
-#include "absent/member/member.h"
 #include "absent/nullable/syntax.h"
+#include "absent/support/member.h"
 
 #include <functional>
 
