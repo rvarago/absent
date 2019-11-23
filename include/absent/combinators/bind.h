@@ -34,7 +34,7 @@ constexpr decltype(auto) bind(Nullable<A, Rest...> const &input, UnaryFunction m
  */
 template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
 constexpr decltype(auto) bind(Nullable<A, Rest...> const &input,
-                              member::Mapper<const A, Nullable<B, Rest...>> mapper) noexcept {
+                              support::member_mapper<const A, Nullable<B, Rest...>> mapper) noexcept {
     return bind(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
 }
 
@@ -51,7 +51,7 @@ constexpr decltype(auto) operator>>(Nullable<A, Rest...> const &input, UnaryFunc
  */
 template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
 constexpr decltype(auto) operator>>(Nullable<A, Rest...> const &input,
-                                    member::Mapper<const A, Nullable<B, Rest...>> mapper) noexcept {
+                                    support::member_mapper<const A, Nullable<B, Rest...>> mapper) noexcept {
     return bind(input, mapper);
 }
 
