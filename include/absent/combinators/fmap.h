@@ -33,7 +33,7 @@ constexpr decltype(auto) fmap(Nullable<A, Rest...> const &input, UnaryFunction m
  * The same as fmap but for a member function that has to be const and parameterless.
  */
 template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-constexpr decltype(auto) fmap(Nullable<A, Rest...> const &input, member::Mapper<const A, B> mapper) noexcept {
+constexpr decltype(auto) fmap(Nullable<A, Rest...> const &input, support::member_mapper<const A, B> mapper) noexcept {
     return fmap(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
 }
 
@@ -49,7 +49,8 @@ constexpr decltype(auto) operator|(Nullable<A, Rest...> const &input, Mapper map
  * Infix version of fmap for a member function.
  */
 template <template <typename...> typename Nullable, typename A, typename B, typename... Rest>
-constexpr decltype(auto) operator|(Nullable<A, Rest...> const &input, member::Mapper<const A, B> mapper) noexcept {
+constexpr decltype(auto) operator|(Nullable<A, Rest...> const &input,
+                                   support::member_mapper<const A, B> mapper) noexcept {
     return fmap(input, mapper);
 }
 
