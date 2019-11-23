@@ -1,5 +1,5 @@
 #include <absent/combinators/bind.h>
-#include <absent/support/blank.h>
+#include <absent/support/execution_status.h>
 #include <absent/support/sink.h>
 
 #include <optional>
@@ -78,17 +78,17 @@ SCENARIO("bind provides a generic and type-safe way to map and then flat a nulla
                 CHECK((some_person >> &Person::id_as_none) == std::nullopt);
             }
         }
-        AND_GIVEN("bind used for chaining parameterless functions") {
+        AND_GIVEN("bind used for multiple error handling") {
 
             bool is_set = false;
-            auto set_flag = [&is_set] {
+            auto set_flag = [&is_set]() -> support::execution_status {
                 is_set = true;
-                return std::make_optional(support::unit);
+                return support::success;
             };
 
-            WHEN("when first is empty") {
+            WHEN("when initial nullable is empty/failed") {
 
-                std::optional<int> const none;
+                support::execution_status const none = support::failure;
 
                 THEN("do nothing and return an empty nullable to stop the chaining") {
 
@@ -99,9 +99,9 @@ SCENARIO("bind provides a generic and type-safe way to map and then flat a nulla
                 }
             }
 
-            WHEN("when first is not empty") {
+            WHEN("when initial nullable is not empty/failed") {
 
-                auto const some = std::optional{1};
+                support::execution_status const some = support::success;
 
                 THEN("run the function that triggers a side-effect and return a non-empty nullable") {
 
