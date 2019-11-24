@@ -11,9 +11,9 @@ namespace rvarago::absent::support {
  * @param f callable to be wrapped.
  * @return a new callable that discards the parameters sent to it.
  */
-template <typename UnaryFunction>
-constexpr decltype(auto) sink(UnaryFunction &&f) noexcept {
-    return [f = std::forward<UnaryFunction>(f)](auto &&...) { return f(); };
+template <typename NullaryFunction>
+constexpr decltype(auto) sink(NullaryFunction &&f) noexcept {
+    return [f = std::forward<NullaryFunction>(f)](auto &&...) { return f(); };
 }
 
 }
