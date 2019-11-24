@@ -76,7 +76,7 @@ SCENARIO("either lawfully works as a nullable", "[either]") {
                 auto always_throw = []() -> int { throw std::runtime_error{"failed"}; };
 
                 THEN("return a new failed either") {
-                    auto const failed = attempt<either, std::exception>::run(always_throw);
+                    auto const failed = attempt<either, std::exception>::or_catch(always_throw);
                     expect_alternative_of_type<std::exception>(failed);
                 }
             }
@@ -86,7 +86,7 @@ SCENARIO("either lawfully works as a nullable", "[either]") {
                 auto never_throw = []() -> int { return 42; };
 
                 THEN("return the result inside a non-failed either") {
-                    auto const success = attempt<either, std::exception>::run(never_throw);
+                    auto const success = attempt<either, std::exception>::or_catch(never_throw);
                     expect_alternative_of_type<int>(success);
                     CHECK(std::get<int>(success) == 42);
                 }

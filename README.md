@@ -425,7 +425,7 @@ which shall be empty if the exception was thrown or shall contain the returned v
 this sole purpose, _absent_ provides a combinator called `attempt`:
 
 ```
-auto const result = attempt<std::optional>::run<std::logic_error>(may_throw_an_exception);
+auto const result = attempt<std::optional>::or_catch<std::logic_error>(may_throw_an_exception);
 ```
 
 Where `may_throw_an_exception` has the following signature:

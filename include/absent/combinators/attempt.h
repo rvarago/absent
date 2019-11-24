@@ -11,7 +11,7 @@ template <template <typename...> typename Nullable, typename... Rest>
 struct attempt {
 
     template <typename BaseException = std::exception, typename NullaryFunction>
-    static auto run(NullaryFunction unsafe) -> Nullable<decltype(unsafe()), Rest...> {
+    static auto or_catch(NullaryFunction unsafe) -> Nullable<decltype(unsafe()), Rest...> {
         using namespace nullable::syntax;
         using ValueT = decltype(unsafe());
         try {
