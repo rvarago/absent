@@ -11,7 +11,7 @@ class AbsentConan(ConanFile):
     url         = homepage
     exports     = ["README.md", "LICENSE"]
 
-    build_requires  = "catch2/2.9.2"
+    build_requires  = "catch2/2.11.0"
     generators      = "cmake_find_package"
 
     exports_sources = "include/*"

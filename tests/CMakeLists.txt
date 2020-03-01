@@ -31,12 +31,12 @@ else()
     message("Unknown compiler...skipping configuration for warnings")
 endif()
 
-find_package(catch2 REQUIRED)
+find_package(Catch2 REQUIRED)
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE
-            catch2::catch2
-            rvarago::absent
+        rvarago::absent
+        Catch2::Catch2
 )
 
 add_test(${PROJECT_NAME} ${PROJECT_NAME})
