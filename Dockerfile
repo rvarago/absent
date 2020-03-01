@@ -1,4 +1,4 @@
-FROM conanio/gcc9:1.19.0
+FROM conanio/gcc9:1.22.2
 
 RUN pip install clang-format
 
