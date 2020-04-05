@@ -1,0 +1,18 @@
+pool:
+  vmImage: 'windows-2019'
+
+steps:
+
+  - script: |
+      pip install conan
+      conan install .
+    displayName: 'Fetch Dependencies'
+
+  - script: |
+      cmake .  && cmake --build .
+    displayName: 'Build'
+
+  - script: |
+      ctest -VV .
+    displayName: 'Test'
+
