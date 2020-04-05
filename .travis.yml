@@ -6,4 +6,3 @@ services:
 script:
   - make env-format-check
   - make env-test
-  - make env-conan-package BUILD_TESTS=OFF PACKAGE_VERSION=ci
