@@ -1,65 +1,67 @@
-#include <absent/combinators/fmap.h>
-
 #include <optional>
 #include <string>
 
 #include <catch2/catch.hpp>
 
-namespace {
+#include <absent/fmap.h>
 
 using namespace rvarago::absent;
 
-SCENARIO("fmap provides a generic and type-safe way to map a nullable", "[fmap]") {
+SCENARIO("fmap provides a way to map {optional<A>, f: A -> B} to optional<B>", "[fmap]") {
 
-    GIVEN("A nullable") {
+    GIVEN("A function int -> string") {
 
-        WHEN("empty") {
-            THEN("return a new empty nullable") {
-                auto const increment = [](auto v) { return v + 1; };
+        auto to_string = [](int x) -> std::string { return std::to_string(x); };
 
-                std::optional<int> const none = std::nullopt;
+        AND_GIVEN("An optional<int>") {
 
-                CHECK((none | increment) == std::nullopt);
+            WHEN("empty") {
+                std::optional<int> none;
+
+                THEN("return a new empty optional<string>") {
+                    std::optional<std::string> mapped_none = none | to_string;
+                    CHECK(mapped_none == std::nullopt);
+                }
             }
-        }
 
-        WHEN("not empty") {
-            THEN("return a new nullable with the mapped value") {
-                auto const increment = [](auto v) { return v + 1; };
+            WHEN("not empty") {
+                std::optional<int> some{200};
 
-                std::optional<int> const some_zero{0};
-
-                CHECK((some_zero | increment) == std::optional{1});
-            }
-        }
-
-        WHEN("not empty and mapped to a new type") {
-            THEN("return a new nullable with the mapped value of the new type") {
-                auto const string_to_int = [](auto v) { return std::stoi(v); };
-                auto const int_to_string = [](auto v) { return std::to_string(v); };
-
-                std::optional<std::string> const some_zero_as_string{"0"};
-
-                CHECK((some_zero_as_string | string_to_int) == std::optional{0});
-                CHECK((some_zero_as_string | string_to_int | int_to_string) == std::optional{"0"});
-            }
-        }
-
-        WHEN("the mapping function is a member function") {
-            THEN("do the same as the free function version") {
-                struct Person {
-                    int id() const {
-                        return 1;
-                    }
-                };
-
-                std::optional<Person> const none_person = std::nullopt;
-                CHECK((none_person | &Person::id) == std::nullopt);
-
-                std::optional<Person> const some_person = std::optional{Person{}};
-                CHECK((some_person | &Person::id) == std::optional{1});
+                THEN("return a non-empty and mapped optional<string>") {
+                    std::optional<std::string> mapped_some = some | to_string;
+                    CHECK(mapped_some == std::optional{std::string{"200"}});
+                }
             }
         }
     }
-}
+
+    GIVEN("A function Person -> string") {
+
+        struct Person {
+            std::string id() const {
+                return std::string{"200"};
+            }
+        };
+
+        AND_GIVEN("An optional<Person>") {
+
+            WHEN("empty") {
+                std::optional<Person> none;
+
+                THEN("return a new empty optional<string>") {
+                    std::optional<std::string> mapped_none = none | &Person::id;
+                    CHECK(mapped_none == std::nullopt);
+                }
+            }
+
+            WHEN("not empty") {
+                std::optional<Person> some{Person{}};
+
+                THEN("return a non-empty and mapped optional<string>") {
+                    std::optional<std::string> mapped_some = some | &Person::id;
+                    CHECK(mapped_some == std::optional{std::string{"200"}});
+                }
+            }
+        }
+    }
 }

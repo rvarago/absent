@@ -1,5 +1,5 @@
-#ifndef RVARAGO_ABSENT_SINK_H
-#define RVARAGO_ABSENT_SINK_H
+#ifndef RVARAGO_ABSENT_SUPPORT_SINK_H
+#define RVARAGO_ABSENT_SUPPORT_SINK_H
 
 #include <utility>
 

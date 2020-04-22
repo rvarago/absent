@@ -46,7 +46,7 @@ Furthermore, we have to make several calls to `std::optional<T>` accessor member
 Otherwise, it would trigger a `bad_optional_access`. Thus, it’d be nice to minimize the direct calls to `value()` by wrapping intermediary ones inside a function that does the checking and then accesses the value.
 And only make the direct call to `value()` from our code at the very end of the composition.
 
-**Note:**  We could have used the dereference operator `*`rather than `value()`. It would invoke undefined behaviour instead of
+**Note:**  We could have used the dereference operator `*` rather than `value()`. It would invoke undefined behaviour instead of
 throwing an exception in case of accessing an empty `std::optional<T>`.
 
 Now, compare it against the code that does not make use of nullable types whatsoever. And of course, it expects
@@ -94,50 +94,36 @@ expressiveness achieved by composing simple functions as we can do for non-nulla
 ### Enters _absent_
 
 _absent_ provides simple abstractions based on functional programming to help us composing operations. It's inspired by
-Haskell and so uses a similar vocabulary. It does **NOT** attempt to solve all problems, far away from it.
-However, it abstracts away some details by encapsulating common patterns into functions, giving labels to repetitive pieces
-of logic. Therefore, it reduces the syntactic noise of some forms of composition of nullable types.
+Haskell and so uses a similar vocabulary. It does **NOT** attempt to solve all problems when it comes to the complex problem of error-handling,
+far away from it.
 
-It's important to say: _absent_ does **NOT** provide any implementation of nullable types, but it attempts to wrap the
-ones that you're using.
+However, it abstracts away some details of an "error-as-value" API by encapsulating common patterns into functions, giving labels to repetitive pieces
+of logic. Therefore, it reduces the syntactic noise of some forms of composition of nullable types and increases safety.
+
+Furthermore, _absent_ does **NOT** provide any implementation of nullable types, instead, it aims to be generic regarding
+the concrete nullable type.
 
 Hence, an interesting caveat of _absent_ is that:
 
-> Up to some extent, _absent_ is agnostic regarding the concrete implementation of a nullable type that you're using,
+> Up to some extent, _absent_ is agnostic regarding the concrete implementation of a nullable type that one may use,
 as long as it adheres to the **concept** of a nullable type expected by the library.
 
-Mainly:
+The main example of a nullable type that models this concept is: `std::optional<T>`, which might get a [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
 
-* It has to have a type parameter.
-* It has to be default constructible in order to express an empty state.
+Meanwhile, _absent_ may be used to fill that "monadic-gap".
 
-And to work out of the box, it has to have the following properties:
+And even after, it could still be interesting, since it's generic regarding the concrete nullable type implementation,
+also working for optional-like types other than `std::optional<T>`. For instance, you might want to return more information to explain why a function has failed to produce a value, maybe by returning not an `std::optional<A>`, but an `types::either<A, E>`.
 
-* It has to provide a predicate `operator bool` to check the presence of the contained value.
-* It has to provide a function `operator*` to extract the contained value.
-
-However, these last two requirements can be adapted by providing template specializations. And some adapters are also
-available, such as for:
-
-* ```rvarago::absent::adapters::either<A, E> which is a left-biased alias std::variant<A, E>```.
-
-More details can be found in the folder ```absent/nullable/```.
-
-One example of a nullable type that models this concept would obviously then be: `std::optional<T>`, which, by the way, is going to
-have a nice [monadic interface](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r3.html) soon.
-
-Meanwhile, _absent_ may be used to fill that gap. And even after it could still be interesting, since it's agnostic
-regarding the concrete nullable types, also working for optional-like types other than `std::optional<T>`. For instance, you might want to return more information to explain why a function has failed to produce a value, maybe by returning not an `std::optional<A>`, but an _std::variant<A, E>_, where _E_ is the type of the returned error, _absent_ might help here as well.
+`types::either<A, E>` is an alias for `std::variant<A, E>`, where, by convention, `E` represents an error.
+_absent_ provides combinators for `types::either<A, E>` as well.
 
 ### Getting started
 
 _absent_ is packaged as a header-only library and, once installed, to get started with it you simply have to include the
-main header `absent/absent.h`, which includes all the combinators. Or you can include each combinator as you need them,
-for example, `absent/combinators/fmap.h`.
+necessary headers, for instance, `absent/absent.h` includes the main combinators that are inside the namespace `rvarago::absent`.
 
-You can find all the combinators inside the namespace _rvarago::absent_.
-
-Since the qualified names may be too verbose, an alias might be helpful.
+Since the qualified names may be too verbose, adding an alias to your project might be helpful.
 
 ### Rewriting the person/address/zip_code example using absent
 
@@ -305,7 +291,7 @@ computations that return `std::optional<T>` to represent success or fail,
 and the computations shall stop as soon as the first one returns an empty
 `std::optional`, meaning it has failed.
 
-absent offers a way to achieve this goal, for instance, via the headers `absent/support/blank.h` and `absent/support/sink.h`:
+_absent_ can help here too, for instance:
 
 ```
 std::optional<blank> first();
@@ -340,9 +326,8 @@ std::string x = "123"s;
 auto const success = first() >> support::sink([&second, &x] { return second(x, 42); });
 ```
 
-It's also possible raise the level of abstraction even more by using the header `absent/support/execution_status.h` instead
-of `absent/support/blank.h`. It, conveniently, exports the alias `execution_status` for `std::optional<blank>`, as well
-as the compile-time constants of type `execution_status`:
+It's also possible raise the level of abstraction even more by using the header `absent/support/execution_status.h`.
+It, conveniently, exports the alias `execution_status` for `std::optional<blank>`, as well as the compile-time constants of type `execution_status`:
 
 * `success` for an `execution_status` filled with a `unit`.
 * `failure` for an `execution_status` filled with a `std::nullopt`.
@@ -370,20 +355,20 @@ else {
 }
 ```
 
-#### foreach
+#### for_each
 
-Another combinator is `foreach` which allows running a function that does not return any value, so only executing an 
+Another combinator is `for_each` which allows running a function that does not return any value, so only executing an 
 action with the wrapped value as a parameter. Since the action does not return anything, it's only executed because of
 its side-effect, like logging a message to the console, saving an entity in the database, etc.
 
-Given a nullable _N[A]_ and a function _f: A -> void_, `foreach` executes _f_  providing _A_ from _N[A]_ as argument to _f_.
-If _N[A]_ is empty, then _foreach_ does nothing.
+Given a nullable _N[A]_ and a function _f: A -> void_, `for_each` executes _f_  providing _A_ from _N[A]_ as the argument to _f_.
+If _N[A]_ is empty, then `for_each` does nothing.
 
-One use-case for `foreach` is where you would like to log the wrapped value if any. Otherwise, in case of empty
+One use-case for `for_each` is where you would like to log the wrapped value if any. Otherwise, in case of empty
 nullable, you don't want to do anything:
 
 ```
-foreach(std::optional{person{}}, log);
+for_each(std::optional{person{}}, log);
 ```
 
 Where `log` may be:
@@ -397,7 +382,7 @@ void log(person const&) const;
 Another combinator is `eval` which returns the wrapped value inside nullable if present or evaluates the
 fallback function in case the nullable is empty. Therefore, providing a simulated "call-by-need" version of `std::optional<T>::value_or`.
 
-Here, call-by-need roughly means that the evaluation of the fallback is deferred to point when it really needs to happen,
+Here, call-by-need roughly means that the evaluation of the fallback is deferred to point when it must happen,
 which is: inside `eval` only when the nullable is empty.
 
 Therefore, it avoids wasting computations as it happens with `std::optional<T>::value_or`, because in this case, the function's argument is evaluated *before* reaching `std::optional<T>::value_or` even if the nullable is not empty, in which case the value is then discarded. So, any computation that was already performed becomes useless and, maybe even more critical, it might've triggered potential side-effects that would only make sense when the nullable is empty.
@@ -425,7 +410,7 @@ which shall be empty if the exception was thrown or shall contain the returned v
 this sole purpose, _absent_ provides a combinator called `attempt`:
 
 ```
-auto const result = attempt<std::optional>::or_catch<std::logic_error>(may_throw_an_exception);
+auto const result = attempt<std::optional, std::logic_error>(may_throw_an_exception);
 ```
 
 Where `may_throw_an_exception` has the following signature:
