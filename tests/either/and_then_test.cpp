@@ -3,12 +3,12 @@
 
 #include <catch2/catch.hpp>
 
-#include <absent/adapters/either/bind.h>
+#include <absent/adapters/either/and_then.h>
 
 using namespace rvarago::absent::adapters::either;
 using rvarago::absent::adapters::types::either;
 
-SCENARIO("bind provides a way to map {either<A, E>, f: A -> either<B, E>} to either<B, E>", "[either-bind]") {
+SCENARIO("and_then provides a way to map {either<A, E>, f: A -> either<B, E>} to either<B, E>", "[either-and_then]") {
 
     struct Error {
         std::string code;

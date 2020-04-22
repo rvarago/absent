@@ -4,13 +4,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 
 add_executable(${PROJECT_NAME}
         attempt_test.cpp
-        bind_test.cpp
+        and_then_test.cpp
         eval_test.cpp
         fmap_test.cpp
         for_each_test.cpp
 
         either/attempt_test.cpp
-        either/bind_test.cpp
+        either/and_then_test.cpp
         either/eval_test.cpp
         either/fmap_test.cpp
         either/for_each_test.cpp

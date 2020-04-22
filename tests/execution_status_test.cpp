@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include <absent/bind.h>
+#include <absent/and_then.h>
 #include <absent/support/execution_status.h>
 
 using namespace rvarago::absent;
