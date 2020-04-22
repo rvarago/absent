@@ -3,11 +3,11 @@
 
 #include <catch2/catch.hpp>
 
-#include <absent/fmap.h>
+#include <absent/transform.h>
 
 using namespace rvarago::absent;
 
-SCENARIO("fmap provides a way to map {optional<A>, f: A -> B} to optional<B>", "[fmap]") {
+SCENARIO("transform provides a way to map {optional<A>, f: A -> B} to optional<B>", "[transform]") {
 
     GIVEN("A function int -> string") {
 

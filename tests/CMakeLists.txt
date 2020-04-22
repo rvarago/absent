@@ -6,13 +6,13 @@ add_executable(${PROJECT_NAME}
         attempt_test.cpp
         and_then_test.cpp
         eval_test.cpp
-        fmap_test.cpp
+        transform_test.cpp
         for_each_test.cpp
 
         either/attempt_test.cpp
         either/and_then_test.cpp
         either/eval_test.cpp
-        either/fmap_test.cpp
+        either/transform_test.cpp
         either/for_each_test.cpp
 
         execution_status_test.cpp

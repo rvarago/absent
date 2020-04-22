@@ -3,12 +3,12 @@
 
 #include <catch2/catch.hpp>
 
-#include <absent/adapters/either/fmap.h>
+#include <absent/adapters/either/transform.h>
 
 using namespace rvarago::absent::adapters::either;
 using rvarago::absent::adapters::types::either;
 
-SCENARIO("fmap provides a way to map {either<A, E>, f: A -> B} to either<B, E>", "[either-fmap]") {
+SCENARIO("transform provides a way to map {either<A, E>, f: A -> B} to either<B, E>", "[either-transform]") {
 
     struct Error {
         std::string code;
