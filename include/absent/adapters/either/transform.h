@@ -1,5 +1,5 @@
-#ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_FMAP_H
-#define RVARAGO_ABSENT_ADAPTERS_EITHER_FMAP_H
+#ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_TRANSFORM_H
+#define RVARAGO_ABSENT_ADAPTERS_EITHER_TRANSFORM_H
 
 #include <functional>
 
@@ -19,7 +19,7 @@ namespace rvarago::absent::adapters::either {
  * @return a new either containing the mapped value of type B, possibly in error if input was also in error.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto fmap(types::either<A, E> const &input, UnaryFunction mapper) noexcept
+constexpr auto transform(types::either<A, E> const &input, UnaryFunction mapper) noexcept
     -> types::either<decltype(mapper(std::declval<A>())), E> {
     using EitherB = types::either<decltype(mapper(std::declval<A>())), E>;
     if (!std::holds_alternative<A>(input)) {
@@ -29,30 +29,30 @@ constexpr auto fmap(types::either<A, E> const &input, UnaryFunction mapper) noex
 }
 
 /***
- * Infix version of fmap.
+ * Infix version of transform.
  */
 template <typename A, typename E, typename UnaryFunction>
 constexpr auto operator|(types::either<A, E> const &input, UnaryFunction mapper) noexcept
     -> types::either<decltype(mapper(std::declval<A>())), E> {
-    return fmap(input, mapper);
+    return transform(input, mapper);
 }
 
 /***
- * The same as fmap but for a member function that has to be const and parameterless.
+ * The same as transform but for a member function that has to be const and parameterless.
  */
 template <typename A, typename E, typename B>
-constexpr auto fmap(types::either<A, E> const &input, support::member_mapper<const A, B> mapper) noexcept
+constexpr auto transform(types::either<A, E> const &input, support::member_mapper<const A, B> mapper) noexcept
     -> types::either<B, E> {
-    return fmap(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
+    return transform(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
 }
 
 /**
- * Infix version of fmap for a member function.
+ * Infix version of transform for a member function.
  */
 template <typename A, typename E, typename B>
 constexpr auto operator|(types::either<A, E> const &input, support::member_mapper<const A, B> mapper) noexcept
     -> types::either<B, E> {
-    return fmap(input, mapper);
+    return transform(input, mapper);
 }
 
 }

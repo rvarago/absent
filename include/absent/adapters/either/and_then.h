@@ -1,5 +1,5 @@
-#ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_BIND_H
-#define RVARAGO_ABSENT_ADAPTERS_EITHER_BIND_H
+#ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_ANDTHEN_H
+#define RVARAGO_ABSENT_ADAPTERS_EITHER_ANDTHEN_H
 
 #include <functional>
 
@@ -20,7 +20,7 @@ namespace rvarago::absent::adapters::either {
  * @return a new either containing the mapped value of type B, possibly in error if input was also in error.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto bind(types::either<A, E> const &input, UnaryFunction mapper) noexcept
+constexpr auto and_then(types::either<A, E> const &input, UnaryFunction mapper) noexcept
     -> decltype(mapper(std::declval<A>())) {
     using EitherB = decltype(mapper(std::declval<A>()));
     if (!std::holds_alternative<A>(input)) {
@@ -30,30 +30,30 @@ constexpr auto bind(types::either<A, E> const &input, UnaryFunction mapper) noex
 }
 
 /***
- * Infix version of bind.
+ * Infix version of and_then.
  */
 template <typename A, typename E, typename UnaryFunction>
 constexpr auto operator>>(types::either<A, E> const &input, UnaryFunction mapper) noexcept
     -> decltype(mapper(std::declval<A>())) {
-    return bind(input, mapper);
+    return and_then(input, mapper);
 }
 
 /***
- * The same as bind but for a member function that has to be const and parameterless.
+ * The same as and_then but for a member function that has to be const and parameterless.
  */
 template <typename A, typename E, typename B>
-constexpr auto bind(types::either<A, E> const &input,
-                    support::member_mapper<const A, types::either<B, E>> mapper) noexcept -> types::either<B, E> {
-    return bind(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
+constexpr auto and_then(types::either<A, E> const &input,
+                        support::member_mapper<const A, types::either<B, E>> mapper) noexcept -> types::either<B, E> {
+    return and_then(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
 }
 
 /**
- * Infix version of bind for a member function.
+ * Infix version of and_then for a member function.
  */
 template <typename A, typename E, typename B>
 constexpr auto operator>>(types::either<A, E> const &input,
                           support::member_mapper<const A, types::either<B, E>> mapper) noexcept -> types::either<B, E> {
-    return bind(input, mapper);
+    return and_then(input, mapper);
 }
 
 }

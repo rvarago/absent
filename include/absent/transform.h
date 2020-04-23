@@ -1,5 +1,5 @@
-#ifndef RVARAGO_ABSENT_FMAP_H
-#define RVARAGO_ABSENT_FMAP_H
+#ifndef RVARAGO_ABSENT_TRANSFORM_H
+#define RVARAGO_ABSENT_TRANSFORM_H
 
 #include <functional>
 
@@ -17,7 +17,7 @@ namespace rvarago::absent {
  * @return a new nullable containing the mapped value of type B, possibly empty if input was also empty.
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
-constexpr auto fmap(Nullable<A> const &input, UnaryFunction mapper) noexcept
+constexpr auto transform(Nullable<A> const &input, UnaryFunction mapper) noexcept
     -> Nullable<decltype(mapper(std::declval<A>()))> {
     using NullableB = Nullable<decltype(mapper(std::declval<A>()))>;
     if (!input) {
@@ -27,28 +27,28 @@ constexpr auto fmap(Nullable<A> const &input, UnaryFunction mapper) noexcept
 }
 
 /***
- * Infix version of fmap.
+ * Infix version of transform.
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
 constexpr auto operator|(Nullable<A> const &input, UnaryFunction mapper) noexcept
     -> Nullable<decltype(mapper(std::declval<A>()))> {
-    return fmap(input, mapper);
+    return transform(input, mapper);
 }
 
 /***
- * The same as fmap but for a member function that has to be const and parameterless.
+ * The same as transform but for a member function that has to be const and parameterless.
  */
 template <template <typename> typename Nullable, typename A, typename B>
-constexpr auto fmap(Nullable<A> const &input, support::member_mapper<const A, B> mapper) noexcept -> Nullable<B> {
-    return fmap(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
+constexpr auto transform(Nullable<A> const &input, support::member_mapper<const A, B> mapper) noexcept -> Nullable<B> {
+    return transform(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
 }
 
 /**
- * Infix version of fmap for a member function.
+ * Infix version of transform for a member function.
  */
 template <template <typename> typename Nullable, typename A, typename B>
 constexpr auto operator|(Nullable<A> const &input, support::member_mapper<const A, B> mapper) noexcept -> Nullable<B> {
-    return fmap(input, mapper);
+    return transform(input, mapper);
 }
 
 }

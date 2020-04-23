@@ -3,11 +3,11 @@
 
 #include <catch2/catch.hpp>
 
-#include <absent/bind.h>
+#include <absent/and_then.h>
 
 using namespace rvarago::absent;
 
-SCENARIO("bind provides a way to bind {optional<A>, f: A -> optional<B>} to optional<B>", "[bind]") {
+SCENARIO("and_then provides a way to and_then {optional<A>, f: A -> optional<B>} to optional<B>", "[and_then]") {
 
     GIVEN("A function int -> optional<string>") {
 

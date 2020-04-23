@@ -130,13 +130,13 @@ Since the qualified names may be too verbose, adding an alias to your project mi
 Using a prefix notation, we can rewrite the above example using _absent_ as:
 
 ```
-auto const maybe_zip_code = fmap(bind(find_person(), find_address), zip_code);
+auto const maybe_zip_code = transform(and_then(find_person(), find_address), zip_code);
 ````
 
 Which solves the initial problem for the lack of composition for nullable types, now we express the pipeline as:
 
 ```
-(void -> std::optional<person>) bind (person -> std::optional<address>) fmap (address -> zip)
+(void -> std::optional<person>) and_then (person -> std::optional<address>) transform (address -> zip)
 ```
 
 And that's _functionally_ equivalent to:
@@ -167,7 +167,7 @@ std::optional<address> person::find_address() const;
 zip address::zip_code() const;
 ```
 
-It's possible to wrap them inside lambdas and use `fmap` and `bind` as we did before.
+It's possible to wrap them inside lambdas and use `transform` and `and_then` as we did before.
 
 However, overloads that accept getter member functions are also provided to simplify the caller code even more.
 
@@ -180,29 +180,29 @@ if (maybe_zip_code) {
 }
 ````
 
-To understand the above snippets, here it follows a brief explanation of the combinators `fmap` and `bind`.
+To understand the above snippets, here it follows a brief explanation of the combinators `transform` and `and_then`.
 
-#### fmap (|)
+#### transform (|)
 
-One of the most basic and useful operations to allow the composition of nullable types is `fmap`. Which roughly
+One of the most basic and useful operations to allow the composition of nullable types is `transform`. Which roughly
 speaking turns a nullable type containing a value of type _A_ into a functor.
  
-Given a nullable _N[A]_ and a function _f: A -> B_, `fmap` uses _f_ to map over _N[A]_, yielding another nullable
+Given a nullable _N[A]_ and a function _f: A -> B_, `transform` uses _f_ to map over _N[A]_, yielding another nullable
 _N[B]_.
 
-Furthermore, if the input nullable is empty, `fmap` does nothing, and simply returns a brand new empty nullable _N[B]_.
+Furthermore, if the input nullable is empty, `transform` does nothing, and simply returns a brand new empty nullable _N[B]_.
 
 Example:
 
 ```
 auto int_to_string = [](auto const& a){ return std::to_string(a); };
 std::optional<int> const one{1};
-std::optional<std::string> const one_as_string = fmap(one, int_to_string); // contains "1"
+std::optional<std::string> const one_as_string = transform(one, int_to_string); // contains "1"
 std::optional<int> const none{};
-std::optional<std::string> const empty_as_string = fmap(none, int_to_string); // contains nothing
+std::optional<std::string> const empty_as_string = transform(none, int_to_string); // contains nothing
 ```
 
-To simplify the act of chaining multiple operations, an infix notation of `fmap` is provided via overloading `operator|`:
+To simplify the act of chaining multiple operations, an infix notation of `transform` is provided via overloading `operator|`:
 
 ```
 auto const string2int = [](auto const& a){ return std::stoi(a); };
@@ -213,7 +213,7 @@ std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_st
                                                                     | int2string; // contains "0"
 ```
 
-There's also an overload for `fmap` that accepts a member function that has to be **const** and **parameterless** getter function.
+There's also an overload for `transform` that accepts a member function that has to be **const** and **parameterless** getter function.
 So you can do this:
 
 ```
@@ -226,36 +226,36 @@ auto const maybe_id = std::optional{person{}} | &person::id; // contains 1
 Which calls `id()` if the `std::optional<person>` contains a `person` and wraps it inside a new `std::optional<int>`.
 Otherwise, in case the `std::optional<person>` does not contain a `person` it simply returns an empty `std::optional<int>`.
 
-It's also possible to use the non-member overload for `fmap`, but at the call site, the user has to wrap the member
+It's also possible to use the non-member overload for `transform`, but at the call site, the user has to wrap the member
 function inside a lambda, which adds a little bit of noise to the caller code.
 
-#### bind (>>)
+#### and_then (>>)
 
-Another useful combinator is `bind` which allows the composition of functions which by themselves also return values
+Another useful combinator is `and_then` which allows the composition of functions which by themselves also return values
 wrapped in a nullable. Roughly speaking, it's modelling a monad. Please, note that you don't have to know about monads
 to benefit from the practical applications of _absent_.
 
-Given a nullable _N[A]_ and a function _f: A -> N[B]_, `bind` uses _f_ to map over _N[A]_, yielding another nullable
+Given a nullable _N[A]_ and a function _f: A -> N[B]_, `and_then` uses _f_ to map over _N[A]_, yielding another nullable
 _N[B]_.
 
-The main difference if compared to `fmap` is that if you apply _f_ using `fmap` you end up with _N[N[B]]_.
-Whereas `bind` knows how it should flatten _N[N[B]]_ into _N[B]_ after applying the mapping function.
+The main difference if compared to `transform` is that if you apply _f_ using `transform` you end up with _N[N[B]]_.
+Whereas `and_then` knows how it should flatten _N[N[B]]_ into _N[B]_ after applying the mapping function.
 
 Suppose a scenario where you invoke a function that might fail, so you use a nullable to represent such failure.
 And then you use the value inside the nullable to invoke another function that might fail as well. So and so forth.
-That's precisely a good use-case to make for `bind`.
+That's precisely a good use-case to make for `and_then`.
 
 Example:
 
 ```
 auto const maybe_int_to_string = [](auto const& a){ return std::optional{std::to_string(a)}; };
 std::optional<int> const one{1};
-std::optional<std::string> const one_as_string = bind(one, maybe_int_to_string); // contains "1"
+std::optional<std::string> const one_as_string = and_then(one, maybe_int_to_string); // contains "1"
 std::optional<int> const none{};
-std::optional<std::string> const none_as_string = bind(none, maybe_int_to_string); // contains nothing
+std::optional<std::string> const none_as_string = and_then(none, maybe_int_to_string); // contains nothing
 ```
 
-To simplify the act of chaining multiple operations, an infix notation of `bind` is provided via overloading `operator>>`:
+To simplify the act of chaining multiple operations, an infix notation of `and_then` is provided via overloading `operator>>`:
 
 ```
 auto const maybe_string2int = [](auto const& a){ return std::optional{std::stoi(a)}; };
@@ -266,7 +266,7 @@ std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_st
                                                                     >> maybe_int2string; // contains "0"
 ```
 
-Similarly to `fmap`, there's also an overload for `bind` that accepts a member function that has to be **const** and
+Similarly to `transform`, there's also an overload for `and_then` that accepts a member function that has to be **const** and
 **parameterless** getter function. So you can do this:
 
 ```
@@ -279,12 +279,12 @@ auto const maybe_id = std::optional{person{}} >> &person::id;
 Which calls `id()` if the `std::optional<person>` contains a `person` already wrapped in an `std::optional<int>`.
 Otherwise, in case the `std::optional<person>` does not contain a `person` it simply returns an empty `std::optional<int>`.
 
-It's also possible to use the non-member overload for `bind`, but at the call site, the user has to wrap the member
+It's also possible to use the non-member overload for `and_then`, but at the call site, the user has to wrap the member
 function inside a lambda, which adds a little bit of noise to the caller code.
 
 ##### Multiple error handling
 
-Another common use-case for `bind` is for multiple error handling.
+Another common use-case for `and_then` is for multiple error handling.
 
 One way to do multiple error handling if by threading a sequence of
 computations that return `std::optional<T>` to represent success or fail,
