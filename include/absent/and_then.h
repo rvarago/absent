@@ -2,6 +2,7 @@
 #define RVARAGO_ABSENT_ANDTHEN_H
 
 #include <functional>
+#include <utility>
 
 #include "absent/support/member.h"
 
@@ -19,7 +20,7 @@ namespace rvarago::absent {
  */
 template <template <typename> typename Nullable, typename UnaryFunction, typename A>
 constexpr auto and_then(Nullable<A> const &input, UnaryFunction mapper) noexcept
-    -> decltype(mapper(std::declval<A>())) {
+    -> decltype(std::declval<UnaryFunction>()(std::declval<A>())) {
     using NullableB = decltype(mapper(std::declval<A>()));
     if (!input) {
         return NullableB{};
@@ -32,7 +33,7 @@ constexpr auto and_then(Nullable<A> const &input, UnaryFunction mapper) noexcept
  */
 template <template <typename> typename Nullable, typename UnaryFunction, typename A>
 constexpr auto operator>>(Nullable<A> const &input, UnaryFunction mapper) noexcept
-    -> decltype(mapper(std::declval<A>())) {
+    -> decltype(std::declval<UnaryFunction>()(std::declval<A>())) {
     return and_then(input, mapper);
 }
 

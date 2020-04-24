@@ -2,6 +2,7 @@
 #define RVARAGO_ABSENT_TRANSFORM_H
 
 #include <functional>
+#include <utility>
 
 #include "absent/support/member.h"
 
@@ -18,7 +19,7 @@ namespace rvarago::absent {
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
 constexpr auto transform(Nullable<A> const &input, UnaryFunction mapper) noexcept
-    -> Nullable<decltype(mapper(std::declval<A>()))> {
+    -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
     using NullableB = Nullable<decltype(mapper(std::declval<A>()))>;
     if (!input) {
         return NullableB{};
@@ -31,7 +32,7 @@ constexpr auto transform(Nullable<A> const &input, UnaryFunction mapper) noexcep
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
 constexpr auto operator|(Nullable<A> const &input, UnaryFunction mapper) noexcept
-    -> Nullable<decltype(mapper(std::declval<A>()))> {
+    -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
     return transform(input, mapper);
 }
 
