@@ -18,10 +18,10 @@ namespace rvarago::absent {
  */
 template <typename BaseException = std::exception, template <typename> typename Nullable = std::optional,
           typename NullaryFunction>
-auto attempt(NullaryFunction unsafe) -> Nullable<decltype(std::declval<NullaryFunction>()())> {
+auto attempt(NullaryFunction &&unsafe) -> Nullable<decltype(std::declval<NullaryFunction>()())> {
     using NullableA = Nullable<decltype(unsafe())>;
     try {
-        return NullableA{unsafe()};
+        return NullableA{std::forward<NullaryFunction>(unsafe)()};
     } catch (BaseException const &) {
         return NullableA{};
     }
