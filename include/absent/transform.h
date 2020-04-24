@@ -2,6 +2,7 @@
 #define RVARAGO_ABSENT_TRANSFORM_H
 
 #include <functional>
+#include <utility>
 
 #include "absent/support/member.h"
 
@@ -17,22 +18,22 @@ namespace rvarago::absent {
  * @return a new nullable containing the mapped value of type B, possibly empty if input was also empty.
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
-constexpr auto transform(Nullable<A> const &input, UnaryFunction mapper) noexcept
-    -> Nullable<decltype(mapper(std::declval<A>()))> {
+constexpr auto transform(Nullable<A> const &input, UnaryFunction &&mapper) noexcept
+    -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
     using NullableB = Nullable<decltype(mapper(std::declval<A>()))>;
     if (!input) {
         return NullableB{};
     }
-    return NullableB{mapper(*input)};
+    return NullableB{std::forward<UnaryFunction>(mapper)(*input)};
 }
 
 /***
  * Infix version of transform.
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
-constexpr auto operator|(Nullable<A> const &input, UnaryFunction mapper) noexcept
-    -> Nullable<decltype(mapper(std::declval<A>()))> {
-    return transform(input, mapper);
+constexpr auto operator|(Nullable<A> const &input, UnaryFunction &&mapper) noexcept
+    -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
+    return transform(input, std::forward<UnaryFunction>(mapper));
 }
 
 /***

@@ -2,6 +2,7 @@
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_ANDTHEN_H
 
 #include <functional>
+#include <utility>
 
 #include "absent/adapters/either/either.h"
 #include "absent/support/member.h"
@@ -20,22 +21,22 @@ namespace rvarago::absent::adapters::either {
  * @return a new either containing the mapped value of type B, possibly in error if input was also in error.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto and_then(types::either<A, E> const &input, UnaryFunction mapper) noexcept
-    -> decltype(mapper(std::declval<A>())) {
+constexpr auto and_then(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept
+    -> decltype(std::declval<UnaryFunction>()(std::declval<A>())) {
     using EitherB = decltype(mapper(std::declval<A>()));
     if (!std::holds_alternative<A>(input)) {
         return EitherB{std::get<E>(input)};
     }
-    return mapper(std::get<A>(input));
+    return std::forward<UnaryFunction>(mapper)(std::get<A>(input));
 }
 
 /***
  * Infix version of and_then.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto operator>>(types::either<A, E> const &input, UnaryFunction mapper) noexcept
-    -> decltype(mapper(std::declval<A>())) {
-    return and_then(input, mapper);
+constexpr auto operator>>(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept
+    -> decltype(std::declval<UnaryFunction>()(std::declval<A>())) {
+    return and_then(input, std::forward<UnaryFunction>(mapper));
 }
 
 /***
