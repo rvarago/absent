@@ -21,7 +21,7 @@ auto attempt(NullaryFunction unsafe) -> Nullable<decltype(unsafe())> {
     using NullableA = Nullable<decltype(unsafe())>;
     try {
         return NullableA{unsafe()};
-    } catch (BaseException const &ex) {
+    } catch (BaseException const &) {
         return NullableA{};
     }
 }
