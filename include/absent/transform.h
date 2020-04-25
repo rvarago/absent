@@ -1,10 +1,7 @@
 #ifndef RVARAGO_ABSENT_TRANSFORM_H
 #define RVARAGO_ABSENT_TRANSFORM_H
 
-#include <functional>
 #include <utility>
-
-#include "absent/support/member.h"
 
 namespace rvarago::absent {
 
@@ -34,22 +31,6 @@ template <template <typename> typename Nullable, typename A, typename UnaryFunct
 constexpr auto operator|(Nullable<A> const &input, UnaryFunction &&mapper) noexcept
     -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
     return transform(input, std::forward<UnaryFunction>(mapper));
-}
-
-/***
- * The same as transform but for a member function that has to be const and parameterless.
- */
-template <template <typename> typename Nullable, typename A, typename B>
-constexpr auto transform(Nullable<A> const &input, support::member_mapper<const A, B> mapper) noexcept -> Nullable<B> {
-    return transform(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
-}
-
-/**
- * Infix version of transform for a member function.
- */
-template <template <typename> typename Nullable, typename A, typename B>
-constexpr auto operator|(Nullable<A> const &input, support::member_mapper<const A, B> mapper) noexcept -> Nullable<B> {
-    return transform(input, mapper);
 }
 
 }

@@ -1,11 +1,9 @@
 #ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_TRANSFORM_H
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_TRANSFORM_H
 
-#include <functional>
 #include <utility>
 
 #include "absent/adapters/either/either.h"
-#include "absent/support/member.h"
 
 namespace rvarago::absent::adapters::either {
 
@@ -36,24 +34,6 @@ template <typename A, typename E, typename UnaryFunction>
 constexpr auto operator|(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept
     -> types::either<decltype(std::declval<UnaryFunction>()(std::declval<A>())), E> {
     return transform(input, std::forward<UnaryFunction>(mapper));
-}
-
-/***
- * The same as transform but for a member function that has to be const and parameterless.
- */
-template <typename A, typename E, typename B>
-constexpr auto transform(types::either<A, E> const &input, support::member_mapper<const A, B> mapper) noexcept
-    -> types::either<B, E> {
-    return transform(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
-}
-
-/**
- * Infix version of transform for a member function.
- */
-template <typename A, typename E, typename B>
-constexpr auto operator|(types::either<A, E> const &input, support::member_mapper<const A, B> mapper) noexcept
-    -> types::either<B, E> {
-    return transform(input, mapper);
 }
 
 }
