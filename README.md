@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/rvarago/absent.svg?branch=master)](https://travis-ci.org/rvarago/absent)
 
+[![Build Status](https://dev.azure.com/rvarago/absent/_apis/build/status/rvarago.absent?branchName=master)](https://dev.azure.com/rvarago/absent/_build/latest?definitionId=1&branchName=master)
+
 This is a small header-only library meant to simplify the composition of nullable types in a declarative style for some C++ types constructors.
 
 _absent_ provides an alternative way to solve a very specific problem of chaining operations on nullable types.
