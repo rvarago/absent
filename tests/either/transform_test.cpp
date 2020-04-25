@@ -1,3 +1,4 @@
+#include <functional>
 #include <string>
 #include <utility>
 
@@ -60,7 +61,7 @@ SCENARIO("transform provides a way to map {either<A, E>, f: A -> B} to either<B,
                 either<Person, Error> invalid{Error{"404"}};
 
                 THEN("return a new invalid either<string, Error>") {
-                    either<std::string, Error> mapped_invalid = invalid | &Person::id;
+                    either<std::string, Error> mapped_invalid = invalid | std::mem_fn(&Person::id);
                     CHECK(mapped_invalid == either<std::string, Error>{Error{"404"}});
                 }
             }
@@ -69,7 +70,7 @@ SCENARIO("transform provides a way to map {either<A, E>, f: A -> B} to either<B,
                 either<Person, Error> valid{Person{}};
 
                 THEN("return a valid and mapped either<string, Error>") {
-                    either<std::string, Error> mapped_valid = valid | &Person::id;
+                    either<std::string, Error> mapped_valid = valid | std::mem_fn(&Person::id);
                     CHECK(mapped_valid == either<std::string, Error>{std::string{"200"}});
                 }
             }

@@ -1,10 +1,7 @@
 #ifndef RVARAGO_ABSENT_ANDTHEN_H
 #define RVARAGO_ABSENT_ANDTHEN_H
 
-#include <functional>
 #include <utility>
-
-#include "absent/support/member.h"
 
 namespace rvarago::absent {
 
@@ -35,24 +32,6 @@ template <template <typename> typename Nullable, typename UnaryFunction, typenam
 constexpr auto operator>>(Nullable<A> const &input, UnaryFunction &&mapper) noexcept
     -> decltype(std::declval<UnaryFunction>()(std::declval<A>())) {
     return and_then(input, std::forward<UnaryFunction>(mapper));
-}
-
-/***
- * The same as and_then but for a member function that has to be const and parameterless.
- */
-template <template <typename> typename Nullable, typename A, typename B>
-constexpr auto and_then(Nullable<A> const &input, support::member_mapper<const A, Nullable<B>> mapper) noexcept
-    -> Nullable<B> {
-    return and_then(input, [&mapper](auto const &value) { return std::invoke(mapper, value); });
-}
-
-/***
- * Infix version of and_then for a member function.
- */
-template <template <typename> typename Nullable, typename A, typename B>
-constexpr auto operator>>(Nullable<A> const &input, support::member_mapper<const A, Nullable<B>> mapper) noexcept
-    -> Nullable<B> {
-    return and_then(input, mapper);
 }
 
 }

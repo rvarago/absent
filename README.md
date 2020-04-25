@@ -1,18 +1,19 @@
 # absent
 
-This is a small header-only library meant to simplify the composition of nullable types in a declarative style for some C++ types constructors.
-
 [![Build Status](https://travis-ci.org/rvarago/absent.svg?branch=master)](https://travis-ci.org/rvarago/absent)
 
-## A word of caution
+[![Build Status](https://dev.azure.com/rvarago/absent/_apis/build/status/rvarago.absent?branchName=master)](https://dev.azure.com/rvarago/absent/_build/latest?definitionId=1&branchName=master)
 
-_absent_ provides an alternative way to solve a very specific problem of enabling some kinds of compositions for some kinds of nullable types. Of course, there are several ways to do achieve pretty much the same goal.
+This is a small header-only library meant to simplify the composition of nullable types in a declarative style for some C++ types constructors.
+
+_absent_ provides an alternative way to solve a very specific problem of chaining operations on nullable types.
 
 _absent_ represents a tiny contribution that aims to leverage composition via immutable operations that don't mutate the argument, instead, they create and return brand new instances.
 
 It may be a pro, because by restricting mutation the likelihood of introducing a class of bugs may be reduced as well.
 
-However, it may also be a con, because for each operation a new instance is created and then destroyed. Hopefully, few copies would be optimized away by the compiler, but there's no guarantee. So it's important to keep this in mind, maybe via objective measurements that prove that it's a real problem for the specific project in which _absent_ is planned to be used.
+However, it may also be a con, because for each operation a new instance is usually created and then destroyed.
+Hopefully, few copies would be optimized away by the compiler, but there's no guarantee. So it's important to keep this in mind, maybe via objective measurements that prove that it's a real problem for the specific project in which _absent_ is planned to be used.
 
 ## Description
 
@@ -42,8 +43,10 @@ auto const zip_code = zip_code(maybe_address.value());
 We have mixed business logic with error handling, it'd be nice to have these two concerns apart from each other. It's a lot
 of boilerplate to achieve such a simple requirement as obtaining the zip code of a given person.
 
-Furthermore, we have to make several calls to `std::optional<T>` accessor member function, `value()`, and for each call, we have to make sure we’ve checked that it's not empty before accessing its value.
-Otherwise, it would trigger a `bad_optional_access`. Thus, it’d be nice to minimize the direct calls to `value()` by wrapping intermediary ones inside a function that does the checking and then accesses the value.
+Furthermore, we have to make several calls to `std::optional<T>` accessor member function, `value()`, and for each call,
+we have to make sure we’ve checked that it's not empty before accessing its value.
+Otherwise, it would trigger a `bad_optional_access`. Thus, it’d be nice to minimize the direct calls to `value()` by
+wrapping intermediary ones inside a function that does the checking and then accesses the value.
 And only make the direct call to `value()` from our code at the very end of the composition.
 
 **Note:**  We could have used the dereference operator `*` rather than `value()`. It would invoke undefined behaviour instead of
@@ -93,7 +96,7 @@ expressiveness achieved by composing simple functions as we can do for non-nulla
 
 ### Enters _absent_
 
-_absent_ provides simple abstractions based on functional programming to help us composing operations. It's inspired by
+_absent_ provides simple abstractions based on functional programming to help us to compose operations. It's inspired by
 Haskell and so uses a similar vocabulary. It does **NOT** attempt to solve all problems when it comes to the complex problem of error-handling,
 far away from it.
 
@@ -160,21 +163,17 @@ Which is very similar to the notation used to express the pipeline:
 Almost as easy to read as the version without using nullable types (maybe even more?) and with the expressiveness and type-safety
 brought by them.
 
-In the case where `find_address` and `zip_code` are "getter" member functions, such as:
+In the case where `find_address` and `zip_code` are non-static member functions, such as:
 
 ```
 std::optional<address> person::find_address() const;
 zip address::zip_code() const;
 ```
 
-It's possible to wrap them inside lambdas and use `transform` and `and_then` as we did before.
-
-However, overloads that accept getter member functions are also provided to simplify the caller code even more.
-
-So, using the infix notation, we can do:
+It's possible to wrap them inside std::mem_fn, lambdas, etc, and use `transform` and `and_then` as we did before. For instance:
 
 ```
-auto const maybe_zip_code = find_person() >> &person::find_address | &address::zip_code;
+auto const maybe_zip_code = find_person() >> std::mem_fn(&person::find_address) | std::mem_fn(&address::zip_code);
 if (maybe_zip_code) {
     // You just have to check at the end before making the "final" use of the outcome yielded by the composition chain
 }
@@ -213,22 +212,6 @@ std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_st
                                                                     | int2string; // contains "0"
 ```
 
-There's also an overload for `transform` that accepts a member function that has to be **const** and **parameterless** getter function.
-So you can do this:
-
-```
-struct person {
-    int id() const{ return 1; }
-};
-auto const maybe_id = std::optional{person{}} | &person::id; // contains 1
-```
-
-Which calls `id()` if the `std::optional<person>` contains a `person` and wraps it inside a new `std::optional<int>`.
-Otherwise, in case the `std::optional<person>` does not contain a `person` it simply returns an empty `std::optional<int>`.
-
-It's also possible to use the non-member overload for `transform`, but at the call site, the user has to wrap the member
-function inside a lambda, which adds a little bit of noise to the caller code.
-
 #### and_then (>>)
 
 Another useful combinator is `and_then` which allows the composition of functions which by themselves also return values
@@ -265,22 +248,6 @@ std::optional<std::string> const mapped_some_of_zero_as_string = some_zero_as_st
                                                                     >> maybe_string2int
                                                                     >> maybe_int2string; // contains "0"
 ```
-
-Similarly to `transform`, there's also an overload for `and_then` that accepts a member function that has to be **const** and
-**parameterless** getter function. So you can do this:
-
-```
-struct person {
-     std::optional<int> id() const{ return 1; }
-};
-auto const maybe_id = std::optional{person{}} >> &person::id;
-```
-
-Which calls `id()` if the `std::optional<person>` contains a `person` already wrapped in an `std::optional<int>`.
-Otherwise, in case the `std::optional<person>` does not contain a `person` it simply returns an empty `std::optional<int>`.
-
-It's also possible to use the non-member overload for `and_then`, but at the call site, the user has to wrap the member
-function inside a lambda, which adds a little bit of noise to the caller code.
 
 ##### Multiple error handling
 
@@ -430,10 +397,10 @@ Or it throws an exception derived from `std::logic_error`, in which case `result
 
 ### Optional
 
-* CMake (_only if you need to build from sources_)
-* Make (_only if you want to use it to orchestrate task execution_)
-* Conan (_only if you want generate a package or build the tests using conan as a provider for the test framework_)
-* Docker (_only if you want build from inside a docker container_)
+* CMake
+* Make
+* Conan
+* Docker
 
 ## Build
 
