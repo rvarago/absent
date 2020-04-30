@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
         either/for_each_test.cpp
 
         execution_status_test.cpp
+        from_variant_test.cpp
 
         main.cpp
 )
