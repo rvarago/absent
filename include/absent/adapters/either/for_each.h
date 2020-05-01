@@ -17,10 +17,9 @@ namespace rvarago::absent::adapters::either {
  */
 template <typename UnaryFunction, typename A, typename E>
 constexpr auto for_each(types::either<A, E> const &input, UnaryFunction &&action) noexcept -> void {
-    if (!std::holds_alternative<A>(input)) {
-        return;
+    if (auto const p = std::get_if<A>(&input); p) {
+        std::forward<UnaryFunction>(action)(*p);
     }
-    std::forward<UnaryFunction>(action)(std::get<A>(input));
 }
 
 }

@@ -389,6 +389,17 @@ int may_throw_an_exception();
 So it returns either value of type `int`, in which case `result` will be an `std::optional<int>` that wraps the returned value.
 Or it throws an exception derived from `std::logic_error`, in which case `result` will be an empty `std::optional<int>`.
 
+#### from_variant
+
+`from_variant` allows us to go from an `std::variant<As...>` to a nullable type, such as `std::optional<A>`, holding the value
+of type `A` if the variant holds a value of such type, or empty otherwise.
+
+```
+std::variant<int, std::string> v = 10;
+std::optional<int> opt = from_variant<int>(v);
+```
+
+
 ## Requirements
 
 ### Mandatory
