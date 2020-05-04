@@ -4,7 +4,7 @@ project(absent LANGUAGES CXX)
 
 # Definition
 
-option(BUILD_TESTS "Build test executable" ON)
+option(BUILD_TESTS "Build test executable" OFF)
 
 add_library(${PROJECT_NAME} INTERFACE)
 

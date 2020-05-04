@@ -378,49 +378,23 @@ std::optional<int> opt = from_variant<int>(v);
 
 ## Build
 
-The _Makefile_ wraps the commands to download dependencies (Conan), generate the build configuration, build, run the
-unit tests, and clear the build folder.
+The _Makefile_ conveniently wraps the commands to fetch the dependencies using Conan, invoke CMake to build, run the tests, etc.
 
 * Compile:
 
 ```
-make
+make # BUILD_TESTS=OFF to skip tests
 ```
 
-By default, it also builds the unit tests, you can disable the behavior by:
-
-```
-make BUILD_TESTS=OFF
-```
-
-The build always assumes that the default profile (*profiles/common*) applies to your build. If that's not, then you
-can specify your profile by setting _PROFILE_ as:
- 
-```
-make PROFILE=<path_to_your_profile>
-```
-
-And to build with Release mode (by default it builds with Debug mode enabled):
-
-``
-make BUILD_TYPE=Release
-``
-
-* To run the unit tests:
+* To run the tests:
 
 ```
 make test
 ```
 
-* To clean the _build_ folder:
+### Build inside a Docker container
 
-```
-make clean
-```
-
-### Run unit tests inside a Docker container
-
-Optionally, it's also possible to run the unit tests inside a Docker container by executing:
+Optionally, it's also possible to build and run the tests inside a Docker container by executing:
 
 ```
 make env-test
