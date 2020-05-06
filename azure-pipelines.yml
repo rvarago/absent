@@ -9,7 +9,7 @@ steps:
     displayName: 'Fetch Dependencies'
 
   - script: |
-      cmake .  && cmake --build .
+      cmake . -DBUILD_TESTS=ON && cmake --build .
     displayName: 'Build'
 
   - script: |
