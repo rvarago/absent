@@ -2,6 +2,7 @@
 #define RVARAGO_ABSENT_FROMVARIANT_H
 
 #include <optional>
+#include <type_traits>
 #include <variant>
 
 namespace rvarago::absent {
@@ -16,6 +17,8 @@ namespace rvarago::absent {
  */
 template <typename A, template <typename> typename Nullable = std::optional, typename... Rest>
 constexpr auto from_variant(std::variant<Rest...> v) noexcept -> Nullable<A> {
+    static_assert(std::disjunction_v<std::is_same<A, Rest>...>, "The provided type A is not a member of the variant.");
+
     if (auto const value = std::get_if<A>(&v); value) {
         return Nullable<A>{*value};
     }
