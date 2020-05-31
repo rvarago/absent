@@ -424,3 +424,4 @@ target_link_libraries(myExample rvarago::absent)
 _absent_ is also integrated into the following package managers:
 
 1. [Conan](https://bintray.com/conan/conan-center/absent%3A_)
+2. [Vcpkg](https://github.com/microsoft/vcpkg/tree/master/ports/absent)
