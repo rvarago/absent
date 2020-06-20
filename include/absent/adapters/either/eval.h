@@ -17,7 +17,8 @@ namespace rvarago::absent::adapters::either {
  * @return the wrapped value inside the either or the result of fallback if the either is in error.
  */
 template <typename NullaryFunction, typename A, typename E>
-constexpr auto eval(types::either<A, E> const &input, NullaryFunction &&fallback) noexcept -> A {
+constexpr auto eval(types::either<A, E> const &input,
+                    NullaryFunction &&fallback) noexcept(noexcept(std::declval<NullaryFunction>()())) -> A {
     if (!std::holds_alternative<A>(input)) {
         return std::forward<NullaryFunction>(fallback)();
     }

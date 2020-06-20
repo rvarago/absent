@@ -18,7 +18,8 @@ namespace rvarago::absent::adapters::either {
  * @return a new either containing the mapped value of type B, possibly in error if input was also in error.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto transform(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept
+constexpr auto transform(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept(
+    noexcept(std::forward<UnaryFunction>(mapper)(std::declval<A>())))
     -> types::either<decltype(std::declval<UnaryFunction>()(std::declval<A>())), E> {
     using EitherB = types::either<decltype(mapper(std::declval<A>())), E>;
     if (auto const p = std::get_if<A>(&input); p) {
@@ -31,7 +32,8 @@ constexpr auto transform(types::either<A, E> const &input, UnaryFunction &&mappe
  * Infix version of transform.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto operator|(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept
+constexpr auto operator|(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept(
+    noexcept(std::forward<UnaryFunction>(mapper)(std::declval<A>())))
     -> types::either<decltype(std::declval<UnaryFunction>()(std::declval<A>())), E> {
     return transform(input, std::forward<UnaryFunction>(mapper));
 }

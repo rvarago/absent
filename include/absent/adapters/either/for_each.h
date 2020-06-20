@@ -16,7 +16,9 @@ namespace rvarago::absent::adapters::either {
  * @param action an unary function A -> void.
  */
 template <typename UnaryFunction, typename A, typename E>
-constexpr auto for_each(types::either<A, E> const &input, UnaryFunction &&action) noexcept -> void {
+constexpr auto for_each(types::either<A, E> const &input,
+                        UnaryFunction &&action) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
+    -> void {
     if (auto const p = std::get_if<A>(&input); p) {
         std::forward<UnaryFunction>(action)(*p);
     }
