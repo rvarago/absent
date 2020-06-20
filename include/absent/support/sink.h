@@ -12,7 +12,7 @@ namespace rvarago::absent::support {
  * @return a new callable that discards the parameters sent to it.
  */
 template <typename NullaryFunction>
-constexpr decltype(auto) sink(NullaryFunction &&f) noexcept {
+constexpr decltype(auto) sink(NullaryFunction &&f) noexcept(noexcept(std::declval<NullaryFunction>()())) {
     return [f = std::forward<NullaryFunction>(f)](auto &&...) { return f(); };
 }
 
