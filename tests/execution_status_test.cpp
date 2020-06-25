@@ -10,7 +10,7 @@ using namespace rvarago::absent;
 SCENARIO("absent can be used for multiple error handling", "[execution_status]") {
 
     bool is_set = false;
-    auto set_flag = [&is_set]() -> support::execution_status {
+    auto const set_flag = [&is_set]() -> support::execution_status {
         is_set = true;
         return support::success;
     };

@@ -13,7 +13,7 @@ namespace rvarago::absent::support {
  */
 template <typename NullaryFunction>
 constexpr decltype(auto) sink(NullaryFunction &&f) noexcept(noexcept(std::declval<NullaryFunction>()())) {
-    return [f = std::forward<NullaryFunction>(f)](auto &&...) { return f(); };
+    return [f = std::forward<NullaryFunction>(f)](auto &&...) { return std::forward<NullaryFunction>(f)(); };
 }
 
 }
