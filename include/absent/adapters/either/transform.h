@@ -21,11 +21,11 @@ template <typename A, typename E, typename UnaryFunction>
 constexpr auto transform(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept(
     noexcept(std::forward<UnaryFunction>(mapper)(std::declval<A>())))
     -> types::either<decltype(std::declval<UnaryFunction>()(std::declval<A>())), E> {
-    using EitherB = types::either<decltype(mapper(std::declval<A>())), E>;
+    using B = decltype(mapper(std::declval<A>()));
     if (auto const p = std::get_if<A>(&input); p) {
-        return EitherB{std::forward<UnaryFunction>(mapper)(*p)};
+        return types::either<B, E>{std::forward<UnaryFunction>(mapper)(*p)};
     }
-    return EitherB{std::get<E>(input)};
+    return types::either<B, E>{std::get<E>(input)};
 }
 
 /***

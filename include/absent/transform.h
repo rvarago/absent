@@ -18,11 +18,11 @@ template <template <typename> typename Nullable, typename A, typename UnaryFunct
 constexpr auto transform(Nullable<A> const &input,
                          UnaryFunction &&mapper) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
     -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
-    using NullableB = Nullable<decltype(mapper(std::declval<A>()))>;
+    using B = decltype(mapper(std::declval<A>()));
     if (!input) {
-        return NullableB{};
+        return Nullable<B>{};
     }
-    return NullableB{std::forward<UnaryFunction>(mapper)(*input)};
+    return Nullable<B>{std::forward<UnaryFunction>(mapper)(*input)};
 }
 
 /***

@@ -71,10 +71,10 @@ Since the types compose (source and target types match), we can reduce the pipel
 However, for nullable types we can't do the same:
 
 ```
-(void -> std::optional<person>) compose (person -> std::optional<address>) compose (address -> zip_code)
+(void -> optional<person>) compose (person -> optional<address>) compose (address -> zip_code)
 ```
 
-This can't be composed, because the types don't match anymore, so _compose_ isn't powerful enough to be used here. We can't
+This chain of expression can't be composed or reduced, because the types don't match anymore, so _compose_ isn't powerful enough to be used here. We can't
 simply feed an `std::optional<person>` into a function that expects a `person`.
 
 So, in essence, the problem lies in the observation that nullable types break our ability to compose functions using the
@@ -126,13 +126,13 @@ And that solves the initial problem of lack of compositionality for nullable typ
 Now we express the pipeline as:
 
 ```
-(void -> std::optional<person>) and_then (person -> std::optional<address>) transform (address -> zip_code)
+(void -> optional<person>) and_then (person -> optional<address>) transform (address -> zip_code)
 ```
 
 And that's _functionally_ equivalent to:
 
 ```
-(void -> std::optional<zip_code>)
+(void -> optional<zip_code>)
 ```
 
 For convenience, an alternative infix notation based on operator overloading is also available:
@@ -144,7 +144,7 @@ std::optional<zip_code> code_opt = find_person() >> find_address | get_zip_code;
 Which is closer to the notation used to express the pipeline:
 
 ```
-(void -> std::optional<person>) >> (person -> std::optional<address>) | (address -> zip_code)
+(void -> optional<person>) >> (person -> optional<address>) | (address -> zip_code)
 ```
 
 Hopefully, it's almost as easy to read as the version without using nullable types and with the expressiveness and type-safety
@@ -244,10 +244,10 @@ Maybe even more seriously case is when the fallback triggers side-effects that w
 Example:
 
 ```Cpp
-person get_default_person();
+role get_default_role();
 
-std::optional<person> person_opt = find_person();
-person p = eval(person_opt, get_default_person);
+std::optional<role> role_opt = find_role();
+role my_role = eval(role_opt, get_default_role);
 ```
 
 ### <A name="attempt"/>`attempt`
@@ -280,10 +280,10 @@ If _N&lt;A&gt;_ is empty, then `for_each` does nothing.
 Example:
 
 ```Cpp
-void log(person const&) const;
+void log(event const&) const;
 
-std::optional<person> person_opt = find_person();
-for_each(person_opt, log);
+std::optional<event> event_opt = get_last_event();
+for_each(event_opt, log);
 ```
 
 ### <A name="from_variant"/>`from_variant`
@@ -293,10 +293,10 @@ of type `A` if the variant holds a value of such type, or empty otherwise.
 
 ```Cpp
 std::variant<int, std::string> int_or_str = 1;
-std::optional<int> one_opt = from_variant<int>(int_or_str); // std::optional{1}
+std::optional<int> int_opt = from_variant<int>(int_or_str); // std::optional{1}
 
 int_or_str = std::string{"42"}
-std::optional<int> none_opt = from_variant<int>(int_or_str); // std::nullopt
+std::optional<int> int_opt = from_variant<int>(int_or_str); // std::nullopt
 ```
 
 ## Multiple error-handling
@@ -326,17 +326,7 @@ Where:
 * `support::sink` wraps a callable that should receive parameters in another callable, but discards the whatever arguments
 it receives.
 
-Note that, if you had to provide parameters to `second`, then you would need to wrap it inside a lambda that captures
-all the parameters, and then forwards them to `second`, for instance:
-
-```Cpp
-std::optional<blank> second(std::string, int);
-
-std::string x = "123"s;
-auto const success = first() >> support::sink([&second, &x] { return second(x, 42); });
-```
-
-It's also possible to raise the level of abstraction even more by using the alias `support::execution_status` for
+It's also possible to raise the level of abstraction by using the alias `support::execution_status` for
 `std::optional<blank>`, as well as the compile-time constants of type `execution_status`:
 
 * `success` for an `execution_status` filled with a `unit`.
