@@ -26,18 +26,18 @@ target_compile_features(${PROJECT_NAME}
             cxx_std_17
 )
 
-if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU|Clang")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${PROJECT_NAME}
             PRIVATE
                 -Wall -Wextra -Werror -ansi -pedantic
     )
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${PROJECT_NAME}
             PRIVATE
                 /Wall /W4
     )
 else()
-    message("Unknown compiler...skipping configuration for warnings")
+    message("Unknown compiler... skipping configuration for warnings")
 endif()
 
 find_package(Catch2 REQUIRED)
