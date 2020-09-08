@@ -355,6 +355,11 @@ else {
 }
 ```
 
+### Obvious drawbacks
+
+1. Abuse of operator-overloading: We give different meanings to some operators, e.g. `operator>>` means `and_then`, instead of extracting from an input stream.
+2. Lack of interface coherence: We may overload operators (e.g. `operator>>`) for types that we don't own (e.g. `std::optional<T>`), and therefore code may break if the true owner of a given type happens to define the operator in the future.
+
 ## Requirements
 
 ### Mandatory
