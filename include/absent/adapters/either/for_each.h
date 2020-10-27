@@ -1,9 +1,9 @@
 #ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_FOREACH_H
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_FOREACH_H
 
-#include <utility>
-
 #include "absent/adapters/either/either.h"
+
+#include <utility>
 
 namespace rvarago::absent::adapters::either {
 

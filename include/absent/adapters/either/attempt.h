@@ -1,10 +1,10 @@
 #ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_ATTEMPT_H
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_ATTEMPT_H
 
+#include "absent/adapters/either/either.h"
+
 #include <exception>
 #include <utility>
-
-#include "absent/adapters/either/either.h"
 
 namespace rvarago::absent::adapters::either {
 
