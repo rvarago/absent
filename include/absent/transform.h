@@ -1,6 +1,7 @@
 #ifndef RVARAGO_ABSENT_TRANSFORM_H
 #define RVARAGO_ABSENT_TRANSFORM_H
 
+#include <functional>
 #include <utility>
 
 namespace rvarago::absent {
@@ -16,13 +17,15 @@ namespace rvarago::absent {
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
 constexpr auto transform(Nullable<A> const &input,
-                         UnaryFunction &&mapper) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
-    -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
-    using B = decltype(mapper(std::declval<A>()));
+                         UnaryFunction &&mapper) noexcept(noexcept(std::invoke(std::declval<UnaryFunction>(),
+                                                                               std::declval<A>())))
+    -> Nullable<decltype(std::invoke(std::declval<UnaryFunction>(), std::declval<A>()))> {
+    using B = decltype(std::invoke(mapper, std::declval<A>()));
     if (!input) {
         return Nullable<B>{};
+    } else {
+        return Nullable<B>{std::invoke(std::forward<UnaryFunction>(mapper), *input)};
     }
-    return Nullable<B>{std::forward<UnaryFunction>(mapper)(*input)};
 }
 
 /***
@@ -30,8 +33,9 @@ constexpr auto transform(Nullable<A> const &input,
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
 constexpr auto operator|(Nullable<A> const &input,
-                         UnaryFunction &&mapper) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
-    -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
+                         UnaryFunction &&mapper) noexcept(noexcept(std::invoke(std::declval<UnaryFunction>(),
+                                                                               std::declval<A>())))
+    -> Nullable<decltype(std::invoke(std::declval<UnaryFunction>(), std::declval<A>()))> {
     return transform(input, std::forward<UnaryFunction>(mapper));
 }
 
