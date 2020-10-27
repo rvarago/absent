@@ -1,9 +1,9 @@
 #ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_EVAL_H
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_EVAL_H
 
-#include <utility>
-
 #include "absent/adapters/either/either.h"
+
+#include <utility>
 
 namespace rvarago::absent::adapters::either {
 
@@ -17,12 +17,12 @@ namespace rvarago::absent::adapters::either {
  * @return the wrapped value inside the either or the result of fallback if the either is in error.
  */
 template <typename NullaryFunction, typename A, typename E>
-constexpr auto eval(types::either<A, E> const &input,
+constexpr auto eval(types::either<A, E> input,
                     NullaryFunction &&fallback) noexcept(noexcept(std::declval<NullaryFunction>()())) -> A {
     if (!std::holds_alternative<A>(input)) {
         return std::forward<NullaryFunction>(fallback)();
     }
-    return std::get<A>(input);
+    return std::get<A>(std::move(input));
 }
 
 }
