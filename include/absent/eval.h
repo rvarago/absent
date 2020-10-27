@@ -1,6 +1,7 @@
 #ifndef RVARAGO_ABSENT_EVAL_H
 #define RVARAGO_ABSENT_EVAL_H
 
+#include <functional>
 #include <utility>
 
 namespace rvarago::absent {
@@ -16,11 +17,12 @@ namespace rvarago::absent {
  */
 template <template <typename> typename Nullable, typename NullaryFunction, typename A>
 constexpr auto eval(Nullable<A> const &input,
-                    NullaryFunction &&fallback) noexcept(noexcept(std::declval<NullaryFunction>()())) -> A {
+                    NullaryFunction &&fallback) noexcept(noexcept(std::invoke(std::declval<NullaryFunction>()))) -> A {
     if (!input) {
-        return std::forward<NullaryFunction>(fallback)();
+        return std::invoke(std::forward<NullaryFunction>(fallback));
+    } else {
+        return *input;
     }
-    return *input;
 }
 
 }
