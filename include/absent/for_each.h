@@ -14,13 +14,13 @@ namespace rvarago::absent {
  * @param action an unary function A -> void.
  */
 template <template <typename> typename Nullable, typename UnaryFunction, typename A>
-constexpr auto for_each(Nullable<A> const &input,
+constexpr auto for_each(Nullable<A> input,
                         UnaryFunction &&action) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
     -> void {
     if (!input) {
         return;
     }
-    std::forward<UnaryFunction>(action)(*input);
+    std::forward<UnaryFunction>(action)(*std::move(input));
 }
 
 }
