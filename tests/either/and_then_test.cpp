@@ -1,9 +1,9 @@
+#include <absent/adapters/either/and_then.h>
+
 #include <functional>
 #include <string>
 
 #include <catch2/catch.hpp>
-
-#include <absent/adapters/either/and_then.h>
 
 using namespace rvarago::absent::adapters::either;
 using rvarago::absent::adapters::types::either;

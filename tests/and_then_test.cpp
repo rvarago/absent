@@ -1,10 +1,10 @@
+#include <absent/and_then.h>
+
 #include <functional>
 #include <optional>
 #include <string>
 
 #include <catch2/catch.hpp>
-
-#include <absent/and_then.h>
 
 using namespace rvarago::absent;
 

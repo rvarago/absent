@@ -1,10 +1,10 @@
+#include <absent/transform.h>
+
 #include <functional>
 #include <optional>
 #include <string>
 
 #include <catch2/catch.hpp>
-
-#include <absent/transform.h>
 
 using namespace rvarago::absent;
 
