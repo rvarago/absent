@@ -3,6 +3,7 @@
 
 #include "absent/adapters/either/either.h"
 
+#include <functional>
 #include <utility>
 
 namespace rvarago::absent::adapters::either {
@@ -17,10 +18,10 @@ namespace rvarago::absent::adapters::either {
  */
 template <typename UnaryFunction, typename A, typename E>
 constexpr auto for_each(types::either<A, E> const &input,
-                        UnaryFunction &&action) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
-    -> void {
+                        UnaryFunction &&action) noexcept(noexcept(std::invoke(std::declval<UnaryFunction>(),
+                                                                              std::declval<A>()))) -> void {
     if (auto const p = std::get_if<A>(&input); p) {
-        std::forward<UnaryFunction>(action)(*p);
+        std::invoke(std::forward<UnaryFunction>(action), *p);
     }
 }
 
