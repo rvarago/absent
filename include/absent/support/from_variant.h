@@ -17,12 +17,12 @@ namespace rvarago::absent {
  */
 template <typename A, template <typename> typename Nullable = std::optional, typename... Rest>
 constexpr auto from_variant(std::variant<Rest...> v) noexcept -> Nullable<A> {
-    static_assert(std::disjunction_v<std::is_same<A, Rest>...>, "The provided type A is not a member of the variant.");
-
-    if (auto const value = std::get_if<A>(&v); value) {
-        return Nullable<A>{*value};
+    static_assert(std::disjunction_v<std::is_same<A, Rest>...>, "A is not a member type of the variant");
+    if (std::holds_alternative<A>(v)) {
+        return Nullable<A>{std::get<A>(std::move(v))};
+    } else {
+        return Nullable<A>{};
     }
-    return Nullable<A>{};
 }
 
 }

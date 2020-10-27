@@ -15,12 +15,12 @@ namespace rvarago::absent {
  * @return the wrapped value inside the nullable or the result of fallback if the nullable is empty.
  */
 template <template <typename> typename Nullable, typename NullaryFunction, typename A>
-constexpr auto eval(Nullable<A> const &input,
-                    NullaryFunction &&fallback) noexcept(noexcept(std::declval<NullaryFunction>()())) -> A {
+constexpr auto eval(Nullable<A> input, NullaryFunction &&fallback) noexcept(noexcept(std::declval<NullaryFunction>()()))
+    -> A {
     if (!input) {
         return std::forward<NullaryFunction>(fallback)();
     }
-    return *input;
+    return *std::move(input);
 }
 
 }

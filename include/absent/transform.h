@@ -15,24 +15,24 @@ namespace rvarago::absent {
  * @return a new nullable containing the mapped value of type B, possibly empty if input was also empty.
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
-constexpr auto transform(Nullable<A> const &input,
+constexpr auto transform(Nullable<A> input,
                          UnaryFunction &&mapper) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
     -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
     using B = decltype(mapper(std::declval<A>()));
     if (!input) {
         return Nullable<B>{};
     }
-    return Nullable<B>{std::forward<UnaryFunction>(mapper)(*input)};
+    return Nullable<B>{std::forward<UnaryFunction>(mapper)(*std::move(input))};
 }
 
 /***
  * Infix version of transform.
  */
 template <template <typename> typename Nullable, typename A, typename UnaryFunction>
-constexpr auto operator|(Nullable<A> const &input,
+constexpr auto operator|(Nullable<A> input,
                          UnaryFunction &&mapper) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
     -> Nullable<decltype(std::declval<UnaryFunction>()(std::declval<A>()))> {
-    return transform(input, std::forward<UnaryFunction>(mapper));
+    return transform(std::move(input), std::forward<UnaryFunction>(mapper));
 }
 
 }
