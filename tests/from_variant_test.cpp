@@ -1,8 +1,8 @@
+#include <absent/support/from_variant.h>
+
 #include <string>
 
 #include <catch2/catch.hpp>
-
-#include <absent/support/from_variant.h>
 
 using namespace rvarago::absent;
 

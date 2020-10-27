@@ -1,8 +1,8 @@
+#include <absent/eval.h>
+
 #include <optional>
 
 #include <catch2/catch.hpp>
-
-#include <absent/eval.h>
 
 using namespace rvarago::absent;
 

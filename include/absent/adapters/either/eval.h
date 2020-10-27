@@ -1,9 +1,10 @@
 #ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_EVAL_H
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_EVAL_H
 
-#include <utility>
-
 #include "absent/adapters/either/either.h"
+
+#include <functional>
+#include <utility>
 
 namespace rvarago::absent::adapters::either {
 
@@ -18,11 +19,12 @@ namespace rvarago::absent::adapters::either {
  */
 template <typename NullaryFunction, typename A, typename E>
 constexpr auto eval(types::either<A, E> const &input,
-                    NullaryFunction &&fallback) noexcept(noexcept(std::declval<NullaryFunction>()())) -> A {
+                    NullaryFunction &&fallback) noexcept(noexcept(std::invoke(std::declval<NullaryFunction>()))) -> A {
     if (!std::holds_alternative<A>(input)) {
-        return std::forward<NullaryFunction>(fallback)();
+        return std::invoke(std::forward<NullaryFunction>(fallback));
+    } else {
+        return std::get<A>(input);
     }
-    return std::get<A>(input);
 }
 
 }

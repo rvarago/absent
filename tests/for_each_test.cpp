@@ -1,8 +1,8 @@
+#include <absent/for_each.h>
+
 #include <optional>
 
 #include <catch2/catch.hpp>
-
-#include <absent/for_each.h>
 
 using namespace rvarago::absent;
 

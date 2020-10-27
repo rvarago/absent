@@ -1,9 +1,9 @@
+#include <absent/attempt.h>
+
 #include <optional>
 #include <stdexcept>
 
 #include <catch2/catch.hpp>
-
-#include <absent/attempt.h>
 
 using namespace rvarago::absent;
 

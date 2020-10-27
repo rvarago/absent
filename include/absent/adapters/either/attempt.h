@@ -1,10 +1,11 @@
 #ifndef RVARAGO_ABSENT_ADAPTERS_EITHER_ATTEMPT_H
 #define RVARAGO_ABSENT_ADAPTERS_EITHER_ATTEMPT_H
 
-#include <exception>
-#include <utility>
-
 #include "absent/adapters/either/either.h"
+
+#include <exception>
+#include <functional>
+#include <utility>
 
 namespace rvarago::absent::adapters::either {
 
@@ -18,10 +19,11 @@ namespace rvarago::absent::adapters::either {
  * @return a new nullable wrapping the value returned by unsafe, possibly invalid if unsafe threw.
  */
 template <typename BaseException = std::exception, typename NullaryFunction>
-auto attempt(NullaryFunction &&unsafe) -> types::either<decltype(std::declval<NullaryFunction>()()), BaseException> {
-    using EitherA = types::either<decltype(unsafe()), BaseException>;
+auto attempt(NullaryFunction &&unsafe)
+    -> types::either<decltype(std::invoke(std::declval<NullaryFunction>())), BaseException> {
+    using EitherA = types::either<decltype(std::invoke(unsafe)), BaseException>;
     try {
-        return EitherA{std::forward<NullaryFunction>(unsafe)()};
+        return EitherA{std::invoke(std::forward<NullaryFunction>(unsafe))};
     } catch (BaseException const &ex) {
         return EitherA{ex};
     }

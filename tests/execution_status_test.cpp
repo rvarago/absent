@@ -1,9 +1,9 @@
+#include <absent/and_then.h>
+#include <absent/support/execution_status.h>
+
 #include <string>
 
 #include <catch2/catch.hpp>
-
-#include <absent/and_then.h>
-#include <absent/support/execution_status.h>
 
 using namespace rvarago::absent;
 

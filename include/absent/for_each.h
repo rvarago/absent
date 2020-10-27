@@ -1,6 +1,7 @@
 #ifndef RVARAGO_ABSENT_FOREACH_H
 #define RVARAGO_ABSENT_FOREACH_H
 
+#include <functional>
 #include <utility>
 
 namespace rvarago::absent {
@@ -15,12 +16,11 @@ namespace rvarago::absent {
  */
 template <template <typename> typename Nullable, typename UnaryFunction, typename A>
 constexpr auto for_each(Nullable<A> const &input,
-                        UnaryFunction &&action) noexcept(noexcept(std::declval<UnaryFunction>()(std::declval<A>())))
-    -> void {
-    if (!input) {
-        return;
+                        UnaryFunction &&action) noexcept(noexcept(std::invoke(std::declval<UnaryFunction>(),
+                                                                              std::declval<A>()))) -> void {
+    if (input) {
+        std::invoke(std::forward<UnaryFunction>(action), *input);
     }
-    std::forward<UnaryFunction>(action)(*input);
 }
 
 }
