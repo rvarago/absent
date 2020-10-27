@@ -1,6 +1,5 @@
 #include <absent/and_then.h>
 
-#include <functional>
 #include <optional>
 #include <string>
 
@@ -50,7 +49,7 @@ SCENARIO("and_then provides a way to and_then {optional<A>, f: A -> optional<B>}
                 std::optional<Person> none;
 
                 THEN("return a new empty optional<string>") {
-                    std::optional<std::string> bound_none = none >> std::mem_fn(&Person::id);
+                    std::optional<std::string> bound_none = none >> &Person::id;
                     CHECK(bound_none == std::nullopt);
                 }
             }
@@ -59,7 +58,7 @@ SCENARIO("and_then provides a way to and_then {optional<A>, f: A -> optional<B>}
                 std::optional<Person> some{Person{}};
 
                 THEN("return a non-empty and bound optional<string>") {
-                    std::optional<std::string> bound_some = some >> std::mem_fn(&Person::id);
+                    std::optional<std::string> bound_some = some >> &Person::id;
                     CHECK(bound_some == std::optional{std::string{"200"}});
                 }
             }
