@@ -1,6 +1,5 @@
 #include <absent/adapters/either/and_then.h>
 
-#include <functional>
 #include <string>
 
 #include <catch2/catch.hpp>
@@ -62,7 +61,7 @@ SCENARIO("and_then provides a way to map {either<A, E>, f: A -> either<B, E>} to
                 either<Person, Error> invalid{Error{"404"}};
 
                 THEN("return a new invalid either<string, Error>") {
-                    either<std::string, Error> bound_invalid = invalid >> std::mem_fn(&Person::id);
+                    either<std::string, Error> bound_invalid = invalid >> &Person::id;
                     CHECK(bound_invalid == either<std::string, Error>{Error{"404"}});
                 }
             }
@@ -71,7 +70,7 @@ SCENARIO("and_then provides a way to map {either<A, E>, f: A -> either<B, E>} to
                 either<Person, Error> valid{Person{}};
 
                 THEN("return a valid and bound either<string, Error>>") {
-                    either<std::string, Error> bound_valid = valid >> std::mem_fn(&Person::id);
+                    either<std::string, Error> bound_valid = valid >> &Person::id;
                     CHECK(bound_valid == either<std::string, Error>{std::string{"200"}});
                 }
             }
