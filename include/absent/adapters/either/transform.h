@@ -3,6 +3,7 @@
 
 #include "absent/adapters/either/either.h"
 
+#include <functional>
 #include <utility>
 
 namespace rvarago::absent::adapters::either {
@@ -18,23 +19,26 @@ namespace rvarago::absent::adapters::either {
  * @return a new either containing the mapped value of type B, possibly in error if input was also in error.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto transform(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept(
-    noexcept(std::forward<UnaryFunction>(mapper)(std::declval<A>())))
-    -> types::either<decltype(std::declval<UnaryFunction>()(std::declval<A>())), E> {
-    using B = decltype(mapper(std::declval<A>()));
+constexpr auto transform(types::either<A, E> const &input,
+                         UnaryFunction &&mapper) noexcept(noexcept(std::invoke(std::forward<UnaryFunction>(mapper),
+                                                                               std::declval<A>())))
+    -> types::either<decltype(std::invoke(std::declval<UnaryFunction>(), std::declval<A>())), E> {
+    using B = decltype(std::invoke(mapper, std::declval<A>()));
     if (auto const p = std::get_if<A>(&input); p) {
-        return types::either<B, E>{std::forward<UnaryFunction>(mapper)(*p)};
+        return types::either<B, E>{std::invoke(std::forward<UnaryFunction>(mapper), *p)};
+    } else {
+        return types::either<B, E>{std::get<E>(input)};
     }
-    return types::either<B, E>{std::get<E>(input)};
 }
 
 /***
  * Infix version of transform.
  */
 template <typename A, typename E, typename UnaryFunction>
-constexpr auto operator|(types::either<A, E> const &input, UnaryFunction &&mapper) noexcept(
-    noexcept(std::forward<UnaryFunction>(mapper)(std::declval<A>())))
-    -> types::either<decltype(std::declval<UnaryFunction>()(std::declval<A>())), E> {
+constexpr auto operator|(types::either<A, E> const &input,
+                         UnaryFunction &&mapper) noexcept(noexcept(std::invoke(std::forward<UnaryFunction>(mapper),
+                                                                               std::declval<A>())))
+    -> types::either<decltype(std::invoke(std::declval<UnaryFunction>(), std::declval<A>())), E> {
     return transform(input, std::forward<UnaryFunction>(mapper));
 }
 
