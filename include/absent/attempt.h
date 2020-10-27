@@ -2,6 +2,7 @@
 #define RVARAGO_ABSENT_ATTEMPT_H
 
 #include <exception>
+#include <functional>
 #include <optional>
 #include <utility>
 
@@ -18,10 +19,10 @@ namespace rvarago::absent {
  */
 template <typename BaseException = std::exception, template <typename> typename Nullable = std::optional,
           typename NullaryFunction>
-auto attempt(NullaryFunction &&unsafe) -> Nullable<decltype(std::declval<NullaryFunction>()())> {
-    using NullableA = Nullable<decltype(unsafe())>;
+auto attempt(NullaryFunction &&unsafe) -> Nullable<decltype(std::invoke(std::declval<NullaryFunction>()))> {
+    using NullableA = Nullable<decltype(std::invoke(unsafe))>;
     try {
-        return NullableA{std::forward<NullaryFunction>(unsafe)()};
+        return NullableA{std::invoke(std::forward<NullaryFunction>(unsafe))};
     } catch (BaseException const &) {
         return NullableA{};
     }
