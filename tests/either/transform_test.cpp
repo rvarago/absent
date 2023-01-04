@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 using namespace rvarago::absent::adapters::either;
 using rvarago::absent::adapters::types::either;
